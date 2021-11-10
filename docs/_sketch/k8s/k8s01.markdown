@@ -1,0 +1,305 @@
+---
+layout: post
+title: '쿠버네티스'
+date: 2021-10-17 18:19:00 +0900
+categories: [Meta]
+---
+
+# 추후 다듬어서 포스팅하기
+
+왜 #이 더 작지
+
+아무튼.
+
+K8S 쿠버네티스
+
+오늘 마지막시간에 K8S 실습과정 거칠 것
+
+쿠버네티스는 도커 클러스터를 구성하는 기술
+https://kubernetes.io/
+
+실습 환경은 k8s 버전 1.19 사용 예정
+
+쿠버네티스는 마이너 버전 업그레이드 주기가 엄청 짧다  
+실무 환경을 가면 경험하게될 쿠버의 버전이 최신 버전은 아닐것  
+컨테이너 입장에서는 쿠버가 OS같은 느낌인데, OS의 버전 업그레이드는 사실 민감하지.  
+농협은 1.15를 쓰더라...
+
+메이저 버전이 바뀌는건 아니긴 하지만...
+
+# 홈페이지의 Kuberenetes Features 부분 하나씩 분석
+
+쿠버네티스의 구조
+
+미니온  
+워커노드를 과거엔 미니온이라고 불렀음.
+
+Pod  
+쿠버네티스의 배포 단위(Docker의 배포 단위는 컨테이너)
+여러개의 컨테이너를 Pod에 담을 수 있다.
+
+## Automatic bin packing
+
+Kubelet은 마스터의 API를 통해 자신이 설치해야 하는 Pod를 확인
+
+Kubelet의 cadvisor
+현재 워커 노드의 리소스 상황을 보고
+
+etcd  
+key-value store  
+워커 노드의 리소스 상황 저장소
+
+etcd의 정보를 통해 scheduler가 어느 노드에 요청받은 pod를 생성시켜야 할 지에 대해 판단 가능
+
+pod 배포시 필요 리소스에 대한 정보가 들어있음.
+
+따라서 automatic bin packing  
+어느 노드에 포드가 생성되는지는 생각할 필요 없어
+
+## Horizontal scaling
+
+확장은 언제나 어려운 문제
+멘토님 사담) 우리은행에서 프로젝트 하는데 서버 때문에 자꾸 지연됨
+
+### 사용자를 예측하기 쉽다면, 확장은 매뉴얼하게 가능하다.
+
+(그럼 미리 Pod를 늘려놓으면 되겠지)
+
+API를 통해서 Pod를 늘려줘! 하면 스케줄러가 알아서 관리해준다.
+
+Controller  
+pod개수를 체크, 사용자가 요구한 pod와 실제 pod수를 체크  
+실제 pod가 더 적다? etcd에게 pod 하나 더 만ㄷ르어야 해 기록  
+그 기록사항을 기반으로 scheduler는 pod를 생성
+
+### 예측할 수 없는 상황에 대해 자동 확장 가능하다
+
+AWS의 autoscaling group 지정처럼  
+CPU 사용량이 60% 이상 사용하면 -> 2개 추가해줘!  
+메모리 1GB 이상 사용하면 -> 2개 추가해줘!
+
+참고: **kuber에 배포하는 앱은 stateless해야한다**
+
+## Self-healing
+
+Pod의 상태 확인, 근데 Pod의 상태가 아니라 Pod안에 있는 App이 정상인지 확인한다.
+
+점검은 TCP/IP Port level에서 확인할 수 있고, URL로 확인할 수도 있고
+
+Pod가 비정상이다? 해당 Pod를 지우고 다시 만듬
+
+넷플릭스는 Pod가 하루 넘게 운영되는것을 방지한다.  
+24시간 돌면 Pod를 지우고 새로 만든다.  
+새로운 보안 기술이 추가되면 Pod에 반영되도록 하는 개념
+
+docker의 hash check보다 훨씬 풍부하다.
+
+## Service discovery and Load balancing and Service Topology
+
+### Service discovery
+
+end point를 단일 진입점으로 만들어준다.  
+서비스를 하나 만들어줘! REST API에 요청  
+Service:DB -> MariaDB IP들을 grouping -> 가상 IP(VIP)를 할당  
+서비스는 VIP만 노출되고 내부 grouping된 IP는 알아서 관리됨
+
+VIP는 언제 변경되는가? Master 서버가 전체 재기동 되었을 때.  
+Core DNS를 통해 VIP를 반환한다.
+
+### Load balancing
+
+**쿠버네티스 전체 성능은 Network에 좌지우지된다.**  
+가장 많은 트래픽은 내부 트래픽에서 발생한다.  
+Front로 외부 트래픽 하나 나오면 다 내부 트래픽으로 처리된다.
+
+커널 기반의 iptables을 사용  
+kube proxy  
+iptables의 rule을 관리(Port listen도 같이 함)  
+iptables는 Kube proxy의 정책을 기반으로 로드 밸런싱  
+백분률 기반
+
+**controller는 etcd에 직접 접근 불가**, api 서버를 통해 접근한다.
+
+Pod가 어디에 떠있는지는 상관없다. VIP와 iptables를 통해 내부적으로 트래픽을 균등하게 분산시킨다.
+
+## Storage orchestration
+
+Application이 요구하는 storage의 유형은 다 가지각색.  
+MariaDB는 당연히 multi로 구성이 되면 multi로 R/W가 되는 storage가 필요.
+
+미리 storage pool이 있는 것 처럼 미리 storage를 타입에 따라 할당 가능.  
+Backend 개발자는 어떤 유형의 storage가 필요한지만 기입.  
+나는 RWX가 되는 storage 100GB 필요해 하면 그 타입에 맞춰 가져오는 것
+
+## IPv4/IPv6 dual-stack
+
+당연히 둘 다 제공해줌
+
+## Automated rollouts and rollbacks
+
+클라우드 환경에서 일반적인 배포 방식 3가지 (blue-green, 카나리아, rollout)  
+기본적으로 rollout 제공
+
+Dockerhub에 v1 -> v2 이미지 업데이트  
+순차적으로 rolling update해주는 기능을 기본적으로 가지고 있다.  
+v1으로 롤백하는 기능도 기본적으로 제공한다.
+
+내가 어떤 명령어로 배포했는지도 기록할 수 있고, 롤백도 엄청 빠르고
+
+참고) devops 엔지니어 페이 높다
+
+## Secret and configuration management
+
+Application.yaml 등 설정 파일
+개발 환경, 운영 환경, 디비 등등...  
+개발환경인줄 알고 배포했는데 운영환경이다!  
+테스트 데이터가 운영 디비에 들어간다!! 이런 실수들
+
+구성 설정정보를 단일 설정으로 빼서 관리할 수 있다.
+
+운영에 배포하던 개발에 배포하던 동일한 설정에 접근할 수 있도록  
+어플리케이션과 설정을 분리할 수 있다.
+
+민감한 정보 Secret  
+설정정보는 base64로 한 번 encoding 처리함
+
+## Batch execution
+
+app 서비스 하다보면 항상 batch 서비스는 빠질 수가 없다.  
+서비스 환경에 대해 불필요한 파일 삭제라던가,  
+batch, 실행 후 상태정보를 관리할 수 있는 기능 제공  
+키워드: 크론탭
+
+---
+
+최신버전엔 Desinged for extensibility라는 특징도 추가되었다.
+
+---
+
+# 쿠버네티스 맛보기
+
+## 간략하게
+
+도커는 서비스 구동을 쉽게 만들었다.  
+ELK 스택 등등... 대부분의 설정은 기입되어있고 내가 변경할 환경변수만 건들면 되니까.
+
+운용자들은 컨테이너 하나하나가 서버처럼 관리해야하는 대상이 되어버림
+
+공학의 진리, 많은 부품은 많은 고장  
+컨테이너에 대한 관리 비용 증가  
+오케스트레이션 등장
+
+Kuber는 이제 OS 수준이 되었다.
+
+Kuber를 설명해보세요!  
+Observe(현재 상태를 관찰) - Diff(요구상태와 달라) - Act(이를 맞추려고 행동)  
+이 싸이클이 계속 도는 것.
+
+Kubectl을 통해 보통 요청
+
+## 배포 환경에 대하여
+
+-   IaaS
+
+    -   인프라 자동 구축
+    -   AWS의 EC2
+    -   서버 자원(IP, Network, Storage) 가상의 환경에서 쉽고 편하게 사용할 수 있게 서비스 형태로 제공
+    -   가상화 기술 이용, PaaS와 SaaS의 기반
+
+-   PaaS
+
+    -   서비스를 개발할 수 있는 환경을 제공
+    -   IDE 툴까지 다 포함되어 있다.
+
+-   SaaS
+    -   Cloud 환경에서 동작하는 응용프로그램을 서비스 형태로 제공하는 것
+    -   ex. 메일 서비스
+
+사담... LG CNS... MSA 팀... 선진 개발 문화... 닉네임으로 호명...
+
+SaaS는 솔루션을 확장하기 위해서 기본이다.  
+회원가입만 하면 쓸 수 있는 서비스. 마치 Github
+
+참고자료, 캠핑을 즐길 때 선택 할 수 있는 옵션, 찾아보기  
+On-premise 에서 SaaS까지.
+
+## 그래서 컨테이너 오케스트레이션이 왜 필요한가?
+
+Host 머신 한대라면, docker run을 치던, docer-compose를 하던 그냥 container를 실행시켜도 상관 없지.
+
+사용자가 늘어난다면? 하나의 host 머신에서 모든 container를 실행할 수 없다.
+
+Host machine의 리소스를 생각해 분배가 필요. 이를 자동으로 해결해주는 도구가 오케스트레이션 도구
+
+-   고가용성을 위해 어플리케이션을 유지할 수 있나?
+-   필요에 따라 microservice를 확장 할 수 있나?
+-   여러 호스트에서 어플리케이션을 로드밸런스 할 수 있나?
+-   호스트에서 어플리케이션의 하드웨어 리소스를 제한할 수 있나?
+-   여러 서비스를 쉽게 배포할 수 있나?
+
+Container의 6개 layer
+그 중 5th layer, Orchestration/Scheduling Service Model
+
+참고, docker != container engine  
+언제든 바뀔 수 있다.
+
+6th layer, OpenShift, Cloud Foundry, Docker Cloud 등  
+금융 통신사는 이런 플랫폼 기반으로 올린다.  
+IBM은 클라우드를 선점하지 못해 망할뻔 했으나, OpenShift를 인수했다.
+
+## Kubernetes, k8s
+
+Container Cluster Manager  
+구글에서 시작되어 오픈소스화. 구글 또 너야?  
+golang 기반
+
+쿠버네티스는 어떻게 강자가 되었나?
+
+Container는 이미 오래된 기술이었음. LXC
+
+구글이 자기들 쓰던걸 풀었다.  
+Docker-swarm을 재꼈다
+
+버전별로 API 호환 안될수도 있으니까 좀 참고는 해두시고.  
+Warning log 확인해서 수정할 수 있으니께
+
+## Kubernetes Architecture
+
+그림 참고
+
+UI가 있어도 느리니까 잘 안써.
+
+백엔드는 CLI 자주, 잘 쓰셔야 됩니다.
+
+Master server의 구성요소  
+kubectl -> authentication/authorization -> (REST)
+
+etcd / controller / schedulers
+
+Node의 구성요소
+
+-   Container engine
+-   Kubelet
+-   Kube-proxy
+-   cAdvisor
+
+# 실습 환경 구성
+
+Kubeadm을 이용한 멀티 클러스터 구성  
+OS는 CentOS 7 사용  
+Red hat Enterprise와 비슷한 환경  
+2GB 메모리, 2CPU 이상
+
+마스터 노드 하나, 워커 노드 2개 구성
+
+weavenet 사용 예정
+
+(강의자료는 저작권 문제가 있어서 공유X, 제공은 받음)
+
+---
+
+참고, 소마 프로젝트에 전체 시스템의 서비스 레벨에 대한 시퀀스 다이어그램은 반드시 필요하다.
+
+---
+
+kubectl, kubelet 버전이 다르면 호환하지 않는다. 주의
