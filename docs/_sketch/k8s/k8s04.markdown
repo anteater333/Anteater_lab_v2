@@ -1,0 +1,68 @@
+---
+layout: post
+title: '쿠버네티스'
+date: 2021-11-14 18:20:00 +0900
+categories: [Meta]
+---
+
+# 추후 다듬어서 포스팅하기
+
+k8s 4회차  
+
+루트 사용하지 않는 컨테이너 사용방법  
+도커의 취약점은 루트를 사용한다는 점  
+Docker Root Dir  
+(기본적으로 이 경로 쓰면 안됨.)  
+근데 로그가 root 디렉토리로 들어가서 로그 보는것도 루트권한이 필요한 문제가 발생  
+루트 없이 해당 로그 보려면?  
+기본적인 방법, dockerfile 만들때 유저 지정  
+또 하나 문제는, 유저명은 동일한데, 유저의 UID가 다른 경우  
+user 에다가 UID를 박아야됨  
+
+https://docs.docker.com/engine/security/rootless/  
+
+podman, docker의 대체? 레드햇에서 개발.  
+root를 사용하지 않는다는 특징  
+
+멘토님이 해결하지 못한 이슈도 있음  
+도커 이미지 중, 이미 만들어져있는 도커 이미지는, 기본적으로 루트를 쓰도록 되어있는게 많음.  
+요즘 나오는건 user 지정이 되어있긴 하지만...  
+아무튼 새로 우리가 배포하는 입장이라면 user를 지정해주는 것이 좋다.  
+
+ReplicationController  
+Pod가 항상 실행되도록 유지  
+ - label selector  
+ - replica count
+ - pod template
+
+중요, Replication Controller를 운용 중에 pod의 템플릿을 수정할 수 있었음.  
+현재 운용중인 pod엔 영향이 없다가 새로 배포될때 적용되기 때문에, 주로 사용하지는 않음
+
+ReplicaSet  
+deployments라는 상위 리소스의 관리  
+operator를 통해 마치 쿼리처럼 더 다양한 selector  
+
+Deployment  
+rolling update & rolling back  
+
+
+
+# Service 가장 중요  
+실제 네트워크 어떻게 처리 되는가?  
+
+- Pod Network  
+- Service Network
+
+
+# 오늘 실습 내용
+우리가 서비스를 이용해 단일 진입점을 만들었는데,  
+DB 서비스의 단일 IP를 지정해주면 통신하는데 문제가 없을것.  
+실제 발생할 수 있는 문제는, 마스터 서버를 재기동할 경우 cluster ip가 변경될 가능성 존재
+
+가장 안전한 방법은 Master IP를 보는게 아니라 Domain 정보, DNS를 보는것.  
+CoreDNS
+
+Session Affinity  
+
+
+실습3 onpromise 환경 가정 후 loadbalancer 세팅하는 것  
