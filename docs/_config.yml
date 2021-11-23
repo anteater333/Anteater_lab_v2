@@ -22,10 +22,10 @@ title: Anteater's laboratory
 email: anteater1056@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
     엄청난 설명An awesome description
-baseurl: '/Anteater_lab_v2/' # the subpath of your site, e.g. /blog
+baseurl: '/Anteater_lab_v2' # the subpath of your site, e.g. /blog
 url: 'https://anteater333.github.io/Anteater_lab_v2/' # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username: jekyll
+twitter_username: AntEater333
+github_username: anteater333
 
 # Build settings
 theme: minima
