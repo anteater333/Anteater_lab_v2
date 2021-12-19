@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Anteater's laboratory
+title: About
 permalink: /about/
 ---
 
