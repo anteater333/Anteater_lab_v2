@@ -30,6 +30,7 @@ github_username: anteater333
 # Build settings
 theme: minima
 plugins:
+    - jekyll-remote-theme
     - jekyll-feed
     - jekyll-sitemap
 # Exclude from processing.
@@ -55,3 +56,6 @@ plugins:
 # Disqus comments service
 disqus:
   shortname: anteater-lab
+
+# Remote theme (for latest version of theme plugin)
+remote_theme: jekyll/minima
