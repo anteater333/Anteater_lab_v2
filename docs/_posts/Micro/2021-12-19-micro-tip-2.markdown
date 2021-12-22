@@ -165,7 +165,7 @@ export REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address "Wi-
 
 이 명령어도 `.bashrc`에 추가하고 WSL을 재부팅하자.
 
----
+----
 
 ### 그 결과
 
