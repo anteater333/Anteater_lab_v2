@@ -116,16 +116,21 @@
 }
 
 .contact-list,
+.feed-subscribe,
 .social-media-list {
   list-style: none;
   margin-left: 0;
+  margin-bottom: 0;
 }
 
 .footer-col-wrapper {
   @include relative-font-size(0.9375);
   color: $grey-color;
   margin-left: -$spacing-unit / 2;
-  @extend %clearfix;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // @extend %clearfix;
 }
 
 .footer-col {

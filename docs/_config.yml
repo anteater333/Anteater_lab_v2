@@ -19,13 +19,20 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Anteater's laboratory
-email: anteater1056@gmail.com
+author:
+  email: anteater1056@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-    엄청난 설명An awesome description
+    엄청난 설명 An awesome description
 baseurl: '/Anteater_lab_v2' # the subpath of your site, e.g. /blog
 url: 'https://anteater333.github.io/Anteater_lab_v2/' # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: AntEater333
-github_username: anteater333
+
+show_excerpts: false # set to true to show excerpts on the homepage
+
+minima:
+  # footer에 SNS 계정 추가
+  social_links:
+    twitter: AntEater333
+    github: anteater333
 
 # Build settings
 theme: minima
@@ -33,6 +40,7 @@ plugins:
     - jekyll-remote-theme
     - jekyll-feed
     - jekyll-sitemap
+    - jekyll-seo-tag
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
@@ -56,6 +64,12 @@ plugins:
 # Disqus comments service
 disqus:
   shortname: anteater-lab
+
+# Analytics
+analytics:
+  provider: "google-gtag"
+  google:
+    tracking_id:  "G-HXNNZ52L22"
 
 # Remote theme (for latest version of theme plugin)
 remote_theme: jekyll/minima
