@@ -66,10 +66,7 @@ disqus:
   shortname: anteater-lab
 
 # Analytics
-analytics:
-  provider: "google-gtag"
-  google:
-    tracking_id:  "G-HXNNZ52L22"
+google_analytics:  "G-HXNNZ52L22"
 
 # Remote theme (for latest version of theme plugin)
 remote_theme: jekyll/minima
