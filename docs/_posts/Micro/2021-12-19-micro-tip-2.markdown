@@ -84,7 +84,7 @@ CLI에서 `w`를 입력하면 웹 서버가 실행되고(실행 시 그냥 `npm 
 ### Trouble...
 
 ![맥북](https://i.postimg.cc/J0tjKxzj/image.png)  
-[장삐쭈 - 노트북](https://i.postimg.cc/J0tjKxzj/image.png) 中 발췌
+[장삐쭈 - 노트북](https://youtu.be/Wq6NiXskxus) 中 발췌
 {: .center}
 
 내가 이 글을 쓰고있는 이유이자, 내면의 반골 기질의 결과물, 나는 맥북을 쓰지 않는다. 개발 환경은 WSL에 모두 몰아넣었고, 그 점에서 문제가 발생한다.  
