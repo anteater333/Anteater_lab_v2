@@ -103,6 +103,18 @@ h1, h2, h3, h4, h5, h6 {
  * Links
  */
 a {
+  text-decoration: none;
+
+  .social-media-list &:hover {
+    text-decoration: none;
+
+    .username {
+      text-decoration: underline;
+    }
+  }
+}
+
+.post-content a {
   color: $link-base-color;
   text-decoration: none;
 
@@ -114,13 +126,16 @@ a {
     color: $link-hover-color;
     text-decoration: underline;
   }
+}
 
-  .social-media-list &:hover {
-    text-decoration: none;
+/**
+ * Post list link
+ */
+.post-list a {
+  color: $brand-color;
 
-    .username {
-      text-decoration: underline;
-    }
+  &:hover {
+    color: $brand-color-dark;
   }
 }
 
