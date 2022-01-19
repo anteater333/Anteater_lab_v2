@@ -1,0 +1,186 @@
+---
+layout: post
+title: '자잘한 도움말 #3 Java의 String은 Immutable Object'
+date: 2022-01-19 13:53:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+ - Java의 메소드는 항상 **Call by Value** 방식으로 작동한다.
+ - 객체(Object)를 전달할 경우, **객체의 참조**가 **값으로 전달**된다.  
+    ("**Object references**" are "**passed by value**".)
+ - **Java의 String은 불변 객체(Immutable Object)이다.**
+
+## 이하 그리 중요하진 않은 내용들
+
+### 그 전에
+
+잠시 광고타임.  
+
+![소마 13기 모집](https://i.postimg.cc/jjDv0x8b/SWM.jpg)  
+[https://swmaestro.org/sw/main/contents.do?menuNo=200033](https://swmaestro.org/sw/main/contents.do?menuNo=200033)  
+{: .center}
+
+백준 사이트를 매일 들어가는 사람들은 이미 알겠지만, SW 마에스트로 13기 모집이 시작됐다. 일단 합격만 하면 주변에서 막 우러러봐주고, 헌신적인 사무국의 지원, 화려한 커리어의 멘토님들, 온갖 동년배 괴수들을 만나다가 문득 스스로의 모습을 되돌아 보곤 깊은 자괴감에 빠질 수 있는 절호의 기회.  
+
+마지막 표현은 농담이고, 진짜 좋은 기회. 흘러흘러 이런 외진 블로그에 들어온 누군가가 이 링크를 보고 지원해서 붙어줬으면 좋겠다.
+
+근데 작년 12월 24일쯤에 Google Search Console에 내 블로그를 등록했는데, 이 구글놈들이 아직도 색인을 안해주고 있다. 흘러흘러 들어오고 나발이고 일단 구글에 검색부터 돼야할텐데.
+
+### 아무튼 본론으로
+
+소마 뿐만이 아니라 여러 기업, 국가 기관에서 개발자 육성에 정성을 들이고 있다. 내 주변에도 개발자가 되려고 그런 연수 과정에 참여해 공부 중인 친구가 있는데, 오늘 친구한테 질문이 하나 날라왔다.
+
+  > 메소드 내부에서 전달받은 객체를 변경하면 바뀌어야 하는데, String 객체는 왜 안바뀌냐
+
+![까톡](https://i.postimg.cc/QCPqCp9d/Kakao-Talk-Snapshot-20220118-173632.png)  
+사실 저렇게 깔끔하게 질문이 온 건 아니고 좀 우여곡절이 있었다.
+{: .center}
+
+시작하기에 앞서 솔직히 고백하자면, 나도 몰라서 인터넷 찾아봤다. 심지어 첫 번째로 찾은 자료에서 번역을 잘못하는 바람에 처음 답변도 이상하게 해줬다. 결과적으론 나도 친구도 새로운 배움을 얻은 셈이고, 이 블로그를 시작하게 만든 사상에 기인하여 이번 포스팅을 작성해본다. - 안적으면 까먹는다.
+
+### Hack the Question
+
+{% highlight java %}
+static void swap(int a, int b) {
+  int temp;
+  temp = a;
+  a = b;
+  b = temp;
+  System.out.println("a:" + a + ", b:" + b);  // 메소드 내부 출력
+}
+
+public static void main(String[] args) {  
+  int X = 10;
+  int Y = 20;
+  swap(X, Y);
+  System.out.println("X:" + X + ", Y:" + Y);  // 메소드 외부 출력
+}
+{% endhighlight %}
+
+이 간단한 메소드를 기반으로 한 이번 질문에는 여러 사실들이 담겨있다. 하나씩 분해해보려 한다.
+
+#### 1.
+
+> 메소드 내부에서 전달받은 ...
+
+먼저 친구가 공부하고 있던 파트에 대해 파악해보자.
+
+Call by Value vs Call by Reference  
+혹은  
+Pass by Value vs Pass by Reference  
+{: .center .middle-big}  
+
+`swap` 메소드를 선언할 때 매개변수 `a`와 `b`가 제시되었다. 따라서 `swap` 메소드를 **호출(Call)**할 땐 매개변수에 대응할 적절한 데이터를 **전달(Pass)**해줘야 한다.
+
+{% highlight java %}
+int X = 10;
+int Y = 20;
+swap(X, Y);
+{% endhighlight %}
+
+그럼 여기서 문제, **실제로 `swap`이 받은 것은 무엇일까**.  
+
+메소드(함수/프로시저)의 호출 시 실제로 전달되는 대상에 대한 논의가 바로 "Call by/Pass by"로 시작되는 표현들 이다.  
+
+- `swap`이 받은 것은 값(`10`, `20`)이다. => Call by Value
+- `swap`이 받은 것은 참조(`X`, `Y`)이다. => Call by Reference
+
+그리고, Java의 메소드는 항상 **Call by Value** 방식으로 작동한다. `swap` 메소드에 전달된 것은 `10`, `20`이라는 상수값이다. 따라서 다음과 같은 결과를 얻을 수 있다.  
+
+- 메소드 내부 출력 : `a:20, b:10`
+- 메소드 외부 출력 : `X:10, Y:20`
+
+메소드 내부에서 사용된 변수 `a`와 `b`가 서로 바뀌었지만 실제 변수 `X`와 `Y`는 서로 바뀌지 않는다.
+
+#### 2.
+
+> ... 객체를 변경하면 바뀌어야 하는데, ...
+
+{% highlight java%}
+static void swap(DummyClass a, DummyClass b) {
+  String temp = a.name;
+  a.name = b.name;
+  b.name = temp;
+  System.out.println("a:" + a + ", b:" + b);  // 메소드 내부 출력
+}
+
+public static void main(String[] args) {
+  DummyClass X = new DummyClass("10");
+  DummyClass Y = new DummyClass("20");
+  swap(X, Y);
+
+  System.out.println("X:" + X + ", Y:" + Y);  // 메소드 외부 출력
+}
+{% endhighlight %}
+
+그렇다면 위 코드는 어떻게 작동할까?
+
+- 메소드 내부 출력 : `a:20, b:10`
+- 메소드 외부 출력 : `X:20, Y:10`
+
+마치 참조를 전달한 것 처럼 실제 변수가 바뀐다.
+
+[Object references are passed by value.](https://www.infoworld.com/article/3512039/does-java-pass-by-reference-or-pass-by-value.html)  
+객체의 참조가 값으로써 전달된다.
+{: .center .middle-big}  
+
+Java에서 데이터 타입은 둘로 나뉜다.  
+[Ref. https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.4](https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.4){: .middle-small}
+
+- Primitive 타입 : `byte`, `short`, `int`, `long`, `float`, `double`, `char`, `boolean`
+- Reference 타입 : Class, Interface, Type variables(T), Array
+
+**Primitive 타입**은 Java에서 미리 키워드로 정의된 타입들이며, 크게 Numeric 타입과 boolean으로 나누어진다. Java와 구조가 비슷한 C#에서는 Value 타입으로 부르는데, 이름에서 알 수 있듯 이 타입의 변수는 데이터의 값 그 자체를 담는다고 볼 수 있다.
+
+**Reference(참조) 타입**은 이름 그대로 변수에 데이터의 참조를 담는 데이터 타입이다. 참조 타입의 변수를 매개변수로 전달할 경우, 메소드에서 전달받은 값은 데이터에 대한 참조이다. 결과적으론 메소드는 계속 Call by Value 방식으로 동작하면서도 참조를 전달받은 것과 비슷한 효과를 얻는 것이다.  
+
+Object references are passed by value. 무슨 말장난인가 싶으면서도 완벽히 이해하는 것이 중요하다.
+
+#### 3.
+
+> ... String 객체는 왜 안바뀌냐
+
+지금까지의 내용은 사실 프로그래밍 언어를 처음 배울 때 배우게 되는, 이미 알고 있는 사실을 다시 되짚어본 느낌이다. 문제는 이 부분. 나도 이상하더라고, String은 왜 안바뀌지?
+
+검색해본 결과, **Java에서 String은 불변객체(Immutable Object)**라는 것을 알 수 있었다. 불변객체는 생성 후 그 상태를 바꿀 수 없는 객체를 말한다. `str = str + "new String";` 이렇게 기존 String 변수에 새 문자열을 추가하는 코드의 결과는 마치 해당 객체가 변경된 것 처럼 보이지만, 실제로는 새 문자열 데이터를 지칭하는 새로운 참조가 생성된다. 이 방식으로 인하여 문자열을 다루는 상황에서 JVM은 다음과 같은 강력한 기능을 사용할 수 있게 된다.
+
+![String Pool](https://i.postimg.cc/j2P6H8jC/stringpool.png)  
+String Constant Pool
+{: .center}
+
+Java 프로세스의 힙 영억엔 **String Constant Pool**이란 부분이 존재한다. 말 그대로, 런타임 중 사용된 문자열 상수(String Constant)를 저장하는 영역(Pool)이다. 런타임에서 이미 사용된 문자열을 가지는 String 객체가 선언되면, Pool에 저장된 해당 문자열 상수를 참조하도록 만든다. 메모리를 절약하는 아주 영리한 방식인 것이다! (참고, 이러한 방식의 디자인 패턴이 바로 Flyweight 패턴)
+
+여기서 추가로 주의할 점, String Pool은 따옴표("")로 묶어 문자열 값을 표현하는 **리터럴** 방식으로 값을 할당할 때에만 동작한다. `String str = new String("Hello");`처럼 새 인스턴스를 할당하도록 강제하는 코드는 String Pool 밖의 힙 영역에 문자열 데이터를 저장하도록 만든다는 것을 명심해야한다.  
+
+#### 문제의 확장
+
+1. String Object 만이 Immutable한 것은 아니다.  
+
+Java엔 `String` 뿐 만이 아니라, `Integer`, `Double`, `Utf8` 등등 다양한 불변객체를 가지도록 미리 정의된 타입들이 존재한다. 이러한 타입들은 모두 String Constant Pool이 동작하는 것과 같은 방식으로 동작한다. 즉, 오직 String Constant Pool만이 존재하는 것이 아니라 큰 **Constant Pool**이 프로세스의 힙 영역에 존재한다고 생각하는 것이 옳다.
+
+2. Immutable Object는 특별한 예외가 아니다.  
+
+다시 한 번 말한다. 불변객체는 생성 후 그 상태를 바꿀 수 없는 객체를 의미한다. Java의 최초 개발자들이 `String` 클래스의 코드를 작성하며 어떠한 마법을 부려 `String`의 객체들이 모두 불변객체가 된 것이 아니다. 이 말의 의미를 다른 방식으로 설명하자면,  
+
+{% highlight java %}
+void newString(String a) {
+  a = "newString";
+}
+{% endhighlight %}
+
+이 코드가 메소드 밖의 변수를 변경하지 못하는 이유는 String이 Immutable하기 때문이 아니다. 실제로 Mutable한 Dummy Class를 만들어 `a = new DummyClass("newDummy")`를 한다고 해도 당연히 변수가 메소드 밖에서 변경되지 않을 것이다. 이걸 나만 쉬운 오해를 유발하는 함정이라고 생각하는건지, 사실상 동일한 두 행위에 대해 String의 경우에선 불변성 때문, 다른 참조 타입 객체의 경우에선 Call by Value 때문이라고 생각하는 것이 옳은 것인가 라는 생각이 든다.
+
+즉, **불변객체는 특별한 예외가 아니다**. 우리도 우리의 불변객체를 구현할 수 있다. 클래스를 생성하고, Setter를 정의하지 않고 클래스의 모든 필드를 생성 이후 수정할 수 없도록 만들어보자. 이 클래스의 인스턴스를 생성하면 그게 바로 우리의 불변객체이다. 따라서 우리가 String 객체를 메소드 내부에서 변경할 수 없는 이유는, `a = "newString"`이 그것의 불변성 때문에 성립하지 않기 때문이라고 하는 것 보단, String 객체는 `setValue()` 메소드가 존재하지 않는 불변객체이기 때문이라고 하는 것이 더 바람직하지 않을까.
+
+## 내가 배운 것
+
+> "이정도면 간단하지 ㅋㅋ 오랜만에 포스팅 하나 올려서 깃허브에 녹색칠좀 가볍게 해볼까?"  
+
+그리고 24시간이 흘렀다...
+
+내가 안다고 생각하는 지식도 조금만 인터넷 서핑을 해보면 전혀 나의 것이 아니었음을 종종 알 수 있다. 매개변수 전달에 관한 이야기는 내가 고등학생 시절 처음 C언어를 배울 때 부터 나온 주제였다. 남들한테 설명하라면 어찌저찌 설명은 하겠지만, 내가 그것을 완전히 안다고 말할 수 있을까. 별개의 이야기긴 한데 최근 클린 아키텍처 책을 읽으면서 자꾸 구조적 프로그래밍을 머릿속에서 절차적 프로그래밍이라고 바꿔서 해석하더라고. 아무튼.  
+
+- 메소드 안에서 문자열을 바꾸고 싶으면 StringBuilder를 쓰세요.
+- 결국 이 글을 쓰면서 경험한 모든 Call by Value 방식의 기저에 존재하는 목표는 사이드 이펙트를 막자는 것이다.
+- 도대체 **불변객체**가 뭔데!
