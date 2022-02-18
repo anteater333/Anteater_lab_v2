@@ -64,6 +64,8 @@ plugins:
 # Disqus comments service
 disqus:
   shortname: anteater-lab
+utterances:
+  name: anteater333/Anteater_lab_v2
 
 # Analytics
 google_analytics:  "G-HXNNZ52L22"

@@ -35,5 +35,15 @@ layout: default
     {%- include disqus_comments.html -%}
   {%- endif -%}
 
+  {%- if site.utterances.name -%}
+  <script src="https://utteranc.es/client.js"
+        repo="anteater333/Anteater_lab_v2"
+        issue-term="url"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+  </script>
+  {%- endif -%}
+
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
