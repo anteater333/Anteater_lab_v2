@@ -62,8 +62,9 @@ plugins:
 #   - vendor/ruby/
 
 # Disqus comments service
-disqus:
-  shortname: anteater-lab
+# disqus:
+#   shortname: anteater-lab
+# utterances, github issues based comments service
 utterances:
   name: anteater333/Anteater_lab_v2
 
