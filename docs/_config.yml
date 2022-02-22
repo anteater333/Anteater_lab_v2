@@ -23,8 +23,8 @@ author:
   email: anteater1056@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
     CATCH PHRASE !!
-# baseurl: '/Anteater_lab_v2' # the subpath of your site, e.g. /blog
-url: 'https://anteater333.github.io/Anteater_lab_v2' # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: '/Anteater_lab_v2' # the subpath of your site, e.g. /blog
+url: 'https://anteater333.github.io' # the base hostname & protocol for your site, e.g. http://example.com
 
 show_excerpts: false # set to true to show excerpts on the homepage
 
