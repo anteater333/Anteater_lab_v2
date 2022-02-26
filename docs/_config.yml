@@ -29,6 +29,7 @@ url: 'https://anteater333.github.io' # the base hostname & protocol for your sit
 show_excerpts: false # set to true to show excerpts on the homepage
 
 minima:
+  skin: dark
   # footer에 SNS 계정 추가
   social_links:
     twitter: AntEater333
@@ -36,6 +37,7 @@ minima:
 
 # Build settings
 theme: minima
+
 plugins:
     - jekyll-remote-theme
     - jekyll-feed
