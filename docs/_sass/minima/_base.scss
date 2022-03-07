@@ -176,6 +176,7 @@ code {
 pre {
   padding: 8px 12px;
   overflow-x: auto;
+  line-height: #{$base-line-height/1.5};
 
   > code {
     border: 0;

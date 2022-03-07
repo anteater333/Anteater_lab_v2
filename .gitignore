@@ -6,3 +6,4 @@ _site
 vendor
 .liquidrc
 .vscode
+.prettierignore
