@@ -11,15 +11,46 @@
 
   .wrapper {
     display: flex;
+    flex-direction: column;
   }
 }
 
 .title-wrapper {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: $spacing-unit / 2;
 }
+
+.header-utils-wrapper {
+  margin-top: $spacing-unit / 4;
+  margin-bottom: $spacing-unit / 4;
+  flex: 1;
+  display: flex;
+  flex-direction: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// BMC Custom
+.bmc-btn-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: right !important;
+}
+
+.bmc-btn {
+  flex:1 !important;
+  height: 36px !important;
+  padding: 0px!important;
+  min-width: none !important;
+}
+
+.bmc-btn-text {
+  font-size: 18px;
+}
+////////////////
 
 .site-hits {
   height: fit-content;
@@ -42,7 +73,7 @@
 
 .site-nav {
   float: right;
-  line-height: $base-line-height * $base-font-size * 2.25;
+  // line-height: $base-line-height * $base-font-size * 2.25;
 
   .nav-trigger {
       display: none;
