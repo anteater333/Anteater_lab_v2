@@ -11,10 +11,10 @@ categories: [Micro]
    - Host IP Address 설정을 Windows의 IP Address로 바꾸는 것이 좋다.
    - `~/wsl` 폴더에 [WSLHostPatcher](https://github.com/CzBiX/WSLHostPatcher)를 다운받고 `~/.bashrc`에 다음 스크립트를 추가한다.
 
-{% highlight shell %}
+```shell
 ~/wsl/WSLHostPatcher.exe > /dev/null
 export REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address "Wi-Fi" | grep 'IP Address' | sed -r 's/^.*IP Address:\W*//')
-{% endhighlight %}
+```
 
 ## 이하 그리 중요하진 않은 내용들
 
@@ -48,12 +48,12 @@ export REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address "Wi-
 
 나는 모바일 개발은 사실상 처음이기도 하고, 쉬운 길로 가고싶어서 **expo**를 선택했다.
 
-{% highlight shell %}
+```shell
 $ npm install -g expo-cli
 $ expo init AwesomeProject
 $ cd AwesomeProject
 $ npm start
-{% endhighlight %}
+```
 
 이렇게 명령어 입력 4번으로 빈 RN 프로젝트를 생성하고 실행할 수 있다.  
 
@@ -134,11 +134,11 @@ WSL에 열린 포트는 `wslhost.exe` 프로세스에 의해 윈도우의 포트
 
 [WSLHostPatcher](https://github.com/CzBiX/WSLHostPatcher)는 간단히 말하자면 `wslhost.exe`가 `127.0.0.1`이 아닌 `0.0.0.0`로 주소를 설정하도록 만드는 프로그램이다. README에 따르면 윈도우에 설치해서 WSL 실행시 마다 실행해줘야 한다는데, 일단 WSL에 설치해서 실행해도 잘 작동하더라.
 
-{% highlight shell %}
+```shell
 ~/wsl$ wget https://github.com/CzBiX/WSLHostPatcher/releases/download/v0.1.0/release.zip
 ~/wsl$ unzip release.zip
 ~/wsl$ chmod 755 WSLHostPatcher.exe
-{% endhighlight %}
+```
 
 ![요로코롬](https://i.postimg.cc/bwyfv0ch/image.png)  
 요로코롬. 실행 권한 주는것도 까먹지 말자.  
@@ -146,9 +146,9 @@ WSL에 열린 포트는 `wslhost.exe` 프로세스에 의해 윈도우의 포트
 
 그리고 `~/.bashrc` 파일에 다음 라인을 추가해 WSL 실행 시 마다 프로그램이 실행되도록 설정한다.
 
-{% highlight shell %}
+```shell
 ~/wsl/WSLHostPatcher.exe > /dev/null
-{% endhighlight %}
+```
 
 ### Shooting #2
 이제 Expo가 만들어낸 QR 코드가 WSL 머신의 주소가 아닌 개발 PC가 네트워크에서 가지는 주소를 가리키도록 바꿔야한다.
@@ -157,9 +157,9 @@ WSL에 열린 포트는 `wslhost.exe` 프로세스에 의해 윈도우의 포트
 
 Expo는 위의 환경변수를 통해 Hostname을 결정한다. 사실 저게 어떻게 결정되는지 좀 더 정보를 찾고싶었는데, 잘 안나오더라. 아무튼 저걸 바꿔주면 된다.
 
-{% highlight shell %}
+```shell
 export REACT_NATIVE_PACKAGER_HOSTNAME=$(netsh.exe interface ip show address "Wi-Fi" | grep 'IP Address' | sed -r 's/^.*IP Address:\W*//')
-{% endhighlight %}
+```
 
 명령어가 조금 길다. WSL 머신의 내부 네트워크 주소, 그리고 내 개발 PC의 네트워크 주소가 항상 고정이라면 짧게 설정할 수 있을텐데, 이렇게 설정해줌으로써 이제 우리는 카페에 가서 새로운 와이파이를 잡아도 당황하지 않을 수 있다.
 

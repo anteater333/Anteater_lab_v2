@@ -34,6 +34,11 @@ minima:
     twitter: AntEater333
     github: anteater333
 
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
 # Build settings
 theme: minima
 

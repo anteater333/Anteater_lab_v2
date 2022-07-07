@@ -63,7 +63,7 @@ categories: [Hack]
 
 Client는 Service를 사용한다. 클라이언트는 서비스에 의존한다. 이런 형태의 의존은 둘 사이에서 아주 강한 결합도를 가지게 만든다. 마치 운전자가 전기 자동차의 회로를 직접 건드려가며 변속하는 것과 같다. 이 상태론 아직 의존성이 주입됐다고 볼 순 없다. 의존성이 있을 뿐.
 
-{% highlight csharp %}
+```csharp
 public class Client {
 
   /* Composition, Client 객체 안에서 사용할 private Service 인스턴스 변수 */
@@ -81,7 +81,7 @@ public class Client {
     return this.service.serve();
   }
 }
-{% endhighlight %}
+```
 
 우리는 위의 코드에서, `ConcreteService` 클래스가 변경되어도 `Client` 클래스는 아무렇지 않도록 만들어야 하고, 새로운 서비스로 바꾸기도 쉽도록 만들어야 한다. 이때 자주 쓰이는 방법이 바로 인터페이스를 사용하는 것이다.
 
@@ -91,7 +91,7 @@ public class Client {
 
 사실 이렇게 인터페이스를 분리하기만 한걸로 의존 관계가 완벽히 해소된건 아니다. 인터페이스는 다만 첫 단계 정도. 결국 `Client` 클래스 안에 아직 변수 `service`가 남아있고, 여전히 이곳에 인스턴스는 담겨야 한다. 만약 새로운 구체적 서비스가 개발되면? 생성자 안에서 어떤 신박한 분기 처리로 인스턴스의 종류를 결정할 수는 있겠지만 바람직한 방법은 아니다. 애초에 클라이언트가 `new`를 사용하는게 불만스럽고, 그것이 의존을 만든다. 그래서 다음과 같이 코드를 바꾼다.
 
-{% highlight csharp %}
+```csharp
 public class Client {
   private IService service;
 
@@ -101,7 +101,7 @@ public class Client {
     this.service = service;
   }
 }
-{% endhighlight %}
+```
 
 생성자에서 인수를 받는다. 이제 클라이언트는 어떤 서비스가 들어오는지 몰라도 된다. 앞서 언급했던 인젝터 역할을 하는 객체에서 서비스의 종류를 정해줄 수 있게 되었다. 위 코드는 (내가 가장 자주 본) 생성자를 통한 의존성 주입 방식이다. 세터 메소드를 만들어서 의존성을 주입할 수도 있고, 주입을 위한 인터페이스를 만드는 방법도 있다고 한다. 사실 생성자 방식 밖에 못봄.
 
@@ -131,7 +131,7 @@ public class Client {
 
 그리고 하나 더. 바로 작년에 했던 프로젝트의 코드,
 
-{% highlight python %}
+```python
 def analyzerFactory(name: str, labelData: Series, schema: dict) -> LabelAnalyzer:
   """
   analyzer factory method
@@ -154,7 +154,7 @@ def analyzerFactory(name: str, labelData: Series, schema: dict) -> LabelAnalyzer
   else:
     eprint(type + ' is an unacceptable type')
     return None
-{% endhighlight %}
+```
 
 먼저 설명을 좀 하자면, 프레임워크라는 것을 적용하기엔 규모가 작은, 부모 프로세스로부터 독립된 에이전트 프로그램을 개발하는 중이었고, 런타임 중에 입력되는 데이터의 타입에 따라 다른 로직을 가지는 클래스의 인스턴스를 생성해줘야 했다. 그냥 '나는 Factory Method 패턴을 쓰고 있다' 라는 생각하며 구현했는데, 어떤 관점에선 런타임에 인스턴스의 종류를 결정하는 메소드라는 점에서 **인젝터**{: .middle-big}라고 볼 수도 있을 것 같다. 그러니까, 이렇게 생각할 수 있다: **나는 작년 프로젝트를 진행하면서, DI를 직접 구현하기 위해 Factory Method 패턴을 사용했다.**{: .middle-big} 다만 그 사실을 인지하지 못했을 뿐.
 

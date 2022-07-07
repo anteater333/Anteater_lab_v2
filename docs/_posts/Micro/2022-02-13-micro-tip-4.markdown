@@ -7,9 +7,9 @@ categories: [Micro]
 
 ## TL;DR
  - Python 2차원 배열 초기화는 다음과 같은 코드로 한다.
-{% highlight python %}
+```python
 [[0 for i in range(NofColumn)] for j in range(NofRow)]
-{% endhighlight %}
+```
  - 2차원 배열 생성 시 **참조의 복사**를 항상 조심하자.
 
 ## 이하 그리 중요하진 않은 내용들
@@ -23,9 +23,9 @@ categories: [Micro]
 
 작년 진행했던 프로젝트에서 나는 파이썬을 사용해서 데이터를 분석하는 에이전트 프로그램을 만들고 있었다. 당시의 본인에 잠시 이입해서 글을 작성하겠다. 나는 2차원 배열을 만들어야 했다. 당연히 기억이 안났고, 굳이 그걸 또 스택 오버플로우에 안찾아보고 내가 해봐야지 하고 다음과 같은 코드를 사용해봤다.
 
-{% highlight python %}
+```python
 data = [[0] * NofColumn] * NofRow
-{% endhighlight %}
+```
 
 그리고 그 결과,  
 
@@ -35,9 +35,9 @@ data = [[0] * NofColumn] * NofRow
 
 일단 원인은 모르겠는데 뭔가 이상하게 작동한다. 바로 항복하고 스택 오버플로우의 도움을 청했다.
 
-{% highlight python %}
+```python
 [[0 for i in range(NofColumn)] for j in range(NofRow)]
-{% endhighlight %}
+```
 
 ![지혜](https://i.postimg.cc/GhW7dKkW/image.png)  
 이건 **옛 현인들의 지혜**라고 부르기로 했습니다.
@@ -67,9 +67,9 @@ data = [[0] * NofColumn] * NofRow
 
 내가 저지른 코드를 다시 보자.  
 
-{% highlight javascript %}
+```javascript
 const data = new Array(2).fill(new Array(3).fill(0))
-{% endhighlight %}
+```
 
 1. 길이가 2인 새 배열을 생성한다. (`new Array(2)`)
 2. 생성한 배열을 채워넣는다. (`.fill`)
@@ -90,7 +90,7 @@ built-in 메서드의 구현체에서는 그냥 전달받은 값으로 배열의
 
 파이썬에서 사용했던 코드 또한 같은 맥락이다.  
 
-{% highlight python %}
+```python
 x = [1] * 4
 l = [x] * 3
 print(f"id(x): {id(x)}")
@@ -109,7 +109,7 @@ print(f"x: {x}")
 # x: [42, 1, 1, 1]
 print(f"l: {l}")
 # l: [[42, 1, 1, 1], [42, 1, 1, 1], [42, 1, 1, 1]]
-{% endhighlight %}  
+```  
 [https://stackoverflow.com/questions/240178/list-of-lists-changes-reflected-across-sublists-unexpectedly](https://stackoverflow.com/questions/240178/list-of-lists-changes-reflected-across-sublists-unexpectedly)
 
 `[x]*3`을 하면 근본적으로 우리는 배열 `[x, x, x]`를 얻는다. 이는 같은 `x`를 지칭하는 3개의 참조를 가진 배열이다. 따라서 우리는 `for` 문을 사용해서 각 위치에 새로운 배열을 생성해줘야한다.
