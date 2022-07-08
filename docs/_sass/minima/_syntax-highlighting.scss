@@ -6,7 +6,7 @@
   @extend %vertical-rhythm;
 
   .highlighter-rouge & {
-    background: #212121;
+    background: $code-background-color;
   }
   
   .c     { color: #545454; font-style: italic } // Comment
