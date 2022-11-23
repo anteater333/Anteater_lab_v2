@@ -31,8 +31,8 @@ minima:
   skin: dark
   # footer에 SNS 계정 추가
   social_links:
-    twitter: AntEater333
-    github: anteater333
+    - { platform: twitter, user_url: "https://twitter.com/anteater333"}
+    - { platform: github, user_url: "https://github.com/anteater333"}
 
 markdown: kramdown
 kramdown:
