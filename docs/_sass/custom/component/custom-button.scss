@@ -1,0 +1,33 @@
+.global-btn-up {
+  visibility: hidden;
+
+  position: fixed;
+
+  bottom: 0;
+  right: 0;
+
+  margin: 1em;
+  width: 2em;
+  height: 2em;
+
+  z-index: 333;
+
+  border: 3px solid $code-background-color;
+  border-radius: 5px;
+
+  font-size: large;
+  line-height: 1.75em;
+
+  color: $code-background-color;
+  background-color: transparent;
+}
+
+.global-btn-up:hover {
+  cursor: pointer;
+}
+
+.global-btn-up:active {
+}
+
+.global-btn-up:after {
+}
