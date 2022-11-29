@@ -6,8 +6,6 @@ const btnVisibility = () => {
   } else {
     scrollBtn.style.visibility = "hidden";
   }
-
-  console.log(window.scrollY);
 };
 
 document.addEventListener("scroll", () => {

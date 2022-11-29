@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
-
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
   {%- include head.html -%}
 
   <body>
-
     {%- include header.html -%}
 
     <main class="page-content" aria-label="Content">
-      <div class="wrapper">
-        {{ content }}
+      <div class="content-left">
+        <div class="global-profile"></div>
+      </div>
+      <div class="wrapper">{{ content }}</div>
+      <div class="content-right">
+        <div class=""></div>
       </div>
     </main>
 
@@ -18,5 +20,4 @@
     <button class="global-btn-up">^</button>
     <script type="text/javascript" src="/assets/scripts/scroll.js"></script>
   </body>
-
 </html>

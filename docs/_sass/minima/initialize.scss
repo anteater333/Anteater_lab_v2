@@ -2,26 +2,28 @@
 
 // Define defaults for each variable.
 
-$base-font-family: "Pretendard", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", Roboto, Helvetica, Arial, sans-serif !default;
+$base-font-family: "Pretendard", -apple-system, system-ui, BlinkMacSystemFont,
+  "Segoe UI", "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", Roboto,
+  Helvetica, Arial, sans-serif !default;
 $code-font-family: "Menlo" !default;
-$base-font-size:   18px !default;
+$base-font-size: 18px !default;
 $base-font-weight: 400 !default;
-$small-font-size:  $base-font-size * 0.875 !default;
-$base-line-height: 2.0 !default;
+$small-font-size: $base-font-size * 0.875 !default;
+$base-line-height: 2 !default;
 
-$spacing-unit:     30px !default;
+$spacing-unit: 30px !default;
 
-$grey-color:       #828282 !default;
+$grey-color: #828282 !default;
 $grey-color-light: lighten($grey-color, 40%) !default;
-$grey-color-dark:  darken($grey-color, 25%) !default;
+$grey-color-dark: darken($grey-color, 25%) !default;
 
 $table-text-align: left !default;
 
 // Width of the content area
-$content-width:    800px !default;
+$content-width: 800px !default;
 
-$on-palm:          600px !default;
-$on-laptop:        800px !default;
+$on-palm: 600px !default;
+$on-laptop: 800px !default;
 
 // Use media queries like this:
 // @include media-query($on-palm) {
@@ -41,11 +43,5 @@ $on-laptop:        800px !default;
 }
 
 // Import partials.
-@import
-  "minima/base",
-  "minima/layout",
-  "minima/syntax-highlighting",
-  "minima/post",
-  "custom/custom-styles",
-  "custom/component/custom-component"
-;
+@import "minima/base", "minima/layout", "minima/syntax-highlighting",
+  "minima/post", "custom/custom-styles", "custom/component/custom-component";
