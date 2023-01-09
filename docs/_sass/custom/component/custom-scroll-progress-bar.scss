@@ -1,0 +1,25 @@
+#scroll_progress {
+  --scroll: 0%; // 사용자 지정 CSS 속성 https://developer.mozilla.org/ko/docs/Web/CSS/Using_CSS_custom_properties
+
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 2px;
+  width: 100%;
+  z-index: 100;
+
+  background: linear-gradient(
+    to right,
+    var(--color),
+    var(--scroll),
+    transparent 0
+  );
+}
+
+#scroll_progress.reading {
+  --color: #bbbbbb;
+}
+
+#scroll_progress.done {
+  --color: #79b8ff;
+}
