@@ -1,10 +1,11 @@
 const scrollBtn = document.querySelector(".global-btn-up");
+const btnContainer = document.querySelector(".global-btn-container");
 
 const btnVisibility = () => {
-  if (window.scrollY > 400) {
-    scrollBtn.style.visibility = "visible";
+  if (window.scrollY > 100) {
+    btnContainer.classList.add("show");
   } else {
-    scrollBtn.style.visibility = "hidden";
+    btnContainer.classList.remove("show");
   }
 };
 
