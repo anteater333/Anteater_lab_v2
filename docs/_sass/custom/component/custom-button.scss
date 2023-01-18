@@ -41,3 +41,28 @@
 
 .global-btn-up:after {
 }
+
+.global-right-controller-container {
+}
+
+.share-btn {
+  height: 2.5em;
+  width: 2.5em;
+
+  cursor: pointer;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.share-btn.share-btn-vanilla {
+  // background-color: $grey-color-dark;
+
+  padding: 2px;
+}
+.share-btn.share-btn-vanilla > svg > circle,
+.share-btn.share-btn-vanilla > svg > path {
+  fill: $brand-color-dark;
+}
