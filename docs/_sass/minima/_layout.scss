@@ -250,16 +250,16 @@
   justify-content: center;
 }
 
-.page-content > .content-left {
+.page-content > .content-side {
   display: flex;
   flex: 1;
-  flex-direction: row;
+  flex-direction: column-reverse;
+}
+
+.page-content > .content-left {
 }
 
 .page-content > .content-right {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
 }
 
 @include media-query($on-laptop) {

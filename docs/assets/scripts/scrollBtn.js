@@ -1,5 +1,5 @@
-const scrollBtn = document.querySelector(".global-btn-up");
-const btnContainer = document.querySelector(".global-btn-container");
+const scrollBtn = document.querySelector(".up-btn");
+const btnContainer = document.querySelector(".up-btn-container");
 
 const btnVisibility = () => {
   if (window.scrollY > 100) {
