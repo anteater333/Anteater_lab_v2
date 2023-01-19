@@ -1,43 +1,81 @@
-.global-btn-container {
-  visibility: hidden;
-  opacity: 0;
-
-  transition: visibility 0.3s, opacity 0.3s;
+.right-btn {
+  margin-bottom: $spacing-unit / 3;
 }
 
-.global-btn-container.show {
+$local-time: 0.5s;
+.up-btn-container {
+  display: flex;
+  justify-content: center;
+  width: 2.5em;
+  opacity: 0;
+
+  max-height: 0;
+
+  transition: visibility $local-time, opacity $local-time,
+    max-height $local-time;
+}
+
+.up-btn-container.show {
   visibility: visible;
+
+  max-height: 2.5em;
   opacity: 0.75;
 }
 
-.global-btn-up {
-  position: fixed;
-
-  bottom: 0;
-  right: 0;
-
-  margin: 1em;
+.up-btn {
   width: 2em;
   height: 2em;
 
   z-index: 333;
 
   border: 3px solid $brand-color;
-  border-radius: 5px;
+  border-radius: 25%;
 
   font-size: large;
+  font-weight: border;
   line-height: 1.75em;
 
   color: $brand-color;
   background-color: transparent;
 }
 
-.global-btn-up:hover {
+.up-btn:hover {
   cursor: pointer;
 }
 
-.global-btn-up:active {
+.up-btn:active {
 }
 
-.global-btn-up:after {
+.up-btn:after {
+}
+
+.global-right-controller-container {
+  position: sticky;
+  bottom: $spacing-unit / 4;
+  padding-left: $spacing-unit / 4;
+
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.share-btn {
+  height: 2.5em;
+  width: 2.5em;
+
+  cursor: pointer;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.share-btn.share-btn-vanilla {
+  // background-color: $grey-color-dark;
+
+  // padding: 2px;
+}
+.share-btn.share-btn-vanilla > svg > circle,
+.share-btn.share-btn-vanilla > svg > path {
+  fill: $brand-color-dark;
 }

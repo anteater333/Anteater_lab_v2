@@ -1,0 +1,43 @@
+<div class="content-side content-right">
+  <div class="global-right-controller-container">
+    <div class="right-btn up-btn-container">
+      <button class="up-btn">^</button>
+    </div>
+
+    {%- if page.layout == "post" -%}
+    <div
+      class="right-btn share-btn share-btn-vanilla"
+      onclick="(function(){
+    window.navigator.clipboard.writeText(window.location.href)
+    alert(`주소를 복사했습니다.`) // TBD : toast로 변경
+  })();return false;"
+    >
+      <svg
+        width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="14.5588" cy="14.5588" r="4.55882" fill="black" />
+        <circle cx="14.5588" cy="33.7059" r="4.55882" fill="black" />
+        <circle cx="34.5588" cy="23.5588" r="4.55882" fill="black" />
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M34 24L14.5588 15.4706L15.3624 13.6391L34.8035 22.1685L34 24Z"
+          fill="black"
+        />
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M14.5588 32.7941L34 24L34.8243 25.8222L15.3831 34.6164L14.5588 32.7941Z"
+          fill="black"
+        />
+      </svg>
+    </div>
+    {%- endif -%}
+  </div>
+
+  <script type="text/javascript" src="/assets/scripts/scrollBtn.js"></script>
+</div>

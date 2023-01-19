@@ -250,14 +250,22 @@
   justify-content: center;
 }
 
-.page-content > .content-left {
+.page-content > .content-side {
   display: flex;
-  flex-direction: row;
+  flex: 1;
+  flex-direction: column-reverse;
+}
+
+.page-content > .content-left {
 }
 
 .page-content > .content-right {
-  display: flex;
-  flex-direction: row;
+}
+
+@include media-query($on-laptop) {
+  .page-content > .content-side {
+    display: none;
+  }
 }
 
 .page-heading {

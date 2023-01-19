@@ -22,17 +22,16 @@ title: Anteater's laboratory
 author:
   email: anteater1056@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-    CATCH PHRASE !!
-url: 'https://anteater333.github.io' # the base hostname & protocol for your site, e.g. http://example.com
-
+  CATCH PHRASE !!
+url: "https://anteater333.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 show_excerpts: false # set to true to show excerpts on the homepage
 
 minima:
   skin: dark
   # footer에 SNS 계정 추가
   social_links:
-    - { platform: twitter, user_url: "https://twitter.com/anteater333"}
-    - { platform: github, user_url: "https://github.com/anteater333"}
+    - { platform: twitter, user_url: "https://twitter.com/anteater333" }
+    - { platform: github, user_url: "https://github.com/anteater333" }
 
 markdown: kramdown
 kramdown:
@@ -43,10 +42,10 @@ kramdown:
 theme: minima
 
 plugins:
-    - jekyll-remote-theme
-    - jekyll-feed
-    - jekyll-sitemap
-    - jekyll-seo-tag
+  - jekyll-remote-theme
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
@@ -75,7 +74,7 @@ utterances:
   name: anteater333/anteater333.github.io
 
 # Analytics
-google_analytics:  "G-XY1FSXXJM2"
+google_analytics: "G-XY1FSXXJM2"
 
 # Remote theme (for latest version of theme plugin)
 remote_theme: jekyll/minima
