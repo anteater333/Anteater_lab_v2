@@ -115,7 +115,7 @@ sudo bash -c 'echo "[network]" > /etc/wsl.conf'
 sudo bash -c 'echo "generateResolvConf = false" >> /etc/wsl.conf'
 ```
 
-`wsl.conf` [파일은 무엇인가?](https://docs.microsoft.com/ko-kr/windows/wsl/wsl-config) 이름에서 유추 가능하듯이 WSL에 대한 설정을 위한 파일이다. `wsl.conf` 파일에서 `[network]` 레이블 안의 `generateResolvConf` 옵션을 `false`로 설정했다. 사람이 쓰는 말로 바꾸자면, WS이 Resolver 설정 파일을 생성하지 않도록 설정을 바꿨다.
+`wsl.conf` [파일은 무엇인가?](https://docs.microsoft.com/ko-kr/windows/wsl/wsl-config) 이름에서 유추 가능하듯이 WSL에 대한 설정을 위한 파일이다. `wsl.conf` 파일에서 `[network]` 레이블 안의 `generateResolvConf` 옵션을 `false`로 설정했다. 사람이 쓰는 말로 바꾸자면, WSL이 Resolver 설정 파일을 생성하지 않도록 설정을 바꿨다.
 
 {:start="4"}
 4. `/etc/resolv.conf` 파일 속성을 변경한다.
