@@ -40,6 +40,13 @@ body {
   flex-direction: column;
 }
 
+header {
+  background: darken($background-color, 2%);
+}
+footer {
+  background: darken($background-color, 2%);
+}
+
 /**
  * Set `margin-bottom` to maintain vertical rhythm
  */
