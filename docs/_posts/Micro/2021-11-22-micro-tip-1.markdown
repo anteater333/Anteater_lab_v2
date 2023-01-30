@@ -1,12 +1,28 @@
 ---
 layout: post
-title: '자잘한 도움말 #1 Jekyll w/ docker 설정'
+title: "자잘한 도움말 #1 Jekyll w/ docker 설정"
 date: 2021-11-22 17:26:00 +0900
 categories: [Micro]
 ---
 
 ## TL;DR
- - Jekyll 컨테이너를 위한 docker-compose 설정 중, 35729 포트도 bind 설정해야 live reload가 작동한다.
+
+- Jekyll 컨테이너를 위한 docker-compose 설정 중, 35729 포트도 bind 설정해야 live reload가 작동한다.
+- 아래와 같이 `docker-compose.yml` 파일을 설정하자.
+
+```yml
+version: "3.8"
+
+services:
+  blog:
+    image: jekyll/jekyll:latest
+    command: jekyll serve --open-url --force_polling --watch --drafts --livereload --trace
+    ports:
+      - "4000:4000"
+      - "35729:35729"
+    volumes:
+      - ".:/srv/jekyll"
+```
 
 ## 이하 그리 중요하진 않은 내용들
 
@@ -14,11 +30,11 @@ categories: [Micro]
 
 시작하기에 앞서... 블로그를 만들어야겠다고 생각했을 때, 굳이 [훌륭한](https://www.tistory.com/) [솔루션들](https://velog.io/)을 놔두고 Jekyll을 선택한 이유는
 
- ![멋있기 때문이다](https://i.postimg.cc/gjDjjDK3/coollooking.jpg)  
+![멋있기 때문이다](https://i.postimg.cc/gjDjjDK3/coollooking.jpg)
 
 그리하야 지금, 블로그를 막 시작하려고 하는 단계에서 그 업보를 잔뜩 맞닥뜨리고 있는 중. 이렇게 포스팅에 군더더기 없이 이미지를 업로드 하는 법을 알아내는 것도 꽤 시간이 걸렸다. 샤라웃 투 비영리 이미지 호스팅 서비스 [https://postimages.org](https://postimages.org)
 
-----
+---
 
 아무튼 솔직하게 말하자면, Jekyll이 뭔지도 모르는 상태로 블로그를 만들었다. 간단하게라도 파악해보자.
 
@@ -50,30 +66,30 @@ categories: [Micro]
 
 2018년 쯤 docker라는 단어를 처음 듣고 나서, '아 이게 중요하구나' 라는 생각만 있고 당최 어찌 쓰는건지 감이 안잡히던 나는 이 때 머릿속에서 뭔가가 정리되는 느낌을 받았다.
 
-[Jekyll docker image](https://hub.docker.com/r/jekyll/jekyll/)를 사용해 Jekyll 컨테이너를 생성하면 좀 더 깔끔해진다. 그리고 **docker-compose**를 쓰면 더 깔끔해진다.  
+[Jekyll docker image](https://hub.docker.com/r/jekyll/jekyll/)를 사용해 Jekyll 컨테이너를 생성하면 좀 더 깔끔해진다. 그리고 **docker-compose**를 쓰면 더 깔끔해진다.
 
-```
+```yml
 # docker-compose.yml
 
-version: '3.8'
+version: "3.8"
 
 services:
-    blog:
-        image: jekyll/jekyll:latest
-        command: jekyll serve --open-url --force_polling --watch --drafts --livereload --trace
-        ports:
-            - '4000:4000'
-        volumes:
-            - '.:/srv/jekyll'
-
+  blog:
+    image: jekyll/jekyll:latest
+    command: jekyll serve --open-url --force_polling --watch --drafts --livereload --trace
+    ports:
+      - "4000:4000"
+    volumes:
+      - ".:/srv/jekyll"
 ```
-[Ref: visual studio code에서 docker로 jekyll 블로그 로컬 환경 만들기 by jundragon](https://velog.io/@jundragon/visual-studio-code%EC%97%90%EC%84%9C-docker%EB%A1%9C-jekyll-%EB%B8%94%EB%A1%9C%EA%B7%B8-%EB%A1%9C%EC%BB%AC-%ED%99%98%EA%B2%BD-%EB%A7%8C%EB%93%A4%EA%B8%B0)  
+
+[Ref: visual studio code에서 docker로 jekyll 블로그 로컬 환경 만들기 by jundragon](https://velog.io/@jundragon/visual-studio-code%EC%97%90%EC%84%9C-docker%EB%A1%9C-jekyll-%EB%B8%94%EB%A1%9C%EA%B7%B8-%EB%A1%9C%EC%BB%AC-%ED%99%98%EA%B2%BD-%EB%A7%8C%EB%93%A4%EA%B8%B0)
 
 ### 안되잖아?
 
-docker-compose 설정했고... 실행 잘 됐고... 사이트 잘 열리고... 마크다운 새로 작성하고... 바뀌는거 확인... 바뀌는거 확인... 어... `--livereload` 옵션 줬는데...  
+docker-compose 설정했고... 실행 잘 됐고... 사이트 잘 열리고... 마크다운 새로 작성하고... 바뀌는거 확인... 바뀌는거 확인... 어... `--livereload` 옵션 줬는데...
 
-**Live reload가 안먹힌다!**  
+**Live reload가 안먹힌다!**
 
 개발자의 친구 live reload(hot reload)는 아주 강력한 개발 중 편의기능으로써, 개발 빌드 어플리케이션을 실행시켜 놓고 코드를 수정해가며 실시간으로 변경사항을 확인할 수 있게 해준다. Jekyll도 당연히 해당 기능을 가지고 있다. 그런데 왜 docker 컨테이너로 실행한 Jekyll에서 작동하지 않을까?
 
@@ -83,11 +99,11 @@ docker-compose 설정했고... 실행 잘 됐고... 사이트 잘 열리고... �
 
 개발자 도구를 찬찬히 살펴본 결과, 어떤 포트를 발견했다. 저것이 필시 뭔가 작동을 하는 것이 분명하다. 검색하자.
 
-![image04]({{site.baseurl}}/assets/pictures/tip01-04.png)  
+![image04]({{site.baseurl}}/assets/pictures/tip01-04.png)
 
 35729 포트는 Jekyll에서 live reload 기능을 위해 사용하는 포트였다. **즉, live reload가 docker 컨테이너에서 작동하지 않은 이유는 35729 포트를 바인딩하지 않았기 때문이다.**
 
-따라서 아래와 같이 docker-compose.yml에 한 줄을 추가하면 live reload가 정상적으로 동작하는 것을 확인할 수 있다.  
+따라서 아래와 같이 docker-compose.yml에 한 줄을 추가하면 live reload가 정상적으로 동작하는 것을 확인할 수 있다.
 
 ```
             ...
@@ -109,8 +125,9 @@ docker-compose 설정했고... 실행 잘 됐고... 사이트 잘 열리고... �
 참고로, [livereload, 다시말해 LiveReload.js](https://github.com/livereload/livereload-js)는 javascript 기반 오픈소스 개발 도구다. 즉 Jekyll은 livereload.js 프로젝트에 의존성을 가지고 있다고 말할 수 있다.
 
 ## 내가 배운 것
- - Jekyll blog에 대한 대략적인 기반지식
- - Jekyll의 docker 적용법
- - Jekyll이 사용하는 port는 두 개
-   - `4000` : 웹 서버 포트
-   - `35729` : Live Reload 포트
+
+- Jekyll blog에 대한 대략적인 기반지식
+- Jekyll의 docker 적용법
+- Jekyll이 사용하는 port는 두 개
+  - `4000` : 웹 서버 포트
+  - `35729` : Live Reload 포트
