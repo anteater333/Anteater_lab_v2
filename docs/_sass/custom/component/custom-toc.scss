@@ -1,0 +1,19 @@
+.right-toc-container {
+  margin-left: -1.25em;
+  ul {
+    list-style: none;
+
+    li {
+      height: auto;
+    }
+  }
+
+  a {
+    white-space: nowrap;
+    font-size: $small-font-size;
+    color: $brand-color-dark;
+  }
+  a:hover {
+    color: $brand-color;
+  }
+}

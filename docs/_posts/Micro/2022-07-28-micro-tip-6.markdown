@@ -1,13 +1,14 @@
 ---
 layout: post
-title: '자잘한 도움말 #6 백준 10845번 (큐) NodeJS로 풀기'
+title: "자잘한 도움말 #6 백준 10845번 (큐) NodeJS로 풀기"
 date: 2022-07-28 20:34:00 +0900
 categories: [Micro]
 ---
 
 ## TL;DR
- - [큐](https://www.acmicpc.net/problem/10845), [큐 2](https://www.acmicpc.net/problem/18258)
- - 콘솔 출력이 잡아먹는 시간이 크기 때문에 출력이 많이 발생하는 문제에선  
+
+- [큐](https://www.acmicpc.net/problem/10845), [큐 2](https://www.acmicpc.net/problem/18258)
+- 콘솔 출력이 잡아먹는 시간이 크기 때문에 출력이 많이 발생하는 문제에선  
   결과를 **버퍼 배열에 담아 한번에 출력**하자.
 
 ```javascript
@@ -29,14 +30,14 @@ console.log(buffer.join("\n"));
 
 이 바보같은 녀석... 최근엔 [CRDT](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)니 뭐니 하는 요상한 이름들을 접하면서 이불을 차는 힘이 더 세졌다. [큐](https://www.acmicpc.net/problem/10845) 문제가 시간 초과를 내뱉었을 때도 저랬던 시절이 떠올랐었지.
 
-## 백준 10845번, 큐
+### 백준 10845번, 큐
 
 [백준의 10845번 문제, 큐](https://www.acmicpc.net/problem/10845)는 [solved.ac](https://solved.ac) 기준 난이도 실버 4의 아주 쉬운 문제다. 롤에서도 차마 입 밖으로 내뱉기 힘든 그 계급, 실버 4는 아주 쉽다는 의미고, 이 문제에서 시간 초과가 나왔을 때 내 기분은 마치
 
 ![어?](https://i.postimg.cc/0QjDW6cb/image.jpg)  
 {: .center}
 
-이... 이게 왜 안풀리지...?  
+이... 이게 왜 안풀리지...?
 
 아무튼 이 때가 2021년 1월 경이었고, 대학교를 졸업한 이후 마음이 붕 떠있던 중이라 문제를 풀겠다는 의지가 많이 부족한 시기였다. 그래서 그냥 Node의 문제구나.. 하고 넘어갔었다. 큐와 그 구현 방법에 대한걸 모르는건 아니니까. (이거 사실 따라하면 안되는 상당히 나쁜 습관이다.)
 
@@ -48,7 +49,7 @@ console.log(buffer.join("\n"));
 
 다행인건 이 땐 의지가 좀 더 강했다는 것이다. 아무튼 오늘은 저 흔적을 따라가보자.
 
-## 범인찾기
+### 범인찾기
 
 아무래도 가장 직관적인 추측은 시간복잡도 관련이겠지. 첫 번째 가설은 이랬다.
 
@@ -80,12 +81,12 @@ console.log(buffer.join("\n"));
 
 물론 이걸로 해결되진 않았다. 대신 방향성은 맞았다.
 
-## 진범
+### 진범
 
 우선, [`console.log()`가 느린 것은 사실이다.](https://github.com/nodejs/node/issues/10619) 그렇다면 왜? 이 이슈에 달린 mcollina의 답변을 읽어보자.
 
-> The problem you are facing is related to the fact that Node.js is an asynchronous platform. `console.log` does not write strings synchronously to the output, but rather it queue them and deliver through the event loop. Because of this, calling `console.log` in this way would just queue a lot of data to be written, and it will write them when the process ends.  
-> 
+> The problem you are facing is related to the fact that Node.js is an asynchronous platform. `console.log` does not write strings synchronously to the output, but rather it queue them and deliver through the event loop. Because of this, calling `console.log` in this way would just queue a lot of data to be written, and it will write them when the process ends.
+>
 > 당신이 겪은 문제는 Node.js가 비동기 플랫폼이기 때문에 발생합니다. `console.log`는 문자열을 출력에 동기적으로 작성하지 않고, 대기열에 넣은 다음 이벤트 루프를 통해 전달합니다. 따라서 `console.log`을 이렇게 호출하는 것은 그저 출력될 많은 데이터를 대기시키는 것에 불과하고, 데이터들은 프로세스가 끝날 때에 출력될 것입니다.
 
 Node의 콘솔 출력이 다른 이유가 이 점에서 나오는 것이다. 싱글 스레드에서 돌아가는 이벤트 기반의 비동기 자바스크립트 실행 환경. 사실 자바스크립트의 영향력을 업고 node의 인기가 꽤 커졌단 체감을 최근 받고 있는데, **그럼에도 불구하고 node는 특이한 존재**라는 것을 잊으면 안될 것 같다. 아마 많이들 node를 뭐라고 불러야 하는지도 헷갈려 할 것이다. 스스로 실행 환경이라고 소개하고 있고, 위의 답변에서 나온 플랫폼이란 표현 또한 적절해 보인다.
@@ -111,7 +112,7 @@ function bufferOutput() {
 그리고 그 해결법은 바로, 출력 함수를 호출하는 횟수 자체를 줄이는 것이다. 위의 함수와 같이 연산 결과가 나올 때 마다 호출하는 것이 아니라, 결과를 따로 버퍼에 담고, 그 버퍼 통째로 출력시키는 것이다. 간단히 비유하자면, 운송 비용이 너무 많이 드니까 한 번 운송에 싹다 묶어 보내는 것이다. 물론 메모리 손해는 좀 본다. 위의 코드 제출 스크린샷을 보면 통과한 코드의 메모리 사용량이 엄청나단 것을 볼 수 있다.
 
 ![속도](https://i.postimg.cc/Prs7q6sr/image.png)
-{: center}  
+{: center}
 
 출력을 5만 줄 수행했을 때 이만큼이나 속도 차이가 발생한다.
 

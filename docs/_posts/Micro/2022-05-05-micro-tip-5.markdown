@@ -1,13 +1,14 @@
 ---
 layout: post
-title: '자잘한 도움말 #5 NPM install 속도가 너무 느려요! (WSL에서 말입니다)'
+title: "자잘한 도움말 #5 NPM install 속도가 너무 느려요! (WSL에서 말입니다)"
 date: 2022-05-05 11:40:00 +0900
 categories: [Micro]
 ---
 
 ## TL;DR
- - [https://www.reddit.com/r/bashonubuntuonwindows/comments/nt8asc/npm_install_extremely_slow_on_wsl2/hk7zpbw/](https://www.reddit.com/r/bashonubuntuonwindows/comments/nt8asc/npm_install_extremely_slow_on_wsl2/hk7zpbw/)
- - WSL에서 다음 명령어를 실행한 다음 WSL을 재부팅하자.
+
+- [https://www.reddit.com/r/bashonubuntuonwindows/comments/nt8asc/npm_install_extremely_slow_on_wsl2/hk7zpbw/](https://www.reddit.com/r/bashonubuntuonwindows/comments/nt8asc/npm_install_extremely_slow_on_wsl2/hk7zpbw/)
+- WSL에서 다음 명령어를 실행한 다음 WSL을 재부팅하자.
 
 ```shell
 sudo rm /etc/resolv.conf
@@ -39,7 +40,7 @@ sudo chattr +i /etc/resolv.conf
 
 아무튼 정리하자면, 여전히 NPM을 쓰는 사람은 많을 것이고, 앞으로도 계속 생길 것이고, 나도 아마 지금 당장은 딱히 이 친구와 멀어질 것 같진 않다.
 
-## 근데 왜이렇게 느린거야
+### 근데 왜이렇게 느린거야
 
 ![참으려고 해도](https://i.postimg.cc/xCqSJJcv/image.jpg)
 {: .center}
@@ -63,7 +64,7 @@ NPM에 대한 변호는 여기까지. 작년부터 내가 겪고 있던 문제�
 
 그리고 뭔가 하나 내가 빼먹은게 있다는 생각이 들었다. 어... 이거 WSL이잖아? WSL 또 너야?
 
-## WSL은 VM이다.
+### WSL은 VM이다.
 
 ![성](https://i.postimg.cc/kXwD85W1/image.jpg)  
 WSL은 격리된 환경이다.
@@ -76,7 +77,7 @@ WSL은 격리된 환경이다.
 
 사실 글을 점점 진행하면서 이걸 어떻게 마무리해야하지 고민이 스멀스멀 피어오르고 있었는데, 이 두 문장이 그 답이다. 네트워크 환경 변화로 인해 DNS가 고장난 것이었고, 따라서 NPM install에 문제가 생긴 것이었다. 아마 비슷한 사유로 `apt-get` 또한 제대로 동작하지 않는 사람도 있을 것이다. 나도 그랬던 것 같은데, 정확히 기억이 안난다.
 
-## 해결책📖
+### 해결책📖
 
 방법 자체는 [이 레딧 글](https://www.reddit.com/r/bashonubuntuonwindows/comments/nt8asc/npm_install_extremely_slow_on_wsl2/hk7zpbw/)에서부터 먼저 접하였다. 사담이지만 이때까지 스택오버플로우가 구글링의 전부였던 나에게 레딧도 있다는 사실을 일깨워준 귀한 글이다. 아무튼 Works like a charm. 약발 아주 잘 든다.
 
@@ -98,8 +99,7 @@ sudo rm /etc/resolv.conf
 
 `resolv.conf` 파일은 무엇인가? [위키피디아에도 등록된](https://en.wikipedia.org/wiki/Resolv.conf) 이 파일은, OS에서 시스템의 DNS resolver를 설정하기 위해 사용하는 파일이다. Resolve의 의미가 많은데, 여기서는 해석, 분석 등을 뜻하고 있다고 생각하면 될 것 같다. [Resolver(해석기)는 DNS 서버에 대한 엑세스를 수행하는 어플리케이션이다.](http://www.ktword.co.kr/test/view/view.php?m_temp1=1487) 즉, 그런 어플리케이션에 대한 설정 정보를 우리가 직접 수정하기 위해 기존 파일을 삭제하는 것이다.
 
-{:start="2"}
-2. `/etc/resolv.conf` 파일에 DNS 서버의 주소를 입력한다.
+{:start="2"} 2. `/etc/resolv.conf` 파일에 DNS 서버의 주소를 입력한다.
 
 ```shell
 sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf
@@ -107,8 +107,7 @@ sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
 [`8.8.8.8`](https://ko.wikipedia.org/wiki/%EA%B5%AC%EA%B8%80_%ED%8D%BC%EB%B8%94%EB%A6%AD_DNS)은 왠만하면 다들 알텐데, 구글에서 운영하는 퍼블릭 DNS 서버다. 아무튼 DNS 서버가 우리가 원하는 서버로 고정되도록 설정 파일을 작성한다.
 
-{:start="3"}
-3. `/etc/wsl.conf` 파일에 내용을 추가한다.
+{:start="3"} 3. `/etc/wsl.conf` 파일에 내용을 추가한다.
 
 ```shell
 sudo bash -c 'echo "[network]" > /etc/wsl.conf'
@@ -117,8 +116,7 @@ sudo bash -c 'echo "generateResolvConf = false" >> /etc/wsl.conf'
 
 `wsl.conf` [파일은 무엇인가?](https://docs.microsoft.com/ko-kr/windows/wsl/wsl-config) 이름에서 유추 가능하듯이 WSL에 대한 설정을 위한 파일이다. `wsl.conf` 파일에서 `[network]` 레이블 안의 `generateResolvConf` 옵션을 `false`로 설정했다. 사람이 쓰는 말로 바꾸자면, WSL이 Resolver 설정 파일을 생성하지 않도록 설정을 바꿨다.
 
-{:start="4"}
-4. `/etc/resolv.conf` 파일 속성을 변경한다.
+{:start="4"} 4. `/etc/resolv.conf` 파일 속성을 변경한다.
 
 ```shell
 sudo chattr +i /etc/resolv.conf

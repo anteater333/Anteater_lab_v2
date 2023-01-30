@@ -13,7 +13,7 @@ layout: default
       {{ page.title | escape }}
     </h1>
     {% if page.subtitle %}
-    <h2 class="post-subtitle p-name">{{ page.subtitle }}</h2>
+    <p class="post-subtitle p-name">{{ page.subtitle }}</p>
     {% endif %}
     <p class="post-meta">
       {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y"
@@ -38,7 +38,9 @@ layout: default
     </p>
   </header>
 
-  <div class="post-content e-content" itemprop="articleBody">{{ content }}</div>
+  <div class="post-content e-content post-article" itemprop="articleBody">
+    {{ content }}
+  </div>
 
   {%- if site.disqus.shortname -%} {%- include disqus_comments.html -%} {%-
   endif -%} {%- if site.utterances.name -%}

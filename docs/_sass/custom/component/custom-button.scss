@@ -49,15 +49,6 @@ $local-time: 0.5s;
 .up-btn:after {
 }
 
-.global-right-controller-container {
-  position: sticky;
-  bottom: $spacing-unit / 4;
-  padding-left: $spacing-unit / 4;
-
-  display: flex;
-  flex-direction: column-reverse;
-}
-
 .share-btn {
   height: 2.5em;
   width: 2.5em;
