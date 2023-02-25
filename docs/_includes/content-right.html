@@ -5,8 +5,13 @@
       <div
         class="right-btn share-btn share-btn-vanilla"
         onclick="(function(){
-      window.navigator.clipboard.writeText(window.location.href)
-      alert(`주소를 복사했습니다.`) // TBD : toast로 변경
+      window.navigator.clipboard.writeText(window.location.href.split(`#`)[0]);
+      Toastify({
+        text:`주소를 복사했습니다.`,
+        position: 'center',
+        gravity: 'bottom',
+        duration: 1000
+      }).showToast();
     })();return false;"
       >
         <svg
