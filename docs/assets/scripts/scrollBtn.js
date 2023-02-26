@@ -14,6 +14,7 @@ document.addEventListener("scroll", () => {
 });
 
 scrollBtn.addEventListener("click", () => {
+  history.pushState(null, null, window.location.href.split('#')[0]);
   window.scrollTo({
     top: 0,
     behavior: "smooth",
