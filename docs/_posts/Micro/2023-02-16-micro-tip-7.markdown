@@ -1,0 +1,101 @@
+---
+layout: post
+title: "자잘한 도움말 #7 요청 URI의 파라미터에 특수기호가 들어가야 한다면"
+date: 2023-02-16 20:34:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+
+- **URI를 UTF-8 형식으로 인코딩 한다.**
+- 예를 들어, 아래 URI 처럼 **"원피스(만화)/조·홀케이크 아일랜드 편"**이 파라미터로 사용되어야 할 때  
+  - 상황 1. 서버에 특수 기호가 포함된 URI를 사용해 요청을 보내고 있다면  
+    - [https://soup.anteater-lab.link/api/**원피스(만화)/조·홀케이크 아일랜드 편**](https://soup.anteater-lab.link/api/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8)
+    ```
+    GET /api/:keyword
+    ```
+    - URI에서 `:keyword`에 해당되는 부분을 `encodeURIComonent()` 함수로 인코딩한다.
+      ```javascript
+      const response = await axios.get(`/${encodeURIComponent(keyword)}`);
+      ```  
+    - `encodeURI()`
+      - URI 식별에 필요한 특수기호를 인코딩하지 않음
+      - URI 문자열 전체를 인코딩하기에 적합
+    - `encodeURIComponent()`
+      - URI 식별에 필요한 특수기호까지 인코딩 함
+      - URI의 일부를 구성하는 한 컴포넌트를 인코딩하기에 적합
+
+  - 상황 2. URI 라우팅을 SPA의 네비게이션 기능에 사용하고 있다면
+    - [https://blog.anteater-lab.link/namu-soup/m/**원피스(만화)/조·홀케이크 아일랜드 편**](https://blog.anteater-lab.link/namu-soup/m/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8)    
+    - URI를 인코딩하는 것에 더해 **라우터가 해당 파라미터를 해석**할 수 있도록 해야한다.
+    - 라우터 구현 방식 혹은 사용한 라우터 라이브러리에 따라 방법이 달라진다.
+    - 필자는 React Router v6을 사용 중이었고, [splats](https://reactrouter.com/en/main/route/route#splats)를 사용했다.  
+      ```html
+      <!-- 라우트 정의 -->
+      <Route path="/m/*" element={<MemoList />} />
+      ```
+      ```javascript
+      // 파라미터 사용
+      const { "*": splat } = useParams();
+      ```
+
+
+## 이하 그리 중요하진 않은 내용들
+
+### 바쁜 현대사회, 가끔씩은 나무 대신 숲을 봐야 할 때도 있습니다.
+
+![숲](https://raw.githubusercontent.com/anteater333/namu-soup/main/images/s1.png)  
+잠시 광고
+{: .center}
+
+블로그 글은 뜨문뜨문 쓰고 있지만, 나름 매일 이것저것 만들어보면서 살고 있다. [숲 - 나무위키 인기 검색어](https://blog.anteater-lab.link/namu-soup/)는 위의 표어에서 시작해 간단하게 만들어본 사이트다. 어떤 사이트인지는 [깃허브 저장소의 문서](https://github.com/anteater333/namu-soup#readme)를 참고하시라. 이번 글에서는 이 사이트를 만들면서 겪은 문제에 대해 정리하려 한다.
+
+### URI(Uniform Resource Identifier)
+
+> 통합 자원 식별자(Uniform Resource Identifier, **URI**)는 인터넷에 있는 자원을 나타내는 유일한 주소이다. - [통합 자원 식별자, 위키피디아](https://ko.wikipedia.org/wiki/%ED%86%B5%ED%95%A9_%EC%9E%90%EC%9B%90_%EC%8B%9D%EB%B3%84%EC%9E%90)
+
+URI 혹은 URL 혹은 웹 주소. 웹 서비스를 개발 하면 URI를 자주 마주친다. 전설적인 팀 버너스리가 제시한 이 표시법을 사용해 우리는 웹에서 요청을 어디로 보내야 할 지 특정할 수 있다. URI는 다음 문법으로 정의된다. [자세한 정의는 여기서](https://datatracker.ietf.org/doc/html/rfc3986#section-3) 확인하자.
+
+```
+URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
+```
+
+이처럼 URI에는 특수한 목적의 문자들이 사용된다. 예를 들어 위 문법에서 `path`는 `/` 기호를 사용해 경로를 구분한다. 그렇다면 만약 아래와 같은 URI가 주어지면 브라우저는 어떻게 URI를 해석할까?
+
+https://soup.anteater-lab.link/api/**원피스(만화)/조·홀케이크 아일랜드 편**  
+{: .center}
+
+(내 백엔드 서버가 아직 살아있다는 가정 하에) 위 주소를 그대로 복사해 주소창에 붙여넣으면 해당 경로에 GET 요청을 보낼 수 없다는 페이지를 만날 것이다. 왜냐하면 내 서버의 API는 `/api/:keyword` 형태로 열려 있어서 `원피스(만화)/조·홀케이크 아일랜드 편` 전체를 경로의 마지막 요소로 사용해야 하기 때문이다.
+
+### 인코딩
+
+![인코딩](https://i.postimg.cc/bNDR83wc/namu.png)  
+{: .center}
+
+하지만 [`http:` 옆에 슬래시를 두 개 적도록 한것 말고는 설계에 실수가 없었다는 팀 버너스리](https://www.wikitree.co.kr/articles/600930)의 말처럼 URI는 이미 해결책을 가지고 있다. URI의 제안서는 [UTF-8과 같은 인코딩을 사용해 URI를 식별하는 방안을 소개한다](https://datatracker.ietf.org/doc/html/rfc3986#section-2.5). UTF-8을 사용하는 방식은 널리 사용되고 있으며, 예시로 올린 경로를 주소창에 붙여넣었을 때에도 위의 사진 처럼 브라우저가 알아서 해당 URI를 인코딩하는 것을 확인할 수 있다.
+
+- 원 : %EC%9B%90 / 피 : %ED%94%BC / 스 : %EC%8A%A4
+
+**URI를 UTF-8 방식으로 인코딩 하면 된다.** 따라서 이 경로를 들어가면 제대로 된 응답을 받을 수 있을 것이다. (물론 여전히 응답 코드는 404일 테지만)  
+
+[https://soup.anteater-lab.link/api/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8](https://soup.anteater-lab.link/api/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8)  
+{: .center}
+
+하지만 `/` 까지 브라우저가 자동으로 인코딩해주진 않는다. 주소에서 `api` 뒤에 있는 슬래시를 경로 구분자로 봐야 할지 자원 이름의 일부로 봐야 할지 브라우저는 판단할 수 없기 때문이다. URL에 반드시 필요한 특수기호들 까지 브라우저가 알아서 인코딩 해줄순 없다. 이제 개발자의 간단한 수고가 필요한 순간이다. Javascript의 내장 함수 `encodeURIComponent()`를 쓰자.
+
+```javascript
+encodeURIComponent("원피스(만화)/조·홀케이크 아일랜드 편");
+// "%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8"
+
+const targetURI = "https://soup.anteater-lab.link/api/"
+    + encodeURIComponent("원피스(만화)/조·홀케이크 아일랜드 편");
+```
+
+대신 주의할 점 하나, `encodeURI()`라는 내장 함수도 존재한다. 이 함수는 브라우저가 알아서 URI를 인코딩하는 것과 같은 동작을 한다. `/`와 같은 특수기호를 인코딩하지 못한다. 둘을 비교하자면 다음과 같다.
+
+- `encodeURI()`
+  - URI 식별에 필요한 특수기호를 인코딩하지 않음
+  - URI 문자열 전체를 인코딩하기에 적합
+- `encodeURIComponent()`
+  - URI 식별에 필요한 특수기호까지 인코딩 함
+  - URI의 일부를 구성하는 한 컴포넌트를 인코딩하기에 적합
