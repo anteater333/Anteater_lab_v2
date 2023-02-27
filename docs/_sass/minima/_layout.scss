@@ -17,6 +17,10 @@
     flex-direction: column;
     width: 100%;
     min-width: 740px;
+
+    @include media-query($on-palm) {
+      min-width: 0;
+    }
   }
 }
 
