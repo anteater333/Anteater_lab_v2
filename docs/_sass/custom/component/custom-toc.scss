@@ -11,9 +11,14 @@
   a {
     white-space: nowrap;
     font-size: $small-font-size;
-    color: $brand-color-dark;
+    color: $brand-color;
   }
   a:hover {
     color: $brand-color;
+  }
+
+  a.toc-highlighted {
+    font-size: $base-font-size;
+    font-weight: bold;
   }
 }
