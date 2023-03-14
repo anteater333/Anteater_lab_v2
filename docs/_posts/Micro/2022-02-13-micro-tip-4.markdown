@@ -6,10 +6,15 @@ categories: [Micro]
 ---
 
 ## TL;DR
- - Python 2차원 배열 초기화는 다음과 같은 코드로 한다.
-```python
-[[0 for i in range(NofColumn)] for j in range(NofRow)]
-```
+ - N*M 2차원 배열을 한 줄로 초기화 하려면,
+   - Python에선 이렇게 한다.
+  ```python
+  [[0 for i in range(M)] for j in range(N)]
+  ```
+   - Javascript에선 이렇게 한다.
+  ```javascript
+  [...Array(N)].map((e) => Array(M).fill(0))
+  ```
  - 2차원 배열 생성 시 **참조의 복사**를 항상 조심하자.
 
 ## 이하 그리 중요하진 않은 내용들
