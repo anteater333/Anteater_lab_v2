@@ -79,7 +79,7 @@ https://soup.anteater-lab.link/api/**원피스(만화)/조·홀케이크 아일�
 
 **URI를 UTF-8 방식으로 인코딩 하면 된다.** 따라서 이 경로를 들어가면 제대로 된 응답을 받을 수 있을 것이다. (물론 여전히 응답 코드는 404일 테지만)  
 
-[https://soup.anteater-lab.link/api/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8](https://soup.anteater-lab.link/api/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8)  
+[https://soup.anteater-lab.link/api/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8](https://soup.anteater-lab.link/api/%EC%9B%90%ED%94%BC%EC%8A%A4(%EB%A7%8C%ED%99%94)%2F%EC%A1%B0%C2%B7%ED%99%80%EC%BC%80%EC%9D%B4%ED%81%AC%20%EC%95%84%EC%9D%BC%EB%9E%9C%EB%93%9C%20%ED%8E%B8){: .break-anywhere}  
 {: .center}
 
 하지만 `/` 까지 브라우저가 자동으로 인코딩해주진 않는다. 주소에서 `api` 뒤에 있는 슬래시를 경로 구분자로 봐야 할지 자원 이름의 일부로 봐야 할지 브라우저는 판단할 수 없기 때문이다. URI에 반드시 필요한 특수기호들 까지 브라우저가 알아서 인코딩 해줄순 없다. 이제 개발자의 간단한 수고가 필요한 순간이다. Javascript의 내장 함수 `encodeURIComponent()`를 쓰자. 인코딩 함수의 결과를 필요에 따라 `<a>` 태그의 `href` 속성으로 달아주거나, AJAX 요청의 인수로 사용하면 된다.
