@@ -249,10 +249,8 @@
   padding: $spacing-unit 0;
   flex: 1;
 
-  display: flex;
-  flex-direction: row;
-
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .page-content > .page-middle {
