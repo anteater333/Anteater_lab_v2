@@ -22,7 +22,7 @@ const waiter =
 
 - Javascript는 단일 스레드에서 실행된다.  
   - Promise 객체로 무한 루프(`while (true) {}`)를 포장해 비동기 처리가 될 것 처럼 보여도  
-    새 스레드가 생성된 것이 아니므로 무한 루프는 프로세스를 잡아먹는다.
+    결국 새 스레드가 생성된 것은 아니므로 무한 루프는 자바스크립트 엔진을 잡아먹는다.
 - [You need to start thinking in EVENT LOOP](https://stackoverflow.com/questions/71866925/how-to-run-multiple-infinite-loops-without-blocking-each-other-node-js)
 
 ## 이하 그리 중요하진 않은 내용들
