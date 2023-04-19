@@ -2,6 +2,7 @@
 layout: post
 title: "자잘한 도움말 #8 외부 변수가 바뀌길 기다리는 JS Promise 만들기"
 subtitle: 혹은 스레드를 잡아먹지 않는 자바스크립트 무한 루프 만들기
+description: 외부 변수가 바뀌길 기다리는 JS Promise 만들기, Web API, 자바스크립트 실행 환경, Javascript Runtime
 date: 2023-04-14 23:46:00 +0900
 categories: [Micro]
 ---
