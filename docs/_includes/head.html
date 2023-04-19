@@ -10,6 +10,8 @@
     content="no-cache, no-store, must-revalidate"
   />
   {%- seo -%}
+  <!-- <meta  -->
+  <meta property="og:image" content="/logo.png" />
   <link
     rel="stylesheet"
     href="{{ '/assets/css/style.css' |
@@ -19,7 +21,11 @@
   <!-- syntax highlighter -->
   <link rel="stylesheet" href="/assets/css/syntax.css" />
   <!-- toast library -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+  />
 
   {%- feed_meta -%} {%- if jekyll.environment == 'production' and
   site.google_analytics -%} {%- include google-analytics.html -%} {%- endif -%}
