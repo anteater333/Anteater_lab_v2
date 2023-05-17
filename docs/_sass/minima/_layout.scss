@@ -265,6 +265,61 @@
 
 .page-content > .content-left {
   justify-content: flex-end;
+
+  > .global-left-top {
+    display: flex;
+    flex-direction: column;
+
+    @include on-small-height() {
+      display: none !important;
+    }
+
+    > .profile-container {
+      padding-right: $spacing-unit;
+      margin-right: $spacing-unit / 4;
+
+      border-right: 2px solid $grey-color-dark;
+
+      > .profile-upper {
+        display: flex;
+        justify-content: center;
+
+        > .profile-picture {
+          width: 100px;
+          min-width: 100px;
+        }
+      }
+
+      > .profile-bottom {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+
+        > .profile-name {
+          font-size: 1.5rem;
+          height: 1.5rem;
+        }
+        > .profile-nick {
+          margin-top: 4px;
+          height: 1rem;
+          color: $grey-color;
+        }
+        > .profile-desc {
+          white-space: nowrap;
+        }
+        > .profile-link {
+          margin-top: $spacing-unit / 2;
+          a img {
+            height: 1.5rem;
+          }
+        }
+        > .profile-link a:first-child {
+          margin-right: $spacing-unit / 2;
+        }
+      }
+    }
+  }
 }
 
 .page-content > .content-right {
