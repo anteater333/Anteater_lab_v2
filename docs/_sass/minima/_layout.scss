@@ -282,7 +282,7 @@
 
       > .profile-upper {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
 
         > .profile-picture {
           width: 100px;
@@ -294,7 +294,9 @@
         display: flex;
         flex-direction: column;
 
-        align-items: center;
+        align-items: flex-start;
+
+        padding-left: $spacing-unit / 8;
 
         > .profile-name {
           font-size: 1.5rem;
