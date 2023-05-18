@@ -253,8 +253,11 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
-.page-content > .page-middle {
-  width: 40vw;
+.page-content > .content-middle {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
 }
 
 .page-content > .content-side {

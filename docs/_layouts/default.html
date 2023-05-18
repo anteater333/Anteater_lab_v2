@@ -7,7 +7,9 @@
 
     <main class="page-content" aria-label="Content">
       {%- include content-left.html -%}
-      <div class="wrapper content-middle">{{ content }}</div>
+      <div class="content-middle">
+        <div class="wrapper">{{ content }}</div>
+      </div>
       {%- include content-right.html -%}
     </main>
 
