@@ -327,6 +327,14 @@
   }
 }
 
+// hover, opacity
+.profile-link a img:hover,
+.trigger .page-link:hover,
+.up-btn:hover,
+.site-footer a:hover {
+  opacity: 25%;
+}
+
 .page-content > .content-right {
   > .global-right-top {
     display: flex;
