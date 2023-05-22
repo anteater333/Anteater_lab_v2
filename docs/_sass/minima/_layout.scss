@@ -37,8 +37,7 @@
   margin-bottom: $spacing-unit / 4;
   flex: 1;
   display: flex;
-  flex-direction: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -47,6 +46,7 @@
   display: flex !important;
   align-items: center !important;
   justify-content: right !important;
+  margin-left: $spacing-unit / 2;
 }
 
 .bmc-btn {
