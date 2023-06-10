@@ -39,6 +39,23 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  .header-icons-on-half {
+    display: none;
+
+    @include media-query($on-half) {
+      display: flex;
+      flex: 1;
+
+      a img {
+        height: 1.5rem;
+      }
+
+      a {
+        margin-right: $spacing-unit / 2;
+      }
+    }
+  }
 }
 
 // BMC Custom
@@ -329,6 +346,7 @@
 
 // hover, opacity
 .profile-link a img:hover,
+.header-icons-on-half a img:hover,
 .trigger .page-link:hover,
 .up-btn:hover,
 .site-footer a:hover {
@@ -371,7 +389,7 @@
   }
 }
 
-@include media-query($on-laptop) {
+@include media-query($on-half) {
   .page-content {
     grid-template-columns: 1fr;
   }
