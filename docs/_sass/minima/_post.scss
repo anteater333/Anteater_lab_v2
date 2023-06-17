@@ -29,3 +29,15 @@
 hr {
   margin-bottom: 1rem;
 }
+
+.w-half > img {
+  width: 50%;
+}
+
+.w-1-quarter > img {
+  width: 25%;
+}
+
+.w-3-quarter > img {
+  width: 75%;
+}
