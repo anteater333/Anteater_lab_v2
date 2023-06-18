@@ -389,6 +389,14 @@
   }
 }
 
+.page-content > .hover-on-half {
+  display: none;
+
+  position: sticky;
+  bottom: $spacing-unit/4;
+  right: $spacing-unit/4;
+}
+
 @include media-query($on-half) {
   .page-content {
     grid-template-columns: 1fr;
@@ -396,6 +404,13 @@
 
   .page-content > .content-side {
     display: none;
+  }
+
+  .page-content > .hover-on-half {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: $spacing-unit;
   }
 }
 

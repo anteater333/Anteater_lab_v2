@@ -10,11 +10,12 @@
       <div class="content-middle">
         <div class="wrapper">{{ content }}</div>
       </div>
-      {%- include content-right.html -%}
+      {%- include content-right.html -%} {%- include hover-on-half.html -%}
     </main>
 
     {%- include footer.html -%}
 
+    <script type="text/javascript" src="/assets/scripts/scrollBtn.js"></script>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/toastify-js"
