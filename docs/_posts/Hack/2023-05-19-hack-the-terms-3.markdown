@@ -55,7 +55,7 @@ SQL이 데이터베이스에 질문하기 위해 사용하는 질의어이듯, G
   이름에서 발견할 수 있는 유사성이 있으나, GraphQL은 API 영역에서 기능한다. 오히려 RESTFul API 설계를 대체하려는 움직임에 가깝다.
 
 - GraphQL은 라이브러리/프레임워크다?  
-  GraphQL은 라이브러리/프레임워크가 아닌 별개의 컴퓨터 언어, 그리고 [그 언어에 대한 기술 스펙](https://spec.graphql.org/draft/)을 뜻한다. HTML이나 SQL을 떠올려 보면 된다. 표준 스펙이 존재하지만 그것이 실제 동작하기 위해서는 각 웹 브라우저 개발 업체들, DBMS 개발 업체들이 해당하는 기능들을 구현해야 한다. GraphQL 역시 구현체들이 따로 존재하고, 시스템을 개발하는 입장에서 GraphQL의 쿼리에 맞춰 동작할 수 있는 구체적인 코드를 구현해야한다.
+  GraphQL은 라이브러리/프레임워크가 아닌 별개의 컴퓨터 언어, 그리고 [그 언어에 대한 기술 스펙](https://spec.graphql.org/draft/)을 뜻한다. HTML이나 SQL을 떠올려 보면 된다. 표준 스펙이 존재하지만 그것이 실제 동작하기 위해서는 각 웹 브라우저 개발 업체들, DBMS 개발 업체들이 해당하는 기능들을 구현해야 한다. 시스템을 개발하는 입장에서 우리는 사용하는 프로그래밍 언어에 맞춰 GraphQL의 쿼리를 실행할 수 있는 구체적인 서버 측 코드, GraphQL 서비스를 구현해야하고, [이를 도와주는 라이브러리들](https://graphql.org/code/)이 별도로 존재한다.
 
 - 레퍼런스를 찾을 때 이름만 같은 유사품에 주의  
   자료를 찾다보면 대부분 GraphQL을 GQL로 줄이거나 Graph Query Language로 풀어 쓰는데에 익숙한 것을 볼 수 있다. 나도 이 문단의 이름을 저렇게 지었고. 하지만 엄밀히 따지면 [GQL](https://cloud.google.com/datastore/docs/reference/gql_reference)은 구글에서 만든 SQL-like 질의어, [Graph Query Language](https://en.wikipedia.org/wiki/Graph_Query_Language)는 Neo4j와 같은 그래프 데이터베이스를 위한 또다른 질의어를 뜻하기도 한다. 틀렸다는건 아닌데, 정보를 찾을 때 조심할 필요가 있다.
@@ -65,13 +65,72 @@ SQL이 데이터베이스에 질문하기 위해 사용하는 질의어이듯, G
 ![GraphQL](https://i.postimg.cc/L4L26wKq/Graph-QL-Logo-Wordmark-Stacked-Rhodamine.png){:loading="lazy"}  
 {: .center .w-half}
 
-GraphQL은 2012년 페이스북(현 메타)가 개발을 시작해 2015년에 오픈 소스로 공개한 프로젝트이다. 사기업이 개발한 언어긴 하지만 현재는 별도의 재단을 설립해 비영리로 운영되고 있다. [페이스북이 직접 밝힌 개발 당시 배경](https://engineering.fb.com/2015/09/14/core-data/graphql-a-data-query-language/#Why-GraphQL)에서 재밌는 사실을 읽을 수 있는데, 지금으로부터 11년 전의 사례에서도 새 모바일 서비스를 개발할 때 웹뷰 -> 네이티브 앱 전환 이라는 익숙한 흐름이 적용된 것을 발견할 수 있다. 페이스북의 개발팀은 네이티브 앱 개발을 시작하면서 기존 HTML 형식의 데이터를 반환하던 API를 수정할 필요성을 느끼기 시작했다. 그들은 새 모바일 앱을 위한 API를 구현하는 방법들을 조사하며 기존 RESTful API 방식의 문제점을 인식하게 되었다.
+[GraphQL](https://graphql.org/)은 2012년 페이스북(현 메타)가 개발을 시작해 2015년에 오픈 소스로 공개한 프로젝트이다. 사기업이 개발한 언어긴 하지만 현재는 별도의 재단을 설립해 비영리로 운영되고 있다. [페이스북이 직접 밝힌 개발 당시 배경](https://engineering.fb.com/2015/09/14/core-data/graphql-a-data-query-language/#Why-GraphQL)에서 재밌는 사실을 읽을 수 있는데, 지금으로부터 11년 전의 사례에서도 새 모바일 서비스를 개발할 때 웹뷰 -> 네이티브 앱 전환 이라는 익숙한 흐름이 적용된 것을 발견할 수 있다. 페이스북의 개발팀은 네이티브 앱 개발을 시작하면서 기존 HTML 형식의 데이터를 반환하던 API를 수정할 필요성을 느끼기 시작했다. 그들은 새 모바일 앱을 위한 API를 구현하는 방법들을 조사하는 중 기존 RESTful API 방식의 문제점을 인식하게 되었다.
 
-페이스북이 주목한 문제점과 GraphQL의 목적을 요약하면 "관심사의 분리(SoC)"다. 프론트엔드가 자신이 사용할 데이터 모델(일반적으로 JSON)과 그들이 이루는 그래프의 형태에 대해서만 고려하도록 만들겠다는 것이다. URL로 표시되는 자원의 서버 상 위치, 테이블 조인이나 외래 키 등에 대해선 생각할 필요 없도록 하겠다는 의미이다. 이는 즉 데이터를 준비해야 할 백엔드 서버 측과 데이터를 해석해야 할 프론트엔드 클라이언트 측의 코드 수를 줄이는 효과를 낼 수 있음을 의미한다. GraphQL은 API 호출을 추상화 하고 그에 대한 새로운 인터페이스의 역할을 하기 위해 개발되었다.
+페이스북이 주목한 문제점과 GraphQL의 목적을 요약하면 **관심사의 분리(SoC)**다. 프론트엔드가 자신이 사용할 데이터 모델(일반적으로 JSON)과 그들이 이루는 그래프의 형태에 대해서만 고려하도록 만들겠다는 것이다. URL로 표시되는 자원의 위치, 테이블 조인이나 외래 키 등에 대해선 생각할 필요 없도록 하겠다는 의미이다. 이는 데이터를 준비해야 할 백엔드 서버 측과 데이터를 해석해야 할 프론트엔드 클라이언트 측의 코드 수를 줄이는 효과를 낼 수 있음을 의미한다. GraphQL은 API 호출을 추상화 하고 그에 대한 새로운 인터페이스의 역할을 하기 위해 개발되었다.
 
-### 구성요소
+### 구성
 
-### 문법
+![TypeSystem](https://i.postimg.cc/Bn26kFh4/Type-System.png){:loading="lazy"}  
+{: .center}
+
+GraphQL 서비스를 구축하기 위해서, 우선 서버 측에서는 클라이언트가 사용할 수 있는 이 서비스의 GraphQL을 정의해야 한다. 이는 마치 서비스의 **[타입 시스템(Type System)](https://en.wikipedia.org/wiki/Type_system)**을 정의하는 것과 같다. GraphQL의 타입 시스템은 시스템의 **스키마(Schema)**로써 동작한다. 이 스키마는 **필드(Field)**를 가지는 **타입(Type)**들의 중첩된 구조로 구성된다.  
+
+```graphql
+# 서버 측 스키마
+
+"""
+Root Schema
+"""
+schema {
+  query: Query
+}
+
+"""
+Query Operations
+"""
+type Query {
+  # Search by ID
+  todo(id: ID!): Todo
+}
+
+"""
+Objects
+"""
+type Todo {
+  id: ID!
+  title: String
+  done: Boolean
+}
+```
+
+클라이언트는 서버가 제공하는 타입 시스템을 통해 어떤 연산(**쿼리(Query)**, **뮤테이션(Mutation)**, **서브스크립션(Subscription)**)과 그 연산의 입/출력 객체의 어떤 필드를 사용할지 선택해 질의문을 작성한 다음 서버로 요청을 보내게 된다.
+
+```graphql
+# 클라이언트 측 질의문
+
+# id가 3인 todo 데이터의 title과 done을 주세요.
+query getTodoById {
+  todo(id: 3) {
+    title
+    done
+  }
+}
+
+```
+
+다시 서버는 그 질의 요청을 받아 타입 시스템을 통해 해석하고 결과를 생성하는 함수 **리졸버(Resolver)**를 실행해 아래와 같은 결과를 반환한다.
+
+```json
+{
+  "data": {
+    "todo": {
+      "title": "블로그 글 쓰기",
+      "done": false
+    }
+  }
+}
+```
 
 ### Best Practices
 
