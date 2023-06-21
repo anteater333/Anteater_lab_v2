@@ -67,14 +67,14 @@ SQL이 데이터베이스에 질문하기 위해 사용하는 질의어이듯, G
 
 [GraphQL](https://graphql.org/)은 2012년 페이스북(현 메타)가 개발을 시작해 2015년에 오픈 소스로 공개한 프로젝트이다. 사기업이 개발한 언어긴 하지만 현재는 별도의 재단을 설립해 비영리로 운영되고 있다. [페이스북이 직접 밝힌 개발 당시 배경](https://engineering.fb.com/2015/09/14/core-data/graphql-a-data-query-language/#Why-GraphQL)에서 재밌는 사실을 읽을 수 있는데, 지금으로부터 11년 전의 사례에서도 새 모바일 서비스를 개발할 때 웹뷰 -> 네이티브 앱 전환 이라는 익숙한 흐름이 적용된 것을 발견할 수 있다. 페이스북의 개발팀은 네이티브 앱 개발을 시작하면서 기존 HTML 형식의 데이터를 반환하던 API를 수정할 필요성을 느끼기 시작했다. 그들은 새 모바일 앱을 위한 API를 구현하는 방법들을 조사하는 중 기존 RESTful API 방식의 문제점을 인식하게 되었다.
 
-페이스북이 주목한 문제점과 GraphQL의 목적을 요약하면 **관심사의 분리(SoC)**다. 프론트엔드가 자신이 사용할 데이터 모델(일반적으로 JSON)과 그들이 이루는 그래프의 형태에 대해서만 고려하도록 만들겠다는 것이다. URL로 표시되는 자원의 위치, 테이블 조인이나 외래 키 등에 대해선 생각할 필요 없도록 하겠다는 의미이다. 이는 데이터를 준비해야 할 백엔드 서버 측과 데이터를 해석해야 할 프론트엔드 클라이언트 측의 코드 수를 줄이는 효과를 낼 수 있음을 의미한다. GraphQL은 API 호출을 추상화 하고 그에 대한 새로운 인터페이스의 역할을 하기 위해 개발되었다.
+페이스북이 주목한 문제점과 GraphQL의 목적을 요약하면 **관심사의 분리(SoC)**다. 프론트엔드가 자신이 사용할 데이터 모델(일반적으로 JSON)과 그들이 이루는 그래프의 형태에 대해서만 고려하도록 만들겠다는 것이다. URL로 표시되는 자원의 위치, 테이블 조인이나 외래 키 등에 대해선 생각할 필요 없도록 하겠다는 의미이다. 즉, GraphQL은 API 호출을 추상화 하고 그에 대한 새로운 인터페이스의 역할을 하기 위해 개발되었다.
 
-### 구성
+### GraphQL의 구성
 
-![TypeSystem](https://i.postimg.cc/Bn26kFh4/Type-System.png){:loading="lazy"}  
+![TypeSystem](https://i.postimg.cc/t4fy1dyH/Type-System.png){:loading="lazy"}  
 {: .center}
 
-GraphQL 서비스를 구축하기 위해서, 우선 서버 측에서는 클라이언트가 사용할 수 있는 이 서비스의 GraphQL을 정의해야 한다. 이는 마치 서비스의 **[타입 시스템(Type System)](https://en.wikipedia.org/wiki/Type_system)**을 정의하는 것과 같다. GraphQL의 타입 시스템은 시스템의 **스키마(Schema)**로써 동작한다. 이 스키마는 **필드(Field)**를 가지는 **타입(Type)**들의 중첩된 구조로 구성된다.  
+GraphQL 서비스를 구축하기 위해서, 우선 서버 측에서는 클라이언트가 사용할 수 있는 이 서비스의 GraphQL을 정의해야 한다. 이는 마치 서비스의 **[타입 시스템(Type System)](https://en.wikipedia.org/wiki/Type_system)**을 정의하는 것과 같다. GraphQL의 타입 시스템은 백엔드 서비스의 **스키마(Schema)**로써 동작한다. 이 스키마는 **필드(Field)**를 가지는 **타입(Type)**들의 중첩된 구조로 구성된다.  
 
 ```graphql
 # 서버 측 스키마
@@ -104,12 +104,16 @@ type Todo {
 }
 ```
 
-클라이언트는 서버가 제공하는 타입 시스템을 통해 어떤 연산(**쿼리(Query)**, **뮤테이션(Mutation)**, **서브스크립션(Subscription)**)과 그 연산의 입/출력 객체의 어떤 필드를 사용할지 선택해 질의문을 작성한 다음 서버로 요청을 보내게 된다.
+클라이언트는 서버가 제공하는 타입 시스템을 통해 어떤 작업(Operation)을 사용할지, 그 작업의 입/출력 객체에서 어떤 필드를 사용할지 선택해 질의문을 작성한 다음 서버로 요청을 보내게 된다. 현재 GraphQL에 존재하는 작업 유형은 다음과 같다.
+
+- **쿼리(Query)** : 데이터의 조회 (Read)
+- **뮤테이션(Mutation)** : 데이터의 변경 (Create, Update, Delete)
+- **서브스크립션(Subscription)** : 데이터의 실시간 관찰
 
 ```graphql
 # 클라이언트 측 질의문
 
-# id가 3인 todo 데이터의 title과 done을 주세요.
+# id가 3인 todo 데이터의 title과 done을 주세요. (쿼리Query 사용)
 query getTodoById {
   todo(id: 3) {
     title
@@ -132,25 +136,76 @@ query getTodoById {
 }
 ```
 
-### Best Practices
+### GraphQL의 특징
 
-https://graphql.org/learn/best-practices/
+1. 클라이언트가 직접 원하는 데이터의 형태를 명시  
+기존 API 호출 방식은 클라이언트가 백엔드의 API 정의에 종속되어야 한다. 백엔드가 주기로 한 데이터 형태로만 받을 수 있다는 뜻이다. 클라이언트가 필요로 하는 데이터 보다 많은 정보를 주더라도 클라이언트는 꼼짝없이 제공하는 데이터를 모두 받아야 하며(**Overfetching**), 클라이언트가 필요로 하는 데이터를 제공하지 않으면 추가로 API 호출을 수행해야 한다(**Underfetching**). 반면 GraphQL은 클라이언트가 직접 질의문을 통해 원하는 데이터 형태를 명시할 수 있게 된다.
 
-### Well known challenges / Pain Points
+2. HTTP와 단일 엔드포인트  
+기존 웹 API들 처럼 GraphQL 서비스는 HTTP 프로토콜을 통해 제공하는 것이 일반적이다. 대신 URL을 구분해 여러 API 엔드포인트를 두는 기존 방식과 달리 GraphQL의 경우 외부로 `/graphql`라는 단일 엔드포인트만 노출한다. 그리고 해당 URL로 `GET` 또는 `POST` 중 원하는 방식을 사용해 GraphQL 요청을 받게 만든다. 당연한 이야기겠지만 클라이언트는 `GET`을 사용할 경우 URL 쿼리 파라미터에, `POST`를 사용할 경우 JSON으로 인코딩된 바디로 GraphQL 질의문을 전달하면 된다. 여담으로 단일 엔드포인트에 GraphiQL이라는 유용한 테스팅 도구를 물릴 수도 있다. ([이렇게](https://rickandmortyapi.com/graphql))    
+또 여담으로 [GraphQL over HTTP](https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md)라는 프로젝트도 별도로 존재한다. 통신 계층 프로토콜 운용 방법을 정확하게 명시하지 않은 기존 GraphQL 명세를 보완하기 위한 새로운 명세로 이해하면 될 것 같다.
 
-복잡성의 증가
-캐싱 및 성능
-보안
-N+1 문제
+3. API 버전 명시를 권장하지 않음  
+리소스가 재설계 될 때 마다 `/v1` `/v2` 같은 식으로 URL에 버전을 명시해 API를 구분짓던 기존 방식과 달리 GraphQL은 버전이 특별히 필요하지 않다. 앞서 말했듯 서버 측에서 어떤 데이터를 주는지 결정짓지 않고(즉 클라이언트의 API의 사용이 응답에 종속되지 않고) 클라이언트 측에서 원하는 데이터를 선택할 수 있기 때문. 재설계 또는 변경이 필요하다면 기존 GraphQL 스키마에 새로운 타입을 추가하거나 새로운 필드를 추가하면 된다. 거의 사용되지 않는 레거시 쿼리가 파악된다면 별도로 `@deprecated` 표시를 해 클라이언트에게 안전하게 안내할 수도 있다. 덕분에 API 호출 영역이 조금 더 부드러워(Soft)진다고 표현하고 싶다.
 
-https://labs.getninjas.com.br/pain-points-of-graphql-7e83ba5ddef7
+### GraphQL의 도전과제들
 
+간략하게 알아봤지만 GraphQL은 이처럼 기존 방식에 비교했을 때 눈에 띄게 다른 특징들이 존재한다. 기존 방식에 약간의 수정을 가한다는 접근방식이 아닌 새로운 패러다임을 제안하는 수준에 가깝기 때문. 따라서 GraphQL을 사용했을 때 새롭게 맞닥뜨릴 수 있는 문제들 또한 존재한다.
 
+**트리 재귀 질의**  
+
+![reddit](https://i.postimg.cc/MZR6Fxyh/reddit.png){:loading="lazy"}  
+[r/OnePiece](https://www.reddit.com/r/OnePiece/)
+{: .center .w-3-quarter}
+
+위처럼 꼬리에 꼬리를 물 수 있는 댓글 데이터를 GraphQL을 사용해서 가져오려면 어떻게 해야할까?
+
+```graphql
+query {
+  comments {
+    id
+    content
+    comments {
+      id
+      content
+      comments {
+        id
+        content
+        comments {
+          # ...
+        }
+      }
+    }
+  }
+}
+```
+{: .w-code-half .code-center}
+
+클라이언트가 데이터의 형태를 결정해야 하는 GraphQL에서는 이 중첩의 깊이가 어디까지 가는지 알 수 없다. GraphQL 차원에서 전체 루프를 탐색할 수 있도록 만드는 기능을 추가하는 것은 사이클과 무한 루프의 가능성 때문에 현실적으로 힘들다. [관련 문제에 대한 논쟁은 꽤나 오래 전부터 지속된걸로 보인다](https://github.com/graphql/graphql-spec/issues/91#issuecomment-254895093). 일단은 쿼리가 전체 데이터를 가져오도록 하지 말고 "댓글 더 가져오기" 같은 기능으로 제어하는 것을 추천한다. 실제로 위에서 캡처로 보여준 Reddit 또한 댓글을 더 읽어오려면 버튼을 눌러야 된다. 또한 `fragment`라는 기능을 통해 GraphQL 코드를 재사용 가능하도록 만들 수 있으니 위의 중첩 지옥을 조금은 해소하는 방법을 적용할 수도 있다.
+
+**네트워크 수준의 캐싱**  
+
+기존 API 방식에서는 [HTTP 캐싱](https://developer.mozilla.org/ko/docs/Web/HTTP/Caching)을 쉽게 활용할 수 있었다. 하지만 GraphQL에서는 각 작업이 URL 기반 엔드포인트가 아닌 질의문에 의해 결정되기 때문에 HTTP 캐싱을 적용하기 까다로워진다. 따라서 GraphQL 서비스에서는 URL 기반이 아닌 쿼리 기반으로 개발자가 캐싱을 구현해야 한다. 물론 Well-known 문제인 만큼 이를 해결하는 도구들이 이미 존재한다. 개념만 간단히 설명하자면, **Persisted Query**라는 것을 사용한다. 쿼리에 ID를 줘서 캐싱하는 전략을 뜻한다.
+
+**N+1 문제**  
+
+N+1 문제는 1:N 관계를 가지는 엔터티를 조회할 때 쿼리가 추가적으로 발생하는 문제를 뜻한다. 보통 JPA 같은 ORM을 다룰 때 발생하는 문제인데, GraphQL에서도 그 특성상 발생할 수 있다.
+
+```graphql
+query {
+  posts { # 1번 질의 발생
+    id
+    content
+    comments {  # (!) post 갯수(N)만큼 질의 발생 가능
+      # ...
+    }
+  }
+}
+```
+
+GraphQL의 N+1 문제는 서버 측에서 처리할 수 있다. 이 또한 Well-known 문제인지라 이번엔 페이스북이 직접 유틸리티 도구를 만들어줬다. **[DataLoader](https://github.com/graphql/dataloader)**라는 라이브러리인데, 데이터를 로드할 때 **batching(한 번에 묶어서 처리)**을 지원해준다. 이를 GraphQL 리졸버에 적용해 N+1 문제를 해결하는 것이 일반적이다.
 
 ---
-
-오해에 대한 설명 (https://fourwingsy.medium.com/graphql%EC%9D%84-%EC%98%A4%ED%95%B4%ED%95%98%EB%8B%A4-3216f404134)
-
 
 ## 실습
 

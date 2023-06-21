@@ -1,3 +1,9 @@
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
 .center {
   text-align: center;
 }
@@ -40,4 +46,12 @@ hr {
 
 .w-3-quarter > img {
   width: 75%;
+}
+
+.w-code-half {
+  width: 50%;
+}
+
+.code-center {
+  margin: auto;
 }
