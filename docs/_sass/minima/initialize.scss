@@ -51,4 +51,5 @@ $on-half: 960px !default;
 
 // Import partials.
 @import "minima/base", "minima/layout", "minima/syntax-highlighting",
-  "minima/post", "custom/custom-styles", "custom/component/custom-component";
+  "minima/post", "custom/custom-styles", "custom/component/custom-component",
+  "custom/custom-highlight";
