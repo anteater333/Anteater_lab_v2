@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Hack🪓 the #3 GraphQL"
-description: GraphQL, Computer Language, Query Language
-date: 2023-05-23 21:30:00 +0900
+description: GraphQL, Query Language, Apollo Server, Apollo Client, API, Graph Query Language
+date: 2023-06-22 21:08:00 +0900
 categories: [Hack]
 ---
 
@@ -223,7 +223,7 @@ cd graphql-server-example
 npm init --yes && npm pkg set type="module"
 ```
 
-**2 ) 필요한 node 패키지를 설치하고 엔트리 포인트를 만든다.**  
+**2 ) 필요한 패키지를 설치하고 엔트리 포인트를 만든다.**  
 ```bash
 npm install @apollo/server graphql
 npm install --save-dev typescript @types/node
@@ -362,21 +362,120 @@ npm start
 
 ### GraphQL을 직접 사용하기 위한 도구 (클라이언트 편)
 
+**[Apollo Client](https://www.apollographql.com/docs/react/get-started)**  
+{: .center .middle-big}
 
-### GraphQL로 API를 제공 중인 서비스들
+**1 ) 새 React 프로젝트를 생성한다.**  
+```bash
+npx create-react-app graphql-app-example
+# (프로젝트 생성 완료 후)
+cd graphql-app-example/
+npm install
+```
+먼저 CRA 등의 도구로 React 프로젝트를 생성한다.
 
-의외로 Meta는 자사 공개 API에 GraphQL을 안씀. 내부적으로만 쓰는듯.
+**2 ) 필요한 패키지를 설치한다.**  
+```bash
+npm install @apollo/client graphql
+```
 
-Github GraphQL API
+**3 ) `ApolloClient`를 초기화한다.**
+```jsx
+// index.js
 
-릭앤모티 API - 이런게 다 있네.
+// ...
 
-## 결론
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+} from "@apollo/client";
 
-핫하다고 생각되는 기술을 뭔지도 모르고 무턱대고 시도하다 보면 오해가 생기기 마련
+const client = new ApolloClient({
+  uri: "http://localhost:8888/",
+  cache: new InMemoryCache(),
+});
 
-조금 충동적으로 글 주제를 정한 감이 있음. 필요에 의해 찾아보고 공부한게 아니라 이거 유망하다던데? 하고 쓸데없이 미리 공부하는 느낌.
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <ApolloProvider client={client}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </ApolloProvider>
+);
+```
+인스턴스를 생성하고 어플리케이션의 최상단에서 `ApolloProvider`로 묶어준다. 이제 하위 컨텍스트에서 `ApolloClient`의 인스턴스를 사용할 수 있게 된다. 인스턴스를 생성할 때의 코드에서 인상깊은 점은, Apollo Client 라이브러리가 캐시 기능을 지원해준다는 점이다.
 
-유의미한 스펙인것은 부정할 수 없지만, 왜 아직도 수많은 서비스들이 API를 기존의 REST API 형태로 제공하고 있는지 고민할 필요.
+**4 ) 쿼리를 정의하고 `useQuery` 훅을 사용해 데이터를 가져온다.**  
+```jsx
+// App.js
 
-또한 신기술을 알리는게 거대 기업의 공짜 홍보대사 역할을 하고 있는것은 아닌가 경계할 필요도.
+import { useQuery, gql } from "@apollo/client";
+
+const GET_BOOKS = gql`
+  query GetAllBooks {
+    books {
+      author
+      title
+    }
+  }
+`;
+
+function App() {
+  const { loading, error, data } = useQuery(GET_BOOKS);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
+
+  return (
+    <div className="App">
+      {data.books.map(({ author, title }) => {
+        return (
+          <div key={author}>
+            <h1>{title}</h1>
+            <div>{author}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default App;
+```
+라이브러리가 제공해주는 함수 리터럴 `gql`을 사용해 쿼리를 정의할 수 있다. `useQuery` 훅에 그 쿼리를 전달해 요청을 발생시키고 결과를 받아 사용할 수 있다.
+
+![apolloclient](https://i.postimg.cc/FH6GTLCS/apolloclient.png){:loading="lazy"}  
+이제 이 데이터를 프론트엔드에서 잘 요리하면 된다.
+{: .center .rounded-edge}
+
+---
+
+## 마무리
+
+[![rickandmorthy](https://i.postimg.cc/wvFdy2FJ/rick.png){:loading="lazy"}  
+Rick and Morty API](https://rickandmortyapi.com/documentation/)
+{: .center .rounded-edge}
+
+자료를 조사하면서 공개 API를 GraphQL로 제공하고 있는 서비스를 Chat GPT에 물어봤었다. 그 중 하나로 "Rick and Morty API"를 말해주던데, 이건 또 뭔 환각 현상이냐며 코웃음을 쳤지만 실제로 있더라. 여기에 GraphQL 씩이나...?
+
+사실 GraphQL이 고전적인 방식의 문제점을 대부분 해결하는 것으로 보이긴 해도 생각보다 아직까진 GraphQL로 API를 공개하고 있는 서비스는 많지 않다. 규모가 큰 서비스 중에서는 [Github](https://docs.github.com/ko/graphql) 정도. [GraphQL이 더 효율적인데 왜 회사들은 여전히 REST API를 사용 중인가요?](https://www.quora.com/Why-are-companies-still-choosing-REST-API-when-GraphQL-is-more-efficient) 라고 질문한 3년 전 질문에 달린 답변에서는 이렇게 이야기하고 있다. 아무래도 마무리 부분에는 힘이 빠져서 DeepL의 힘을 빌렸다.
+
+> - 고객 채택: 특히 B2B 기업의 경우, GraphQL API를 만들면 파트너와 고객이 REST에 익숙해져 있어 이를 채택할 준비가 되어 있지 않을 것이라는 우려가 있습니다. 시간이 지나면 이러한 우려는 사라질 것입니다. 과거에 SOAP에서 REST로, XML에서 JSON으로 전환할 때에도 이러한 문제가 발생했습니다.  
+> - 기술적 한계: GraphQL은 성능 측면에서 단점이 있습니다. 예를 들어, 백엔드에서 조인 문이 필요한 요청이 문제가 되었습니다. 또한 속도 제한은 GraphQL보다 REST에서 더 간단합니다. 속도 제한 문제는 2019년에 해결된 것으로 보이지만 다른 기술적 걸림돌은 여전히 해결해야 할 과제입니다.
+> - 디자인: 두 가지 모두에 대한 사용 사례가 있기 때문에 GraphQL이 REST를 완전히 추월하지는 않을 것이라는 데 많은 사람들이 동의합니다. 일부 앱은 콘텐츠의 페이지가 지정된 선형 목록을 가져오고, 단일 생성 또는 업데이트를 수행하는 등 간단한 요청만 수행하면 됩니다.  
+> (DeepL로 변역됨)
+
+이 답변 이후로 3년이 지났지만, 아직까지는 좀 더 지켜봐야 할 것 같다. 별개로, 클라이언트 입장에서는 GraphQL 쪽이 조금 더 재밌다는 생각은 든다.
+
+참고자료  
+{: .center}
+
+- [GraphQL을 오해하다](https://fourwingsy.medium.com/graphql%EC%9D%84-%EC%98%A4%ED%95%B4%ED%95%98%EB%8B%A4-3216f404134)
+- [https://principledgraphql.com/](https://principledgraphql.com/)
+- [GraphQL API 까짓꺼 운영해보지 뭐 - DEVIEW 2020](https://deview.kr/data/deview/session/attach/1100_T1_%E1%84%87%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A7%E1%86%AB_GraphQL%20API%20%E1%84%81%E1%85%A1%E1%84%8C%E1%85%B5%E1%86%BA%E1%84%80%E1%85%A5%20%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%92%E1%85%A2%E1%84%87%E1%85%A9%E1%84%8C%E1%85%B5%20%E1%84%86%E1%85%AF.pdf)  
+- [기술 발표) GraphQL 보안 위협과 지키는 방법](https://monkeydeveloper.tistory.com/entry/%EA%B8%B0%EC%88%A0-%EB%B0%9C%ED%91%9C-GraphQL-%EB%B3%B4%EC%95%88-%EC%9C%84%ED%98%91%EA%B3%BC-%EC%A7%80%ED%82%A4%EB%8A%94-%EB%B0%A9%EB%B2%95)
+- [Pain Points of GraphQL](https://labs.getninjas.com.br/pain-points-of-graphql-7e83ba5ddef7)
+- [GraphQL DataLoader를 이용한 성능 최적화](https://y0c.github.io/2019/11/24/graphql-query-optimize-with-dataloader/)
