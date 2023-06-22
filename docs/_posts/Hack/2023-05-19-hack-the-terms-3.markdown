@@ -52,7 +52,7 @@ SQL이 데이터베이스에 질문하기 위해 사용하는 질의어이듯, G
 물론 JavaScript의 경우 처럼 항상 그 이름이 자기 자신을 제대로 설명하는 것은 아니다. 처음 GraphQL에 대해 공부하기 시작했을 때 생겼던 궁금증을 해결해 보고자 이름에 대한 조사를 시도해봤다. 그럼 본격적으로 GraphQL에 대한 설명을 하기 전에 먼저 첫 인상에서 올 수 있는 몇 가지 오해를 짚어보고 넘어가자.
 
 - GraphQL은 SQL을 대체한다?  
-  이름에서 발견할 수 있는 유사성이 있으나, GraphQL은 API 영역에서 기능한다. 오히려 RESTFul API 설계를 대체하려는 움직임에 가깝다.
+  이름에서 발견할 수 있는 유사성이 있으나, GraphQL은 API 영역에서 기능한다. 오히려 RESTful API 설계를 대체하려는 움직임에 가깝다.
 
 - GraphQL은 라이브러리/프레임워크다?  
   GraphQL은 라이브러리/프레임워크가 아닌 별개의 컴퓨터 언어, 그리고 [그 언어에 대한 기술 스펙](https://spec.graphql.org/draft/)을 뜻한다. HTML이나 SQL을 떠올려 보면 된다. 표준 스펙이 존재하지만 그것이 실제 동작하기 위해서는 각 웹 브라우저 개발 업체들, DBMS 개발 업체들이 해당하는 기능들을 구현해야 한다. 시스템을 개발하는 입장에서 우리는 사용하는 프로그래밍 언어에 맞춰 GraphQL의 쿼리를 실행할 수 있는 구체적인 서버 측 코드, GraphQL 서비스를 구현해야하고, [이를 도와주는 라이브러리들](https://graphql.org/code/)이 별도로 존재한다.
@@ -142,11 +142,11 @@ query getTodoById {
 기존 API 호출 방식은 클라이언트가 백엔드의 API 정의에 종속되어야 한다. 백엔드가 주기로 한 데이터 형태로만 받을 수 있다는 뜻이다. 클라이언트가 필요로 하는 데이터 보다 많은 정보를 주더라도 클라이언트는 꼼짝없이 제공하는 데이터를 모두 받아야 하며(**Overfetching**), 클라이언트가 필요로 하는 데이터를 제공하지 않으면 추가로 API 호출을 수행해야 한다(**Underfetching**). 반면 GraphQL은 클라이언트가 직접 질의문을 통해 원하는 데이터 형태를 명시할 수 있게 된다.
 
 2. HTTP와 단일 엔드포인트  
-기존 웹 API들 처럼 GraphQL 서비스는 HTTP 프로토콜을 통해 제공하는 것이 일반적이다. 대신 URL을 구분해 여러 API 엔드포인트를 두는 기존 방식과 달리 GraphQL의 경우 외부로 `/graphql`라는 단일 엔드포인트만 노출한다. 그리고 해당 URL로 `GET` 또는 `POST` 중 원하는 방식을 사용해 GraphQL 요청을 받게 만든다. 당연한 이야기겠지만 클라이언트는 `GET`을 사용할 경우 URL 쿼리 파라미터에, `POST`를 사용할 경우 JSON으로 인코딩된 바디로 GraphQL 질의문을 전달하면 된다. 여담으로 단일 엔드포인트에 GraphiQL이라는 유용한 테스팅 도구를 물릴 수도 있다. ([이렇게](https://rickandmortyapi.com/graphql))    
+기존 웹 API들 처럼 GraphQL 서비스는 HTTP 프로토콜을 통해 제공하는 것이 일반적이다. 대신 URL을 구분해 여러 API 엔드포인트를 두는 기존 방식과 달리 GraphQL의 경우 외부로 `/graphql`라는 단일 엔드포인트만 노출한다. 그리고 해당 URL로 `GET` 또는 `POST` 중 원하는 방식을 사용해 GraphQL 요청을 받게 만든다. 당연한 이야기겠지만 클라이언트는 `GET`을 사용할 경우 URL 쿼리 파라미터에, `POST`를 사용할 경우 JSON으로 인코딩된 바디로 GraphQL 질의문을 전달하면 된다. 여담으로 단일 엔드포인트에 [GraphiQL](https://github.com/graphql/graphiql)이라는 유용한 테스팅 도구를 물릴 수도 있다. ([이렇게](https://rickandmortyapi.com/graphql))    
 또 여담으로 [GraphQL over HTTP](https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md)라는 프로젝트도 별도로 존재한다. 통신 계층 프로토콜 운용 방법을 정확하게 명시하지 않은 기존 GraphQL 명세를 보완하기 위한 새로운 명세로 이해하면 될 것 같다.
 
 3. API 버전 명시를 권장하지 않음  
-리소스가 재설계 될 때 마다 `/v1` `/v2` 같은 식으로 URL에 버전을 명시해 API를 구분짓던 기존 방식과 달리 GraphQL은 버전이 특별히 필요하지 않다. 앞서 말했듯 서버 측에서 어떤 데이터를 주는지 결정짓지 않고(즉 클라이언트의 API의 사용이 응답에 종속되지 않고) 클라이언트 측에서 원하는 데이터를 선택할 수 있기 때문. 재설계 또는 변경이 필요하다면 기존 GraphQL 스키마에 새로운 타입을 추가하거나 새로운 필드를 추가하면 된다. 거의 사용되지 않는 레거시 쿼리가 파악된다면 별도로 `@deprecated` 표시를 해 클라이언트에게 안전하게 안내할 수도 있다. 덕분에 API 호출 영역이 조금 더 부드러워(Soft)진다고 표현하고 싶다.
+리소스가 재설계 될 때 마다 `/v1` `/v2` 같은 식으로 URL에 버전을 명시해 API를 구분짓던 기존 방식과 달리 GraphQL은 버전이 특별히 필요하지 않다. 앞서 말했듯 서버 측에서 어떤 데이터를 주는지 결정짓지 않고(즉 클라이언트의 API의 사용이 응답에 종속되지 않고) 클라이언트 측에서 원하는 데이터를 선택할 수 있기 때문. 재설계 또는 변경이 필요하다면 기존 GraphQL 스키마에 새로운 타입을 추가하거나 새로운 필드를 추가하면 된다. 거의 사용되지 않는 쿼리가 파악된다면 별도로 `@deprecated` 표시를 해 클라이언트에게 안전하게 안내할 수도 있다. 덕분에 API 호출 영역이 조금 더 부드러워(Soft)진다고 표현하고 싶다.
 
 ### GraphQL의 도전과제들
 
@@ -185,7 +185,7 @@ query {
 
 **네트워크 수준의 캐싱**  
 
-기존 API 방식에서는 [HTTP 캐싱](https://developer.mozilla.org/ko/docs/Web/HTTP/Caching)을 쉽게 활용할 수 있었다. 하지만 GraphQL에서는 각 작업이 URL 기반 엔드포인트가 아닌 질의문에 의해 결정되기 때문에 HTTP 캐싱을 적용하기 까다로워진다. 따라서 GraphQL 서비스에서는 URL 기반이 아닌 쿼리 기반으로 개발자가 캐싱을 구현해야 한다. 물론 Well-known 문제인 만큼 이를 해결하는 도구들이 이미 존재한다. 개념만 간단히 설명하자면, **Persisted Query**라는 것을 사용한다. 쿼리에 ID를 줘서 캐싱하는 전략을 뜻한다.
+기존 API 방식에서는 [HTTP 캐싱](https://developer.mozilla.org/ko/docs/Web/HTTP/Caching)을 쉽게 활용할 수 있었다. 하지만 GraphQL에서는 각 작업이 URL 기반 엔드포인트가 아닌 질의문에 의해 결정되기 때문에 HTTP 캐싱을 적용하기 까다로워진다. 따라서 GraphQL 서비스에서는 URL 기반이 아닌 쿼리 기반으로 개발자가 캐싱을 구현해야 한다. 다행히 Well-known 문제인 만큼 이를 해결하는 도구들이 이미 존재한다. **Persisted Query**라는 것을 사용하는데, 개념만 간단히 설명하자면 쿼리에 해싱된 ID를 줘서 캐싱하는 전략을 뜻한다.
 
 **N+1 문제**  
 
@@ -203,15 +203,165 @@ query {
 }
 ```
 
-GraphQL의 N+1 문제는 서버 측에서 처리할 수 있다. 이 또한 Well-known 문제인지라 이번엔 페이스북이 직접 유틸리티 도구를 만들어줬다. **[DataLoader](https://github.com/graphql/dataloader)**라는 라이브러리인데, 데이터를 로드할 때 **batching(한 번에 묶어서 처리)**을 지원해준다. 이를 GraphQL 리졸버에 적용해 N+1 문제를 해결하는 것이 일반적이다.
-
----
+GraphQL의 N+1 문제는 서버 측에서 처리할 수 있다. 이 또한 역시 Well-known 문제인지라 이번엔 페이스북이 직접 유틸리티 도구를 만들어뒀다. **[DataLoader](https://github.com/graphql/dataloader)**라는 라이브러리인데, 데이터를 로드할 때 **batching(한 번에 묶어서 처리)**을 지원해준다. 이를 GraphQL 리졸버에 적용해 N+1 문제를 해결하는 것이 일반적이다.
 
 ## 실습
 
+[![gqlcode](https://i.postimg.cc/rFc28gvV/gqlcode.png){:loading="lazy"}  ](https://graphql.org/code/)
+{: .center .rounded-edge}
+
+GraphQL이 스키마와 쿼리 그 자체로 동작하는 것은 아니기 때문에 개발자는 GraphQL 서버와 GraphQL 클라이언트를 개발해야 한다. HTML을 렌더링하는 웹 브라우저가 다양하듯이 [개발에 도움을 줄 도구들은 언어별로 다양하게 존재한다](https://graphql.org/code/#javascript-tools). 그 중 현재(2023년) 가장 많이 사용되는 조합은 JavaScript/TypeScript와 [Apollo](https://www.apollographql.com/)의 [Apollo Server](https://www.apollographql.com/docs/apollo-server/)와 [Apollo Client](https://www.apollographql.com/docs/react). 그 외에 서버에서는 [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server) 또한 많이 사용되고 있으며 클라이언트에서는 페이스북이 만든 프레임워크 [Relay](https://relay-ko.github.io/)를 사용하는 자료도 꽤 찾아볼 수 있었다. 여기선 Apollo 공식 문서를 따라 간단하게 실습해보자.
+
 ### GraphQL을 직접 구현하기 위한 도구 (서버 편)
+**[Apollo Server](https://www.apollographql.com/docs/apollo-server/getting-started)**  
+{: .center .middle-big}
+
+**1 ) 먼저 새 프로젝트 작업 공간을 만든다.**  
+```bash
+mkdir graphql-server-example
+cd graphql-server-example
+npm init --yes && npm pkg set type="module"
+```
+
+**2 ) 필요한 node 패키지를 설치하고 엔트리 포인트를 만든다.**  
+```bash
+npm install @apollo/server graphql
+npm install --save-dev typescript @types/node
+mkdir src
+touch src/index.ts
+touch tsconfig.json
+```
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "rootDirs": ["src"],
+    "outDir": "dist",
+    "lib": ["es2020"],
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "types": ["node"]
+  }
+}
+```
+```json
+// package.json
+{
+  // ...etc.
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js",
+    // other scripts
+  }
+  // other dependencies
+}
+```
+함께 설치하는 [`graphql`](https://www.npmjs.com/package/graphql) 패키지는 [GraphQL 공식 문서에서도 확인할 수 있는](https://graphql.org/graphql-js/) GraphQL 코어 라이브러리이다. Apollo 등 별도의 라이브러리 없이 이 패키지 만으로 Node GraphQL 서비스를 구현할 수도 있다.
+
+**3 ) GraphQL 스키마를 정의한다.**  
+```typescript
+// index.ts
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+
+// "스키마"는 타입 정의의 묶음을 뜻한다.(typeDefs)
+// 또한 데이터에 대한 질의문이 어떤 형태로 이루어져야 하는지 정의하기도 한다.
+const typeDefs = `#graphql
+  # GraphQL의 주석은 # 기호로 나타낸다.
+
+  # 이 "Book" 타입은 우리 데이터 소스의 모든 책들에 대해
+  # 질의 가능한 필드들을 정의하고 있다.
+  type Book {
+    title: String
+    author: String
+  }
+
+  # "Query" 타입은 서비스에서 클라이언트가 요청 가능한 쿼리의 목록을 나타낸다.
+  # 이 경우 "books" 쿼리는 위에서 정의한 책들의 배열을 반환한다.
+  type Query {
+    books: [Book]
+  }
+`;
+```
+문자열 형태로 스키마를 하드코딩해서 정의했다. 프로젝트가 커지면 `.gql` 혹은 `.graphql` 확장자로 따로 파일을 분리해 저장해도 좋다. 템플릿 리터럴의 첫 부분에 `#graphql` 주석을 넣은 것을 볼 수 있는데, 이렇게 하면 IDE가 이 문자열을 GraphQL 코드로 인식해 코드 하이라이팅을 제공해줄 것이다.
+
+**4 ) 데이터셋을 정의한다.**  
+```typescript
+// index.ts
+
+// ...
+
+/* 우리의 데이터 소스, 우리의 데이터베이스 */
+const books = [
+  {
+    title: 'One Piece',
+    author: 'Oda Eiichiro',
+  },
+  {
+    title: 'Nausicaä of the Valley of the Wind',
+    author: 'Miyazaki Hayao',
+  },
+];
+```
+실습 용도로 간단한 데이터를 준비했다. 우리 서비스는 요청을 받으면 이 배열에서 책 데이터를 가져와 반환해준다.
+
+**5 ) 리졸버를 정의한다.**  
+```typescript
+// index.ts
+
+// ...
+
+// "리졸버"는 스키마에서 정의한 데이터를
+// 어떻게 가져올지 정의하는 함수들을 뜻한다.
+// 이 리졸버는 위에서 정의한 "books" 배열에서 책들을 검색한다.
+const resolvers = {
+  Query: {
+    books: () => books,
+  },
+};
+```
+이 경우는 그저 앞서 정의한 `books` 배열을 그대로 리턴할 뿐이지만, 리졸버에서는 별도의 데이터베이스에 접근하거나 다른 비즈니스 로직을 실행하도록 함수를 정의하면 된다.
+
+**6 ) `ApolloServer`의 인스턴스를 생성한다.**  
+```typescript
+// index.ts
+
+// ...
+
+// ApolloServer 생성자엔 다음 두 매개변수가 필요하다:
+// 스키마, 리졸버 목록
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+// 서버 실행
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 8888 },
+});
+
+console.log(`🚀  Server ready at: ${url}`);
+```
+원하는 포트 번호를 설정해서 서버를 실행한다. 서버를 실행할 때 `startStandaloneServer()`라는 함수를 사용한다. 공식 문서의 설명에 따르면 이 함수는 내부적으로 Exrpess 인스턴스를 생성해서 `ApolloServer` 인스턴스를 미들웨어로 사용한다고 한다. 응용하면 우리가 생성한 인스턴스 변수 `server`를 원하는 서버 프레임워크에 적용할 수 있을 것으로 보인다.
+
+**7 ) 서버를 실행하고 테스트해본다.**  
+```bash
+npm start
+```
+![apolloserver](https://i.postimg.cc/RFzz3LqT/apolloserver.png){:loading="lazy"}  
+{: .center .rounded-edge}
+
+서버를 실행한 후 웹 브라우저로 [http://localhost:8888](http://localhost:8888)에 접속하면 위와 같은 GraphiQL 기반 도구를 확인할 수 있다.
+
+![postman](https://i.postimg.cc/1t8x87r2/postman.png){:loading="lazy"}  
+{: .center .rounded-edge}
+
+혹은 이렇게 포스트맨 같은 테스팅 도구를 활용해 질의를 보내볼 수도 있다. 포스트맨도 GraphQL에 대한 지원이 깔끔하게 되어있는 편.
 
 ### GraphQL을 직접 사용하기 위한 도구 (클라이언트 편)
+
 
 ### GraphQL로 API를 제공 중인 서비스들
 
