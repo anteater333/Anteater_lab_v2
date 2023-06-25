@@ -251,10 +251,22 @@
 
 .page-content > .content-middle {
   max-width: 100vh;
+
   display: flex;
   justify-content: center;
 
-  min-width: 0;
+  min-width: 740px;
+
+  margin: 0 $spacing-unit;
+
+  @include media-query($on-half) {
+    margin: 0 auto;
+  }
+
+  @include media-query($on-palm) {
+    margin: 0;
+    min-width: 0;
+  }
 }
 
 .page-content > .content-side {
