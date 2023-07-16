@@ -1,6 +1,7 @@
 ---
 layout: post
 title: '자잘한 도움말 #4 2차원 배열 초기화'
+description: 참조의 복사, Python 2차원 배열 초기화, Javascript 2차원 배열 초기화
 date: 2022-02-13 18:00:00 +0900
 categories: [Micro]
 ---

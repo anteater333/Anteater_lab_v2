@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "자잘한 도움말 #7 요청 URI의 파라미터에 특수기호가 들어가야 한다면"
+description: URI, URL, URL 파라미터 특수기호, UTF-8 인코딩
 date: 2023-02-27 00:32:00 +0900
 categories: [Micro]
 ---

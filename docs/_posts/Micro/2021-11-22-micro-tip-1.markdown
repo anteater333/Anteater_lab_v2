@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "자잘한 도움말 #1 Jekyll w/ docker 설정"
+description: Jekyll, Docker, 컨테이너, live reload, 35729 포트, 4000 포트
 date: 2021-11-22 17:26:00 +0900
 categories: [Micro]
 ---

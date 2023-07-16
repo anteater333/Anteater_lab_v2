@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Hack🪓 the #2 Promise"
+description: Promsie, Javascript, Async, Async, 디자인 패턴, 자바스크립트, 프로미스, 비동기, Asynchronous, 자바스크립트 비동기 처리의 발전
 date: 2022-07-9 22:30:00 +0900
 categories: [Hack]
 ---

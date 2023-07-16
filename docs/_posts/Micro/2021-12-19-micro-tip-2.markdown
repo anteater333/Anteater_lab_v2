@@ -1,6 +1,7 @@
 ---
 layout: post
 title: '자잘한 도움말 #2 WSL 환경에 Expo 설정 중 일어나는 문제'
+description: React Native, Expo, WSL, WSLHostPatcher
 date: 2021-12-19 10:00:00 +0900
 categories: [Micro]
 ---

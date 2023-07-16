@@ -1,6 +1,7 @@
 ---
 layout: post
 title: '자잘한 도움말 #3 Java의 String은 Immutable Object'
+description: Call by Value, Call by Reference, Immutable Object, 불변 객체
 date: 2022-01-19 13:53:00 +0900
 categories: [Micro]
 ---

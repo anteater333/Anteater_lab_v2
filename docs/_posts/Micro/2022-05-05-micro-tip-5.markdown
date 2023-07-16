@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "자잘한 도움말 #5 NPM install 속도가 너무 느려요! (WSL에서 말입니다)"
+description: WSL, NPM, WSL NPM install 속도, resolv.conf, deno, node
 date: 2022-05-05 11:40:00 +0900
 categories: [Micro]
 ---

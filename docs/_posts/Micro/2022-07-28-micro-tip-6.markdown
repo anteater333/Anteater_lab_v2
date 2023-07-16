@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "자잘한 도움말 #6 백준 10845번 (큐) NodeJS로 풀기"
+description: 백준 10845번, 백준 큐 NodeJS, Node 콘솔 출력 속도
 date: 2022-07-28 20:34:00 +0900
 categories: [Micro]
 ---

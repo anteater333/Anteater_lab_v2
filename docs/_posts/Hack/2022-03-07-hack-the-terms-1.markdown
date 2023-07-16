@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Hack🪓 the #1 의존성 주입"
+description: 의존성 주입, Dependency Injection, 의존성 주입이란?, 제어의 역전, IoC, 소프트웨어 공학, DI 프레임워크, DI 라이브러리
 date: 2022-03-07 18:50:00 +0900
 categories: [Hack]
 ---
