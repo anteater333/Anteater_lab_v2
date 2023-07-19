@@ -1,0 +1,33 @@
+---
+layout: post
+title: "자잘한 도움말 #10 TypeError: (...).default is not a constructor"
+subtitle: TypeScript 코드를 컴파일해서 실행했더니 어떤 라이브러리가 자기는 생성자가 아니라고 할 때
+description: "TypeError: jszip_1.default is not a constructor, esModuleInterop, javascript, typescript, module export, module import, node, 자바스크립트 모듈, 생성자, 에러"
+date: 2023-07-18 23:46:00 +0900
+categories: [Micro]
+---
+
+⚠️ 작성후 파일명 + 시간 바꿔! (tip 9 시간 안바꿔놨다. 이제와서 바꾸면 GSC 관련해서 문제 생길듯.)
+
+## TL;DR
+
+- ```typescript
+import JSZip from 'jszip';
+  ```
+  TypeScript에서 위처럼 모듈을 불러왔는데 실행 시 다음과 같은 에러가 나타난다면.
+  ```
+TypeError: jszip_1.default is not a constructor
+  ```
+- `tsconfig.json` 파일에서 `"esModuleInterop"`의 값을 `true`로 수정한다.
+- 해당 값을 수정할 수 없다면 import를 다음과 같이 수정한다.
+  ```typescript
+import JSZip = require("jszip");
+  ```
+
+
+## 이하 그리 중요하진 않은 내용들
+
+언제나 그렇듯이 문제 해결을 위해서라면 아래 글은 전혀 읽을 필요가 없다. 사실 처음 이 에러를 겪었을 땐 없었던 걸로 기억하는데 지금 와서 문제를 재현하니까 vscode가 손수 어떻게 하면 된다고 알려주더라고. 아무튼 얼마나 궁금해할지는 모르겠으나 나는 궁금해서 주제로 정해봤다.
+
+## 내가 배운 것
+
