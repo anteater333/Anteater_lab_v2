@@ -84,7 +84,7 @@ requirejs(["helper/util"], function(util) {
 });
 ```
 
-AMD(Asynchronous Module Definition)는 웹 브라우저라는 비동기 환경에서 모듈을 정의하는 표준을 만들자는 목표를 가지고 탄생했다. 이쪽에서 대표적으론 RequireJS라는 스펙의 구현체가 존재했다. AMD는 CommonJS로부터 독립한 단체였는데, 둘 사이에 의견이 일치하지 않아 결국 분리되었다고 한다. 개인적으론 모듈을 정의하고 불러오는 구조가 꽤 생소하다. CommonJS는 할당문(Assignment)을 사용하는 반면 AMD는 콜백 함수를 사용해 비동기 환경에 대한 고려가 담겨있다는 것을 알 수 있다.
+AMD(Asynchronous Module Definition)는 웹 브라우저라는 비동기 환경에서 모듈을 정의하는 표준을 만들자는 목표를 가지고 탄생했다. 이쪽에서 대표적으론 RequireJS라는 스펙의 구현체가 존재했다. AMD는 CommonJS로부터 독립한 단체였는데, 둘 사이에 의견이 일치하지 않아 결국 분리되었다고 한다. 개인적으론 모듈을 정의하고 불러오는 구조가 꽤 생소하게 다가왔다. CommonJS는 할당문(Assignment)을 사용하는 반면 AMD는 콜백 함수를 사용해 비동기 환경에 대한 고려가 담겨있다는 것을 알 수 있다.
 
 ![ECMA](https://i.postimg.cc/rscc8cRV/image.png){:loading="lazy"}  
 그만 싸워!
