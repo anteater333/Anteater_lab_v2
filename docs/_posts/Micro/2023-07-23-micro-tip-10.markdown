@@ -1,0 +1,220 @@
+---
+layout: post
+title: "자잘한 도움말 #10 TypeError: (...).default is not a constructor"
+subtitle: TypeScript 코드를 컴파일해서 실행했더니 어떤 라이브러리가 자기는 생성자가 아니라고 할 때
+description: "TypeError: jszip_1.default is not a constructor, esModuleInterop, javascript, typescript, module export, module import, node, 자바스크립트 모듈, 생성자, 에러, 자바스크립트 모듈화의 역사, CommonJS, AMD, ESM, ECMAScript 2015"
+date: 2023-07-23 23:09:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+
+![오늘의문제](https://i.postimg.cc/6Qb0jyq9/image.png)   
+{: .center .w-3-quarter .mb-lg}
+
+- ```typescript
+import JSZip from 'jszip';
+  ```
+  TypeScript에서 위처럼 모듈을 불러왔는데 실행 시 다음과 같은 에러가 나타난다면.
+  ```
+TypeError: jszip_1.default is not a constructor
+  ```
+- `tsconfig.json` 파일에서 `"esModuleInterop"`의 값을 `true`로 수정한다.
+- 해당 값을 수정할 수 없다면 import를 다음과 같이 수정한다.
+  ```typescript
+import JSZip = require("jszip");
+  ```
+
+
+## 이하 그리 중요하진 않은 내용들
+
+언제나 그렇듯이 문제 해결을 위해서라면 아래글은 전혀 읽을 필요가 없다. 사실 처음 이 에러를 겪었을 땐 없었던 걸로 기억하는데 지금 와서 문제를 재현하니까 vscode가 손수 어떻게 하면 된다고 알려주더라고. 그래서 오류 재현과 관련된 부분은 어느 정도 감안해서 글을 읽을 필요가 있다. 아무튼 얼마나 궁금해할지는 모르겠으나 나는 궁금해서 주제로 정해봤다.
+
+### TypeScript와 JavaScript의 관계
+
+![the cooler script](https://i.postimg.cc/cLMytPZN/cooler-Daniel.webp){:loading="lazy"}  
+{: .center .w-3-quarter}
+
+**타입스크립트는 자바스크립트의 슈퍼셋이다**. 우리말로는 상위집합이라고 한다. 부분집합의 반대말. 하지만 "자바스크립트는 타입스크립의 서브셋이다"라고는 흔히 말하지 않는다. 태초에 자바스크립트가 먼저 존재했고, 그것을 보완하기 위해 만든 것이 타입스크립트이기 때문.
+
+자바스크립트는 약타입 언어로 설계되었다. 런타임 동안 데이터의 타입을 보장해주지 않는다. `1 + 1`을 입력했더니 `11`을 반환받는 경험을 한번쯤 해봤을 것이다. 코드를 작성할 때 이 변수가 `number`인지, `string`인지 따로 선언하지도 않는다. 이런 특성이 어느 정도 이점은 있었겠지만 개발자들 사이에서 적잖은 불편함을 불러일으켰고, 그들은 자바스크립트에 타입 시스템을 추가해 **타입**스크립트(**Type**Script)를 개발하게 된다.
+
+![ts2js](https://i.postimg.cc/XYGVKkKx/tstjs.png){:loading="lazy"}  
+{: .center .w-3-quarter}
+
+개인적으로 흥미롭다고 생각하는 부분은, 타입스크립트가 자바스크립트를 완전히 대체하는 방식을 택하지 않고 자바스크립트를 보완하는 방식을 택했다는 점이다. 타입스크립트에는 "타입스크립트 엔진"이라는 물건이 따로 존재하지 않는다. 타입스크립트 코드를 실행하려면 그것을 자바스크립트 코드로 먼저 바꿔야 한다. 달리 말해서, 타입스크립트를 컴파일하면 그 결과로 자바스크립트 코드가 나오게 된다.
+
+### 모듈화 문제
+
+> [자바스크립트 프로그램은 꽤 작게 시작되었습니다.](https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Modules)
+
+자바스크립트는 웹 페이지 제어라는 작은 목적만을 가지고 시작되었다. 자바스크립트가 단 10일 만에 완성된 프로젝트라는 이야기는 유명하다. 그런데 웬걸 21세기 웹은 덜컥 엄청난 성공을 거두어 버렸고, 2023년 현재 사람들은 이 자바스크립트를 가지고 머신 러닝 라이브러리까지 만들어 사용하고 있다.
+
+![webpack, module bundler](https://i.postimg.cc/fR4vsbNs/image.png){:loading="lazy"}  
+Webpack
+{: .center .rounded-edge-16}
+
+현대적인 웹 개발 프로젝트라면 저마다 하나씩 모듈 번들러(Module bundler)를 가지고 있을 것이다. 나도 관성적으로 번들러를 포함해서 여러 프로젝트를 진행해오고 있다. 모듈 번들러에 대해서 핵심만 설명하자면 여러 자바스크립트 모듈들을 한데 모아 묶음 처리 해주는 도구이다. 이런 기능이 왜 필요하냐, 초기 자바스크립트와 웹 브라우저는 굳이 모듈에 대한 고려를 하지 않았기 때문. 하지만 자바스크립트는 예상보다 훨씬 유용했다. 자바스크립트의 사용처가 늘어나고 프로젝트는 커지면서 개발자들은 프로젝트의 모듈화를 원하게 되었고 저마다의 방식으로 이를 구현하게 된다. 브라우저의 자바스크립트 엔진이 이해하지 못하는 이 모듈이란 개념을 중간에서 해석해 주는 역할이 필요했던 것이다.
+
+![난세](https://i.postimg.cc/c1RH8G1B/image.png){:loading="lazy"}  
+이것저것 많다.
+{: .center}
+
+"저마다의 방식"이라는건 난감한 측면이 있다. 같은 기능을 구현하고자 해도 저마다 다른 형태를 가지게 되기 때문. 특히 모듈화 같은 주요한 기능에 있어서 구현의 파편화 양상이 발생하는 것은 바람직하지 않았다. 그래서 당시의 난세를 정리하고자 두 단체가 등장하게 된다. **CommonJS**와 **AMD**. 
+
+```javascript
+// CommonJS export (두 가지 방식)
+module.exports = { myModule };
+exports.myModule = myModule;
+
+// CommonJS import
+const myModule = require("./myModule.js");
+```
+
+CommonJS는 굳이 의미를 번역하자면 범용 자바스크립트라고 할 수 있다. 모듈화를 통해 웹 브라우저를 벗어나 더 넓은 범위에서 자바스크립트를 사용할 수 있도록 표준을 만들자는 목표인 것이다. 대표적으로 NodeJS는 초기에 이 CommonJS의 모듈 시스템을 사용했다.
+
+```javascript
+// AMD 구현체 requirejs의 예제 코드
+// ref. https://requirejs.org/docs/start.html
+requirejs(["helper/util"], function(util) {
+    //This function is called when scripts/helper/util.js is loaded.
+    //If util.js calls define(), then this function is not fired until
+    //util's dependencies have loaded, and the util argument will hold
+    //the module value for "helper/util".
+});
+```
+
+AMD(Asynchronous Module Definition)는 웹 브라우저라는 비동기 환경에서 모듈을 정의하는 표준을 만들자는 목표를 가지고 탄생했다. 이쪽에서 대표적으론 RequireJS라는 스펙의 구현체가 존재했다. AMD는 CommonJS로부터 독립한 단체였는데, 둘 사이에 의견이 일치하지 않아 결국 분리되었다고 한다. 개인적으론 모듈을 정의하고 불러오는 구조가 꽤 생소하다. CommonJS는 할당문(Assignment)을 사용하는 반면 AMD는 콜백 함수를 사용해 비동기 환경에 대한 고려가 담겨있다는 것을 알 수 있다.
+
+![ECMA](https://i.postimg.cc/rscc8cRV/image.png){:loading="lazy"}  
+그만 싸워!
+{: .center}
+
+```javascript
+// ECMAScript 2015(ES6) export
+export myValue = 3;
+export default myModule;
+
+// ECMAScript 2015(ES6) import
+import myModule, { myValue } from './myModule'
+```
+
+두 단체의 옹립에 결국 자바스크립트 스펙 표준을 결정하는 기구 ECMA가 두 팔을 걷고 나서게 된다. 자바스크립트의 대격변 **ECMAScript 2015, ES6**에서 모듈의 가져오기/내보내기와 관련된 새로운 문법(ECMAScript Module, **ESM**)이 탄생한다. 아마 2023년 현재 기준 가장 익숙한 방식은 이 방식일 것이다.
+
+### TypeScript에서의 Module
+
+타입스크립트에서도 당연히 모듈을 사용할 수 있다. ESM 문법을 그대로 사용하면 된다. 다만 특별히 고려해야할 부분이 있는데, 바로 오래전에 자바스크립트로 개발된 외부 라이브러리를 사용할 때의 문제.
+
+타입스크립트를 사용하면 `*.d.ts`같은 파일명을 자주 볼 수 있다. 이를 **정의 파일(Declaration Files)**이라고 한다. 예제로 [JSZip](https://www.npmjs.com/package/jszip)라는 자바스크립트 라이브러리를 `npm`으로 설치 해보자. 라이브러리의 디렉토리에 `index.d.ts` 파일이 존재한다. 타입스크립트 개발 시 JSZip 라이브러리를 사용하면 이 파일을 통해 모듈의 타입 시스템을 인식하는 것이다.
+
+![오늘의문제](https://i.postimg.cc/6Qb0jyq9/image.png)   
+{: .center .w-3-quarter .mb-lg}
+
+그런데 평범하게 `import JSZip from 'jszip'` 으로 라이브러리를 가져오면 위와 같은 에러를 만날 수 있다. 오류를 재현하는 예제 코드를 보자.
+
+```typescript
+import JSZip from 'jszip';
+import {saveAs} from "file-saver";
+
+const zip = new JSZip();
+
+zip.file("Hello.txt", "Hello World\n");
+
+zip.generateAsync({type:"blob"}).then(function(content) {
+    saveAs(content, "example.zip");
+});
+```
+
+이 코드를 `tsc`로 컴파일 하면 아래와 같은 결과물이 나온다.
+
+```javascript
+"use strict";
+exports.__esModule = true;
+var jszip_1 = require("jszip");
+var file_saver_1 = require("file-saver");
+var zip = new jszip_1["default"](); // <= 오류 발생
+zip.file("Hello.txt", "Hello World\n");
+zip.generateAsync({ type: "blob" }).then(function (content) {
+    (0, file_saver_1.saveAs)(content, "example.zip");
+});
+```
+
+JSZip의 정의 파일을 한 번 살펴보자.
+
+```typescript
+// node_modules/jszip/index.d.ts
+
+// ...
+
+declare var JSZip: JSZip;
+
+export = JSZip;
+```
+
+`export`문이 봐오던 것과 조금 다르게 생겼다. 모듈이 `export default` 형태로 정의되어 있기를 기대해 `import JSZip` 형태로 가져오려 했으나 다른 형태로 정의되어 있었기 때문에 해당 생성자가 존재하지 않는다는 오류를 받은 것이다. 이 문법에 대해서는 [타입스크립트 공식 문서](https://www.typescriptlang.org/ko/docs/handbook/modules.html#export-%EC%99%80-import--require-export--and-import--require)에서 확인할 수 있다. ESM이 아니라 CommonJS/AMD 방식에 대응하는 문법이다. 공식 표준으로 발표된 ESM 이전 모듈화 방식에서는 `exports` 객체에 값을 할당하는, 조금 다른 패러다임으로 모듈화를 진행하기 때문에 호환성을 위해 별도의 문법을 제공 해주는 것이다.
+
+문제를 해결하려면 아래와 같이 `export =` 형태에 대응하는 `import =` 형태로 코드를 수정해야 한다.
+
+```typescript
+import JSZip = require('jszip') // <= 수정!
+import {saveAs} from "file-saver";
+
+const zip = new JSZip();
+
+zip.file("Hello.txt", "Hello World\n");
+
+zip.generateAsync({type:"blob"}).then(function(content) {
+    saveAs(content, "example.zip");
+});
+```
+
+이런 결과물을 얻을 것이다.
+
+```javascript
+"use strict";
+exports.__esModule = true;
+var JSZip = require("jszip");
+var file_saver_1 = require("file-saver");
+var zip = new JSZip();  // <= 오류 사라짐
+zip.file("Hello.txt", "Hello World\n");
+zip.generateAsync({ type: "blob" }).then(function (content) {
+  (0, file_saver_1.saveAs)(content, "example.zip");
+});
+```
+
+문법의 통일성을 해치는 게 그리 이쁘지 않아 보이는데 당연하게도 타입스크립트 컴파일러의 설정 파일 `tsconfig.json`에서 [관련 옵션을 제공해주고 있다](https://www.typescriptlang.org/tsconfig#esModuleInterop).
+
+```json
+{
+    /* Allow 'import x from y' when a module doesn't have a default export. */
+    "esModuleInterop": true,
+}
+```
+
+Interop은 interoperability의 줄임말로, 상호운용성을 뜻한다. 즉 ESM과 CommonJS 두 방식 사이의 상호운용성을 컴파일러 차원에서 제공 해주도록 만드는 옵션을 뜻한다. 위 옵션을 활성화하고 `import JSZip from 'jszip'` 형태로 코드를 작성하면 컴파일 결과가 다음과 같이 나온다.
+
+```javascript
+"use strict";
+var __importDefault = (this && this.__importDefault) ||  function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+}; // <= 컴파일러가 직접 유틸 함수를 구현
+Object.defineProperty(exports, "__esModule", { value: true });
+const jszip_1 = __importDefault(require("jszip")); // <= 유틸함수를 사용해
+const file_saver_1 = require("file-saver");
+const zip = new jszip_1.default(); // <= 오류가 발생하지 않는다.
+zip.file("Hello.txt", "Hello World\n");
+zip.generateAsync({ type: "blob" }).then(function (content) {
+    (0, file_saver_1.saveAs)(content, "example.zip");
+});
+```
+
+## 내가 배운 것
+
+[자바스크립트 모듈의 안타깝고(?) 치열한 역사(유튜브, 프롱트님 채널)](https://youtu.be/Mah0QakFaJk)  
+{: .center .middle-big}
+
+이번 문제 관련해 영상을 찾던 중 발견한 재밌는 영상. 사실 아주 가벼운 마음으로 선택한 주제였는데 생각보다 복잡한 역사가 얽혀있었다. 역사 공부 재밌지... 아무튼 예상외의 깊은 내용을 배울 수 있어 즐거웠다.
+
+- 자바스크립트 모듈화의 역사
+- CommonJS/AMD/ESM
+- 타입스크립트의 또 다른 `export`/`import` 문법
