@@ -1,0 +1,22 @@
+---
+layout: post
+title: '프로젝트 회고록 저장소 🗃️'
+date: 2023-08-02 11:14:00 +0900
+categories: [Memoir]
+---
+
+## 후회중독자의 개인/사이드 프로젝트 회고록 저장소
+
+[![Projects](https://i.postimg.cc/6QRGLQdz/image.png)](https://blog.anteater-lab.link/portfolio/#works-section)  
+{: .center .w-3-quarter .rounded-edge-16}
+
+- 벌려놓은 일은 많으나 그 흔적이 희소하다.
+- 앞으로 작성할 때 지키면 좋을 가이드라인들:
+  - 개인 노션에 작성한 개발일지를 참고
+  - 프로젝트 소개 (프로젝트 별로 한번만)
+  - 포스팅은 개발 기간 단위로 작성
+  - 개발 기간 중 구현한 핵심 기능 소개
+  - 기술 사용 이유
+  - 개발 중 겪은 도전들
+  - 이번 개발 기간 평가
+  - 다음 개발 기간 계획은 개발일지에 작성하도록

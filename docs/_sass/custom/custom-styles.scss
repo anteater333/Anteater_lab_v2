@@ -48,3 +48,12 @@ body > .page-content {
 .footer-col-wrapper a {
   color: $brand-color-dark;
 }
+
+/**
+ * Site Navigator
+ */
+.site-nav {
+  a.page-link {
+    font-size: 1rem;
+  }
+}
