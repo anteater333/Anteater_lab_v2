@@ -2,6 +2,7 @@
 layout: post
 title: '회고록 #1 - 숲 (1)'
 date: 2023-09-09 20:54:00 +0900
+description: "숲, 나무위키 인기 검색어, beautifulsoup, jssoup, selenium, cURL, 크롤링, 크롤러, 실검, 프로젝트 회고록, React, node, express, cloudflare"
 categories: [Memoir]
 ---
 
