@@ -45,7 +45,7 @@ services:
 
 내가 파악하기론 이렇다. 사용자가 블로그의 소스를 작성하고, `jekyll serve` 명령어를 입력하면 Jekyll이 그걸 html로 빌드해서 웹서버에 올려준다.
 
-그리고 github pages의 은총 아래, github의 repo에다 우리의 블로그 소스를 push하면, github pages는 내부적으로 `jekyll serve`를 실행해 웹 서버를 연다(혹은 html로 빌드만 하고 다른 웹 서버 솔루션을 사용할 수도). 그렇게 우리는 [이런 URL](https://anteater333.github.io/Anteater_lab_v2/)에 접근할 수 있게 된다.
+그리고 github pages의 은총 아래, github의 repo에다 우리의 블로그 소스를 push하면, github pages는 내부적으로 `jekyll serve`를 실행해 웹 서버를 연다(혹은 html로 빌드만 하고 다른 웹 서버 솔루션을 사용할 수도). 그렇게 우리는 [이런 URL](https://blog.anteater-lab.link/)에 접근할 수 있게 된다.
 
 ![image02]({{site.baseurl}}/assets/pictures/tip01-02.png)  
 다음 문단의 스포일러  

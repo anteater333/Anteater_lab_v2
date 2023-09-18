@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://anteater333.github.io/sitemap.xml
+Sitemap: https://blog.anteater-lab.link/sitemap.xml
