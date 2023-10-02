@@ -294,7 +294,7 @@
 
       > .profile-upper {
         display: flex;
-        justify-content: flex-start;
+        justify-content: flex-end;
 
         > .profile-picture {
           width: 100px;
@@ -306,7 +306,7 @@
         display: flex;
         flex-direction: column;
 
-        align-items: flex-start;
+        align-items: flex-end;
 
         padding-left: $spacing-unit / 8;
 
