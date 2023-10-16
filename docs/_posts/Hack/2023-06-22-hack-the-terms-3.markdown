@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Hack🪓 the #3 GraphQL"
-description: GraphQL, Query Language, Apollo Server, Apollo Client, API, Graph Query Language
+description: GraphQL, Query Language, Apollo Server, Apollo Client, API, Graph Query Language, GraphQL이란?
 date: 2023-06-22 21:08:00 +0900
 categories: [Hack]
 ---
@@ -210,7 +210,7 @@ GraphQL의 N+1 문제는 서버 측에서 처리할 수 있다. 이 또한 역�
 [![gqlcode](https://i.postimg.cc/rFc28gvV/gqlcode.png){:loading="lazy"}  ](https://graphql.org/code/)
 {: .center .rounded-edge}
 
-GraphQL이 스키마와 쿼리 그 자체로 동작하는 것은 아니기 때문에 개발자는 GraphQL 서버와 GraphQL 클라이언트를 개발해야 한다. HTML을 렌더링하는 웹 브라우저가 다양하듯이 [개발에 도움을 줄 도구들은 언어별로 다양하게 존재한다](https://graphql.org/code/#javascript-tools). 그 중 현재(2023년) 가장 많이 사용되는 조합은 JavaScript/TypeScript와 [Apollo](https://www.apollographql.com/)의 [Apollo Server](https://www.apollographql.com/docs/apollo-server/)와 [Apollo Client](https://www.apollographql.com/docs/react). 그 외에 서버에서는 [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server) 또한 많이 사용되고 있으며 클라이언트에서는 페이스북이 만든 프레임워크 [Relay](https://relay-ko.github.io/)를 사용하는 자료도 꽤 찾아볼 수 있었다. 여기선 Apollo 공식 문서를 따라 간단하게 실습해보자.
+GraphQL이 스키마와 쿼리 그 자체로 동작하는 것은 아니기 때문에 개발자는 GraphQL 서버와 GraphQL 클라이언트를 개발해야 한다. HTML을 렌더링하는 웹 브라우저가 다양하듯이 [개발에 도움을 줄 도구들은 언어별로 다양하게 존재한다](https://graphql.org/code/#javascript-tools). 그 중 현재(2023년) 가장 많이 사용되는 조합은 JavaScript/TypeScript와 [Apollo](https://www.apollographql.com/)의 [Apollo Server](https://www.apollographql.com/docs/apollo-server/)/[Apollo Client](https://www.apollographql.com/docs/react). 그 외에 서버에서는 [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server) 또한 많이 사용되고 있으며 클라이언트에서는 페이스북이 만든 프레임워크 [Relay](https://relay-ko.github.io/)를 사용하는 자료도 꽤 찾아볼 수 있었다. 여기선 Apollo 공식 문서를 따라 간단하게 실습해보자.
 
 ### GraphQL을 직접 구현하기 위한 도구 (서버 편)
 **[Apollo Server](https://www.apollographql.com/docs/apollo-server/getting-started)**  
