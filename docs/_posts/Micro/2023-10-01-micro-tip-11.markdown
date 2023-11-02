@@ -25,8 +25,6 @@ hostname: xx.xxx.xxx.xx, addr: ::ffff:xx.xx.xx.xx
   - 프론트엔드 프레임워크(Vue, React) 수준의 프록시 설정은 개발용 설정이다.
   - 배포 환경에서는 Nginx나 Apache 같은 웹 서버에서 프록시를 설정하자. 
 
-----
-
 ## 이하 그리 중요하진 않은 내용들
 
 ### 험난한 정보의 바다
