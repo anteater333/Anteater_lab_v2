@@ -464,7 +464,8 @@
     text-align: justify;
   }
 
-  h2 {
+  h2,
+  h2 > code {
     @include relative-font-size(2);
 
     @include media-query($on-laptop) {
@@ -472,7 +473,8 @@
     }
   }
 
-  h3 {
+  h3,
+  h3 > code {
     @include relative-font-size(1.625);
 
     @include media-query($on-laptop) {
@@ -480,7 +482,8 @@
     }
   }
 
-  h4 {
+  h4,
+  h4 > code {
     @include relative-font-size(1.25);
 
     @include media-query($on-laptop) {
