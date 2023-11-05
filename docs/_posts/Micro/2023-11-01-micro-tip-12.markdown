@@ -8,7 +8,8 @@ categories: [Micro]
 
 ## TL;DR
 
-- USB를 꽂으면 윈도우에서는 자동으로 인식이 되지만, WSL은 인식하지 못한다.
+- USB를 꽂으면 윈도우에서는 자동으로 인식이 되지만(Plug & Play), WSL은 인식하지 못한다.
+  - 가상 머신은 하드웨어에 직접 접근하기 어렵다.
 - 리눅스 쉘에서 별도의 명령어를 사용해 USB 장치를 WSL에 연결(마운트, mount) 해줘야 한다.
 
 ```sh
@@ -54,3 +55,5 @@ OS는 생각보다 더 많은 일을 한다.
       - 이러다 결국 이상한 GUI 프로그램 깔아버리는 수가
     - or "마운트" (엄근진)
       - 명령어 단 2줄로 해결
+
+https://wrtn.ai/?utm_source=google.adwords&utm_medium=cpc&utm_campaign=google_searchad_brand&utm_content=adset_keyword_exact&utm_term=%EB%A4%BC%ED%8A%BC&ad_group=adset_keyword_exact&ad_creative=%EB%A4%BC%ED%8A%BC&gad_source=1&gclid=Cj0KCQjw-pyqBhDmARIsAKd9XIMMo-7jRO9yKHgfEJ5to_Jq0ygJdiANoYl9nr11dpXnmFWWB1Ou4fgaAnv8EALw_wcB
