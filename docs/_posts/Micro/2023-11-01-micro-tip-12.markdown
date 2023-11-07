@@ -13,7 +13,7 @@ categories: [Micro]
 - 리눅스 쉘에서 별도의 명령어를 사용해 USB 장치를 WSL에 연결(마운트, mount) 해줘야 한다.
 
 ```sh
-# D 드라이브로 잡힌 저장 장치 연결
+# 윈도우에 D 드라이브로 잡힌 저장 장치를 WSL에 연결
 sudo mount -t drvfs D: /mnt/d/
 
 # 연결 해제
@@ -41,30 +41,50 @@ WSL은 가상 머신으로 엄밀히 따지면 윈도우의 파일 시스템과�
 ![마운트](https://i.postimg.cc/HsX22Ccv/image.png)  
 {: .center .rounded-edge-16}
 
-물리 > 논리(윈도우) > 논리(WSL/VM)의 흐름으로 저장 장치가 연결된다고 생각했을 때, 두 수준 사이에서 발생하는 연결을 **마운트(Mount)**라고 한다. 즉 `/mnt` 경로는 Mount의 준말이었다. 다시 정리해서 말해보자. WSL은 자동으로 C 드라이브를 `/mnt/c/`에 마운트해준다. 문제는 여기에서 시작된다. 나는 내 노트북에 외장 SSD를 연결하고 그것이 윈도우에서 D 드라이브로 연결된 것을 확인했다. 그리고 WSL의 쉘에서 `/mnt/d/` 경로에 접근을 시도했다. "지정된 경로를 찾을 수 없음."
+물리 > 논리(윈도우) > 논리(WSL/VM)의 흐름으로 저장 장치가 연결된다고 생각했을 때, 두 수준 사이에서 발생하는 연결을 **마운트(Mount)**라고 한다. 조금 더 정확히 설명하자면, 위 그림에서 앞선 단계의 저장 장치 혹은 그 저장 장치의 일부 영역을 운영체제의 파일 시스템 구조에 연결하는 것을 의미한다. `/mnt` 경로는 Mount의 준말이다. 정리해서, WSL은 자동으로 윈도우의 C 드라이브를 `/mnt/c/`에 마운트해준다는 것을 알 수 있다.
 
-### PnP
-플러그 앤 플레이, USB를 꽂으면 별다른 설정 없이 바로 인식이 되는게 사실 OS가 많은 일을 해주고 있던 것.
+문제는 여기에서 시작된다. 나는 내 노트북에 외장 SSD를 연결하고 그것이 윈도우에서 D 드라이브로 연결된 것을 확인했다. 그리고 WSL의 쉘에서 `/mnt/d/` 경로에 접근을 시도했다. **"지정된 경로를 찾을 수 없음."**
+
+### Plug and Play
+
+<div class="center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yeUyxjLhAxU?si=xQJjJl6mUhus9kWt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<br/>
+<span>전설의 PnP 기능 발표 프레젠테이션</span>
+</div>
+
+플러그 앤 플레이(Plug and Play). 이름 그대로 USB를 꽂으면 별다른 설정 없이 바로 장치에서 사용할 수 있도록 만들어주는 기술이다. 사실 요즘엔 자주 들을 일 없는 이름이다. 숨 쉬듯이 자연스러운 일이 된지 오래되었기 때문. 요점은, 위 영상 처럼 까딱 잘못하다간 블루 스크린을 발생시킬지도 모르는 일을 사실 OS가 대신 처리해주고 있다는 이야기다.
+
+하지만 WSL에는 그 기능이 닿지 않는다. WSL은 VM이기 때문에 장치의 변화를 직접 인식하기가 어렵다. "아니 어차피 윈도우는 USB를 인식할건데 그 이벤트를 WSL에 전달해주면 되지 않나?" 싶지만, WSL의 설계 이념, 윈도우 PC에서 리눅스 환경의 제공이란 이념에 따라 그 인식을 사용자가 필요한 경우에만 직접 수동으로 하도록 되어있다. 여기서 리눅스 환경이란 아마 리눅스 서버 환경에 가까운 듯 하고, 사실 생각해보면 WSL을 사용할 정도의 컴퓨터 관련 지식이 있는 사용자에게 USB 연결을 직접 맡기는 것이 보안적인 측면에서도 더 유리하겠구나 납득되긴 한다.
 
 ### `mount`
-그리고 Linux에서 USB 외장 장치를 연결하는 명령어.
+
+말이 길었지만 아무튼, WSL에 설치된 리눅스에서 USB 외장 저장 장치를 마운트하는 방법을 알아보자. 아주 쉽다.
+
+```sh
+sudo mount -t drvfs D: /mnt/d/
+```
+
+0. `sudo`, SuperUser DO  
+1. `mount`는 이름 그대로 장치를 마운트하는 리눅스 명령어다.  
+2. `-t`는 마운트할 장치의 파일 시스템 유형을 지정하는 옵션이다.  
+3. `drvfs`는 [DrvF](https://learn.microsoft.com/ko-kr/windows/wsl/wsl-config#what-is-drvfs), WSL과 Windows 파일 시스템 간의 상호 운용성을 지원하도록 설계된 WSL의 파일 시스템 플러그 인이다.  
+4. `D:`는 윈도우에서 인식된 드라이브 이름을 뜻한다.  
+5. `/mnt/d/`는 마운트할 WSL 내 경로를 뜻한다.
+
+```sh
+sudo umount /mnt/d
+```
+
+연결 해제 또한 수동으로 해줘야 한다. 사실 윈도우에서도 "하드웨어 안전하게 제거" 같은 기능을 사용하니 그리 특별한 일은 아니긴 하다.
+
 
 ## 내가 배운 것
 
-마운트란
-OS는 생각보다 더 많은 일을 한다.
-키워드의 중요성 - 검색을 더 쉽게 만들어 줍니다.
+이번 주제를 정한 이유는 내가 [Hack](/category/3.Hack.html) 카테고리를 만든 이유와 일맥상통하는 부분이 있다. 처음 WSL에서 D 드라이브에 바로 접근이 안된다는 사실을 알고 나서 검색하는 데에 조금 어려움을 겪었던 기억이 있다. '어... USB가.. WSL에.. 인식이.. 안되는 것.. 같아..' 이러다가 검색을 잘못 하면 이상한 스크립트 파일 하나 깔아버릴 지도 몰라. 이정도로 과장된 일은 일어나지 않았겠지만, 구글에 장황하게 문제를 설명하려다 "마운트"라는 단어 하나를 떠올리자 마자 문제가 명령어 단 한 줄로 해결되었다는 것이 당시에 좋은 기억으로 남아있었다.
 
----
-- WSL에서 외장 하드 / 다른 파티션 마운트 시키기
-
-  - sudo mount -t drvfs D: /mnt/d/
-  - sudo umount /mnt/d
-  - 마운트란 무엇인가?
-  - 문제 해결엔 키워드가 중요하다.
-    - 어.. USB가.. WSL에.. 인식이.. 안되는 것.. 같아..
-      - 이러다 결국 이상한 GUI 프로그램 깔아버리는 수가
-    - or "마운트" (엄근진)
-      - 명령어 단 2줄로 해결
-
-https://wrtn.ai/?utm_source=google.adwords&utm_medium=cpc&utm_campaign=google_searchad_brand&utm_content=adset_keyword_exact&utm_term=%EB%A4%BC%ED%8A%BC&ad_group=adset_keyword_exact&ad_creative=%EB%A4%BC%ED%8A%BC&gad_source=1&gclid=Cj0KCQjw-pyqBhDmARIsAKd9XIMMo-7jRO9yKHgfEJ5to_Jq0ygJdiANoYl9nr11dpXnmFWWB1Ou4fgaAnv8EALw_wcB
+- 마운트(Mount)란 무엇인가.
+- OS는 생각보다 더 많은 일을 한다.
+  - Plug and Play
+  - 하지만 USB를 수동으로 인식시켜야 할 때도 있다.
+- **용어**의 중요성: 검색을 더 쉽게 만들어 줍니다.
