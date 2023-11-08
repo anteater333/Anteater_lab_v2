@@ -48,7 +48,7 @@ WSL은 가상 머신으로 엄밀히 따지면 윈도우의 파일 시스템과�
 ### Plug and Play
 
 <div class="center">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yeUyxjLhAxU?si=xQJjJl6mUhus9kWt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe class="youtube-iframe" width="560" height="315" src="https://www.youtube.com/embed/yeUyxjLhAxU?si=xQJjJl6mUhus9kWt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 <br/>
 <span>전설의 PnP 기능 발표 프레젠테이션</span>
 </div>

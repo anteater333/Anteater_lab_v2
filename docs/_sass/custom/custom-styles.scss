@@ -57,3 +57,13 @@ body > .page-content {
     font-size: 1rem;
   }
 }
+
+/**
+ * Youtube iframe
+ */
+.youtube-iframe {
+  @include media-query($on-palm) {
+    min-width: 0;
+    width: 100%;
+  }
+}
