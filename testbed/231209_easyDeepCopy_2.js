@@ -45,9 +45,6 @@ const copiedObj = deepCopy(original);
 
 const copied2Obj = JSON.parse(JSON.stringify(original));
 
-original.likes.push("movies");
-original.etc.budget = 10000;
-
 // 중첩된 구조에 대해서도 깊은 복사
 console.log(copiedObj.likes); // 출력 결과 : [ 'singing', 'games' ]
 console.log(copiedObj.etc.budget); // 출력 결과 : 0
@@ -58,3 +55,16 @@ console.log(copied2Obj.etc.budget);
 console.log(original.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (Date 객체)
 console.log(copiedObj.createdAt); // 출력 결과 : {}
 console.log(copied2Obj.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (문자열)
+
+const copied3Obj = structuredClone(original);
+
+original.likes.push("movies");
+original.etc.budget = 10000;
+
+// 중첩된 구조에 대해서도 깊은 복사
+console.log(copied3Obj.likes); // 출력 결과 : [ 'singing', 'games' ]
+console.log(copied3Obj.etc.budget); // 출력 결과 : 0
+
+// 이건 어떠냐
+console.log(original.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (Date 객체)
+console.log(copied3Obj.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (Date 객체)
