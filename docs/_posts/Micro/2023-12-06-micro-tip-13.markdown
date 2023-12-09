@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "자잘한 도움말 #13 Javascript에서 중첩된 객체에 대한 깊은 복사"
+title: "자잘한 도움말 #13 Javascript에서 중첩된 구조에 대한 깊은 복사"
 subtitle: "structuredClone() 쓰세요."
 description: ""
 date: 2023-12-06 11:00:00 +0900
@@ -34,35 +34,157 @@ categories: [Micro]
 
 ## 이하 그리 중요하진 않은 내용들
 
+![안깊어요^^](https://i.postimg.cc/L8mGm1wL/image.png)  
+{: .center .rounded-edge-16}
+
 복사된 것은 값인가, 주소인가. 앞서서 몇 번 이 주제와 관련된 글을 썼던 기억이 난다. 그래서 어차피 개념은 익숙해보이고, 그냥 API 하나 소개하면 되겠거니 살짝 정보의 바다에 발을 담궈봤는데, 생각보다 그 깊이가 깊어서 조금 당황하고 있다. 아무튼 이 "자잘한 도움말" 카테고리의 여느 글들과 다를 바 없이 아래 내용들은 굳이 읽을 필요 없다는 점을 미리 언급하고 시작하겠다. 특히 이번처럼 나 스스로도 자신이 없는 경우엔 더...
 
 ### 얕은 복사 vs 깊은 복사
 
-얕은 복사 : 주소의 복사. 데이터는 그대로, 변수만 하나 더 생김.
-깊은 복사 : 값의 복사. 그리고 새로운 메모리 공간 사용.
+데이터는 크게 두 유형으로 나뉘어진다. 숫자나 문자열 같은 기본형(Primitive) 데이터와 배열이나 객체같은 참조형(Reference) 데이터. [예전 글](/micro/2022/01/18/micro-tip-3.html)에서 이 두 종류의 데이터가 함수에 전달되었을 때의 행동에 대해 정리했던 적이 있다. 간단히 요약하자면, 기본형 데이터는 값 그 자체가 전달되기 때문에 함수 내부에서 그 데이터를 담고 있는 변수에 변화가 생겨도 밖의 변수에는 변화가 반영되지 않는다. 참조형 데이터는 그 데이터의 주소값이 전달(Object references are passed by value), 함수 내부에서 그 주소를 통해 데이터에 접근하기 때문에 원본 데이터에도 영향이 갈 수 있다. 여기서 "전달"은 다시말해 "복사"라고 할 수 있다. 현재 스코프의 데이터를 복사해서 새 스코프(함수)에 전달한다는 개념. 기본형 데이터에선 데이터 그 자체가 복사된다. 참조형 데이터에서는 주소만 복사된다.
 
-### Javascript 객체에 대한 깊은 복사
+![당연히 말이되죠](https://i.postimg.cc/GmPL4X8g/image.gif)  
+그럼 참조형 데이터의 데이터를 복사하는건?
+{: .center .rounded-edge}
 
-중첩된 구조에 대해서 깊은 복사를 수행하기가 까다로움.
+이번 문제는 '그러면 우리는 참조형 데이터에 대해선 항상 주소를 복사할 수 밖에 없는 것인가' 라는 질문에서 시작된다. 당연히 가능하다. 참조형 데이터에 대한 복사는 두 가지 방식으로 나눌 수 있다.
 
-1. 깊어야 함. 그 구조 전체와 똑같은 형태를 가지는 데이터가 생성되야함. (막 숫자 문자열만 깊은 복사 처리되고 자식으로 포함된 객체는 여전히 주소만 복사되면 안된다는 뜻.)
-2. 복사여야 함. AS IS. 나는 어떤 클래스로 선언했던 값인데, 갑자기 문자열로 변환되어서 복사되면 안된다는 뜻.
+![얕은 vs 깊은](https://i.postimg.cc/ZRtmLgBh/image.png)  
+배열에 대한 얕은 복사 vs 깊은 복사
+{: .center .rounded-edge-16}
 
-### 고전적 방식
+- **얕은 복사** : 주소를 복사. 데이터는 그대로, 변수만 하나 더 생긴다.
+- **깊은 복사** : 값을 복사. 그리고 새로운 메모리 공간을 사용한다.
 
-Object.assign()
+Javascript에서 기초적인 형태의 깊은 복사는 다음과 같이 구현할 수 있다. 배열 혹은 객체를 순환하면서 그 값들을 하나씩 복사해주면 된다.
 
-Spread operator (...)
+```javascript
+/**
+ * 원본 객체
+ */
+const original = {
+  name: "anteater",
+  age: "16 (for real)",
+  gender: "male",
+  likes: ["singing", "games"],
+};
 
-위 두 방식의 경우 깊이가 존재할 경우 실패 -> 재귀 함수로 만들어줘야 함.
+/**
+ * 간단한 깊은 복사 함수
+ */
+function easyDeepCopy(obj) {
+  const newObj = {};
+  for (const key in obj) {
+    newObj[key] = obj[key];
+  }
+  return newObj;
+}
 
-JSON.parse(JSON.stringify())
+/** 얕은 복사한 객체 */
+const shallowClone = original;
 
-일종의 편법이지만 그래도 그럭저럭 잘 동작. 하지만 데이터의 변조가 발생할 수 있음. (Date => String)
+/** 깊은 복사한 객체 */
+const deepClone = easyDeepCopy(original);
 
-각각 코드와 함께 소개
+// 원본 객체의 값을 변경
+original.age = 29;
 
-### 소개합니다 structuredClone
+// 얕게 복사한 객체도 값이 변경됨
+console.log(shallowClone.age); // 출력 결과 : 29
+// 깊게 복사한 객체엔 변경이 반영되지 않음
+console.log(deepClone.age); // 출력 결과 : "16 (for real)"
+```
+
+### 중첩된 구조에 대한 깊은 복사
+
+위 함수는 특정한 상황에만 제대로 동작할 것이다. 객체가 아닌 배열이 들어온다면? 이건 뭐 배열이 들어올 땐 `in` 대신 `of`를 쓰면 되겠지만. 참조형 데이터 안에 또다른 참조형 데이터가 들어있다면? 위 코드 아래쪽에 다음 두 줄을 추가해보자.
+
+```javascript
+original.likes.push("movies");
+console.log(deepClone.likes); // 출력 결과 : [ 'singing', 'games', 'movies' ]
+// 깊은 복사한 객체도 영향을 받는다!
+```
+
+이처럼 중첩된 구조에 대해선 깊은 복사를 수행하기가 까다롭다. 우리는 다음 두 조건을 만족하는 복사 로직을 만들어야 한다.
+
+1. 깊어야 함: 원본 구조 전체에 대해서 깊은 복사가 수행되어야 한다. 예를 들어 숫자, 문자열만 깊은 복사 처리되고 자식으로 포함된 객체는 여전히 주소만 복사되면 안된다.
+2. 복사여야 함: 데이터의 형태가 변경되면 안된다. AS-IS. 예를 들어 임의의 클래스로 선언했던 값이 복사 과정에서 문자열로 변환되어선 안된다.
+
+#### 고전적 방식
+
+일단 고전적인 방식부터 알아보자. 구조를 직접 순회하는 것은 기존 방식과 같되, 내부에 소속된 참조형 데이터에 대해 다시 깊은 복사를 적용할 수 있도록 재귀 함수를 사용한다.
+
+```javascript
+/**
+ * 제대로 된(?) 깊은 복사
+ */
+function deepCopy(obj) {
+  if (typeof obj !== "object" || obj === null) {
+    return obj; // 기본형 데이터는 그대로 반환
+  }
+
+  if (Array.isArray(obj)) {
+    // 배열에 대한 깊은 복사
+    const newArray = [];
+    for (let data of obj) {
+      newArray.push(deepCopy(data)); // 재귀
+    }
+
+    return newArray;
+  } else {
+    // 객체에 대한 깊은 복사
+    const newObj = {};
+    for (let key in obj) {
+      newObj[key] = deepCopy(obj[key]); // 재귀
+    }
+
+    return newObj;
+  }
+}
+```
+
+그리고 또다른 널리 알려진 방법도 있다. `JSON.parse(JSON.stringify(obj))`. 직접 객체를 순회하는 것이 아니라 데이터를 통째로 문자열로 만들어 상수화한 다음 그걸 다시 JSON으로 파싱해 새 객체로 만드는 방법이다. 약간 편법 같으면서도 꽤 잘 동작한다.
+
+```javascript
+const original = {
+  name: "anteater",
+  age: "16 (for real)",
+  gender: "male",
+  likes: ["singing", "games"],
+  etc: {
+    home: "Daegu",
+    budget: 0,
+  },
+  createdAt: new Date("1995-04-07"),
+};
+
+/** 직접 구현한 깊은 복사 */
+const copiedObj = deepCopy(original);
+/** JSON 활용 깊은 복사 */ 
+const copied2Obj = JSON.parse(JSON.stringify(original));
+
+original.likes.push("movies");
+original.etc.budget = 10000;
+
+// 중첩된 구조에 대해서도 깊은 복사 성공
+console.log(copiedObj.likes); // 출력 결과 : [ 'singing', 'games' ]
+console.log(copiedObj.etc.budget); // 출력 결과 : 0
+console.log(copied2Obj.likes); // 출력 결과 : [ 'singing', 'games' ]
+console.log(copied2Obj.etc.budget); // 출력 결과 : 0
+```
+
+하지만 이 방법들도 완벽하진 않다. 아래 테스트 케이스를 보자.
+
+```javascript
+// 이건 어떠냐
+console.log(original.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (Date 객체)
+console.log(copiedObj.createdAt); // 출력 결과 : {}
+console.log(copied2Obj.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (문자열)
+```
+
+직접 구현한 함수는 Date 객체를 제대로 복사하지 못하고, JSON을 활용한 방법에선 출력은 제대로 된 것 처럼 보이지만 객체가 아니라 문자열로 데이터의 변조가 발생하였다. 이대로 못 쓸 수준은 아니라고 생각할 수도 있겠지만, 아무튼 완전 무결한 깊은 복사는 아니라는 것. 물론 이를 해결하기 위해 또 if문을 추가해가며 깊은 복사 로직을 더 완벽하게 만들 수는 있다. 하지만 모든 에지 케이스를 고려해야 한다는 것이 여간 귀찮은 일이 아니다.
+
+#### 소개합니다 structuredClone
 
 structuredClone()
 
@@ -83,6 +205,8 @@ HTML DOM API에서 정의한 Structured Clone Algorithm을 사용함. 데이터 
 그냥 객체에 대한 깊은 복사를 해주는 API 라고 쉽게 설명할 수 있지만, 파고들수록 아주 어려운 내용들이 나온다.
 
 ## 내가 배운 것
+
+일단 짚고 넘어야 할 부분은, 애초에 깊은 복사는 비싼 연산이란 점이다. 배열에 대해 깊은 복사를 수행한다면 그 배열의 요소 수 만큼 연산을 해야한다. 메모리도 2배로 필요하다. 프로그래밍 언어를 설계할 때 참조형 데이터는 주소값을 복사하도록 만든게 괜히 그런것은 아니라는점.  
 
 ---
 
