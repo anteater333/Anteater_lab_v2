@@ -1,0 +1,329 @@
+---
+layout: post
+title: "자잘한 도움말 #13 Javascript에서 중첩된 구조에 대한 깊은 복사"
+subtitle: "structuredClone() 쓰세요."
+description: "Javascript, 얕은 복사, 깊은 복사, 구조화된 객체, structured clone algorithm, structuredClone(), JSON.parse(JSON.stringify()), HTML5, HTML DOM API, Web API, Web Worker, 웹 워커, IndexedDB, Javascript에서 중첩된 구조에 대한 깊은 복사, 백준 structuredClone(), HTML Living Standard, 전송 가능한 객체, transferable objects"
+date: 2023-12-10 20:47:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+
+- 참조 타입의 얕은 복사 vs 깊은 복사
+  - 얕은 복사 : 데이터의 주소만 복사한다.
+  - 깊은 복사 : 데이터의 값을 복사해 새로운 메모리에 할당한다.
+- 중첩 구조를 가지는 데이터에 대해서는 제대로 된 깊은 복사를 구현하기 까다롭다.
+  ```javascript
+  const original = { a: 1, b: 2, c: new Date() };
+  const deepCopied = JSON.parse(JSON.stringify(original));
+  // deepCopied.c는 문자열
+  ```
+  - 이렇게 `JSON.parse()`와 `JSON.stringify()`를 사용하거나, 데이터를 직접 순회하는 방식으로 구현할 순 있지만 특정 상황에서 제대로 동작하지 않을 수 있다.
+
+- [Web API `structuredClone()`](https://developer.mozilla.org/ko/docs/Web/API/structuredClone)을 사용하자.  
+  ```javascript
+  const original = { a: 1, b: 2, c: new Date() };
+  const deepCopied = structuredClone(original);
+  // deepCopied.c는 Date 객체
+  ```
+- 2023년 기준 비교적 최신 기술이기 때문에 사용 중인 자바스크립트 실행 환경의 [지원 현황](https://developer.mozilla.org/ko/docs/Web/API/structuredClone#%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80_%ED%98%B8%ED%99%98%EC%84%B1)을 확인하고 사용해야 한다.
+  - 대표적으로 node.js는 17 버전부터 지원한다.
+  - [백준의 node.js 버전은 2023년 기준 v16.13.1이기 때문에](https://help.acmicpc.net/language/info) 이 API를 사용할 수 없다.
+
+---
+
+## 이하 그리 중요하진 않은 내용들
+
+![안깊어요^^](https://i.postimg.cc/L8mGm1wL/image.png)  
+{: .center .rounded-edge-16}
+
+복사된 것은 값인가, 주소인가. 앞서서 몇 번 이 주제와 관련된 글을 썼던 기억이 난다. 그래서 어차피 개념은 익숙해 보이고, 그냥 API 하나 소개하면 되겠거니 살짝 정보의 바다에 발을 담가봤는데, 생각보다 그 깊이가 깊어서 조금 당황하고 있다. 아무튼 이 "자잘한 도움말" 카테고리의 여느 글들과 다를 바 없이 아래 내용들은 굳이 읽을 필요 없다는 점을 미리 언급하고 시작하겠다. 특히 이번처럼 나 스스로도 자신이 없는 경우엔 더...
+
+### 얕은 복사 vs 깊은 복사
+
+데이터는 크게 두 유형으로 나누어진다. 숫자나 문자열 같은 기본형(Primitive) 데이터와 배열이나 객체 같은 참조형(Reference) 데이터. [예전 글](/micro/2022/01/18/micro-tip-3.html)에서 이 두 종류의 데이터가 함수에 전달되었을 때의 행동에 대해 정리했던 적이 있다. 요약하자면, 기본형 데이터는 값 그 자체가 전달되기 때문에 함수 내부에서 그 데이터를 담고 있는 변수에 변화가 생겨도 밖의 변수에는 변화가 반영되지 않는다. 참조형 데이터는 그 데이터의 주솟값이 전달(Object references are passed by value), 함수 내부에서 그 주소를 통해 데이터에 접근하기 때문에 원본 데이터에도 영향이 갈 수 있다. 여기서 "전달"은 다시 말해 "복사"라고 할 수 있다. 현재 스코프의 데이터를 복사해서 새 스코프(함수)에 전달한다는 개념. 기본형 데이터에선 데이터 그 자체가 복사된다. 참조형 데이터에서는 주소만 복사된다.
+
+![당연히 말이되죠](https://i.postimg.cc/GmPL4X8g/image.gif)  
+그럼 참조형 데이터의 데이터를 복사하는 건?
+{: .center .rounded-edge}
+
+이번 문제는 '그러면 우리는 참조형 데이터에 대해선 항상 주소를 복사할 수밖에 없는 것인가?' 라는 질문에서 시작된다. 당연히 가능하다. 참조형 데이터에 대한 복사는 두 가지 방식으로 나눌 수 있다.
+
+![얕은 vs 깊은](https://i.postimg.cc/ZRtmLgBh/image.png)  
+얕은 복사 vs 깊은 복사
+{: .center .rounded-edge-16}
+
+- **얕은 복사** : 주소를 복사. 데이터는 그대로, 변수만 하나 더 생긴다.
+- **깊은 복사** : 값을 복사. 새로운 메모리 공간을 사용한다.
+
+Javascript에서 기초적인 깊은 복사는 다음과 같이 구현할 수 있다. 배열 혹은 객체를 순환하면서 그 값들을 하나씩 복사해 주면 된다.
+
+```javascript
+/**
+ * 원본 객체
+ */
+const original = {
+  name: "anteater",
+  age: "16 (for real)",
+  gender: "male",
+  likes: ["singing", "games"],
+};
+
+/**
+ * 간단한 깊은 복사 함수
+ */
+function easyDeepCopy(obj) {
+  const newObj = {};
+  for (const key in obj) {
+    newObj[key] = obj[key];
+  }
+  return newObj;
+}
+
+/** 얕은 복사한 객체 */
+const shallowClone = original;
+
+/** 깊은 복사한 객체 */
+const deepClone = easyDeepCopy(original);
+
+// 원본 객체의 값을 변경
+original.age = 29;
+
+// 얕은 복사한 객체도 값이 변경됨
+console.log(shallowClone.age); // 출력 결과 : 29
+// 깊은 복사한 객체엔 변경이 반영되지 않음
+console.log(deepClone.age); // 출력 결과 : 16 (for real)
+```
+
+### 중첩된 구조에 대한 깊은 복사
+
+위 함수는 특정한 상황에만 제대로 동작할 것이다. 객체가 아닌 배열이 들어온다면? 이건 뭐 배열이 들어올 땐 `in` 대신 `of`를 쓰면 되겠지만. 참조형 데이터 안에 또 다른 참조형 데이터가 들어있다면? 위 코드 아래쪽에 다음 두 줄을 추가해 보자.
+
+```javascript
+original.likes.push("movies");
+console.log(deepClone.likes); // 출력 결과 : [ 'singing', 'games', 'movies' ]
+// 깊은 복사한 객체도 영향을 받는다!
+```
+
+이처럼 중첩된 구조에 대해선 깊은 복사를 수행하기가 까다롭다. 우리는 다음 두 조건을 만족하는 복사 로직을 만들어야 한다.
+
+- 깊어야 함: 원본 구조 전체에 대해서 깊은 복사가 수행되어야 한다. 예를 들어 숫자, 문자열만 깊은 복사 처리되고 자식으로 포함된 객체는 여전히 주소만 복사되면 안 된다.
+- 복사여야 함: 데이터의 형태가 변경되면 안 된다. AS-IS. 예를 들어 임의의 클래스로 선언했던 값이 복사 과정에서 문자열로 변환되어선 안 된다.
+
+#### 고전적 방식
+
+일단 고전적인 방식부터 알아보자. 구조를 직접 순회하는 것은 기존 방식과 같되, 내부에 소속된 참조형 데이터에 대해 다시 깊은 복사를 적용할 수 있도록 재귀 함수를 사용한다.
+
+```javascript
+/**
+ * 제대로 된(?) 깊은 복사
+ */
+function deepCopy(obj) {
+  if (typeof obj !== "object" || obj === null) {
+    return obj; // 기본형 데이터는 그대로 반환
+  }
+
+  if (Array.isArray(obj)) {
+    // 배열에 대한 깊은 복사
+    const newArray = [];
+    for (let data of obj) {
+      newArray.push(deepCopy(data)); // 재귀
+    }
+
+    return newArray;
+  } else {
+    // 객체에 대한 깊은 복사
+    const newObj = {};
+    for (let key in obj) {
+      newObj[key] = deepCopy(obj[key]); // 재귀
+    }
+
+    return newObj;
+  }
+}
+```
+
+그리고 또 다른 널리 알려진 방법도 있다. `JSON.parse(JSON.stringify(obj))`. 직접 객체를 순회하는 것이 아니라 데이터를 통째로 문자열로 만들어 상수화한 다음 그걸 다시 JSON으로 파싱해 새 객체로 만드는 방법이다. 약간 편법 같으면서도 꽤 잘 동작한다.
+
+```javascript
+const original = {
+  name: "anteater",
+  age: "16 (for real)",
+  gender: "male",
+  likes: ["singing", "games"],
+  etc: {
+    home: "Daegu",
+    budget: 0,
+  },
+  createdAt: new Date("1995-04-07"),
+};
+
+/** 직접 구현한 깊은 복사 */
+const copiedObj = deepCopy(original);
+/** JSON 활용 깊은 복사 */ 
+const copied2Obj = JSON.parse(JSON.stringify(original));
+
+original.likes.push("movies");
+original.etc.budget = 10000;
+
+// 중첩된 구조에 대해서도 깊은 복사 성공
+console.log(copiedObj.likes); // 출력 결과 : [ 'singing', 'games' ]
+console.log(copiedObj.etc.budget); // 출력 결과 : 0
+console.log(copied2Obj.likes); // 출력 결과 : [ 'singing', 'games' ]
+console.log(copied2Obj.etc.budget); // 출력 결과 : 0
+```
+
+하지만 이 방법들도 완벽하진 않다. 아래 테스트 케이스를 보자.
+
+```javascript
+// 이건 어떠냐
+console.log(original.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (Date 객체)
+console.log(copiedObj.createdAt); // 출력 결과 : {}
+console.log(copied2Obj.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (문자열)
+```
+
+직접 구현한 함수는 Date 객체를 제대로 복사하지 못하고, JSON을 활용한 방법에선 출력은 제대로 된 것처럼 보이지만 객체가 아니라 문자열로 데이터의 변조가 발생하였다. 이대로 못 쓸 수준은 아니라고 생각할 수도 있겠지만, 아무튼 완전무결한 깊은 복사는 아니라는 것. 물론 이를 해결하기 위해 또 if 문을 추가해 가며 깊은 복사 로직을 더 완벽하게 만들 수는 있다. 하지만 모든 에지 케이스를 고려해야 한다는 것이 여간 귀찮은 일이 아니다.
+
+#### `structuredClone()`
+
+```javascript
+// original 객체는 위와 같음
+
+const copied3Obj = structuredClone(original);
+
+original.likes.push("movies");
+original.etc.budget = 10000;
+
+console.log(copied3Obj.likes); // 출력 결과 : [ 'singing', 'games' ]
+console.log(copied3Obj.etc.budget); // 출력 결과 : 0
+console.log(original.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (Date 객체)
+console.log(copied3Obj.createdAt); // 출력 결과 : 1995-04-07T00:00:00.000Z (Date 객체)
+
+```
+
+이런 문제를 해결하기 위해 표준이 있는 법. 위처럼 복잡한 구조를 가진, 다른 말로 구조화된(Structued) 데이터를 복사하는 Web API가 존재한다. 바로 `structuredClone()`. 이 API는 [HTML5 명세](https://html.spec.whatwg.org/multipage/structured-data.html#safe-passing-of-structured-data)에 정의된 **Structured Clone Algorithm**을 사용해 주어진 데이터에 대해 깊은 복사를 수행한다. 저렇게 알고리즘에 이름도 붙어있고 명세 문서를 보면 아주 복잡한 게 뭔가 시간복잡도를 획기적으로 줄일 것만 같지만, 사실 우리가 앞서 직접 구현한 깊은 복사 로직과 큰 틀에선 크게 다를 바 없다. 똑같이 재귀적으로 알고리즘을 호출하면서 직렬화와 역직렬화를 반복해 새로 할당한 메모리에 데이터들을 복사해 담는다.
+
+```javascript
+// 세 방식 속도 비교
+// 약 40MB, 최대 깊이 8인 JSON 파일을 임의로 생성해 테스트함
+
+const testSize = 30;
+let t1Sum = 0,
+  t2Sum = 0,
+  t3Sum = 0;
+for (let i = 0; i < testSize; i++) {
+  if ((i + 1) % 10 === 0) console.log(`${i + 1} tests completed`);
+
+  const t1Start = Date.now();
+  const copiedObj = deepCopy(original);
+  t1Sum += Date.now() - t1Start;
+
+  const t2Start = Date.now();
+  const copied2Obj = JSON.parse(JSON.stringify(original));
+  t2Sum += Date.now() - t2Start;
+
+  const t3Start = Date.now();
+  const copied3Obj = structuredClone(original);
+  t3Sum += Date.now() - t3Start;
+}
+
+console.log(`T1: ${t1Sum / testSize}ms`); // 앞서 구현한 간단한 깊은 복사
+console.log(`T2: ${t2Sum / testSize}ms`); // JSON 활용
+console.log(`T3: ${t3Sum / testSize}ms`); // structuredCopy
+```
+![속도비교](https://i.postimg.cc/g2sRqSNg/image.png)  
+30회 반복 후 평균 소요 시간
+{: .center .rounded-edge-16}
+
+그래서 보시는 바와 같이 특별히 속도가 더 빠르다거나 하지는 않다. 우리가 위에서 구현한 `deepCopy()`는 에지 케이스를 무시하고 있으니 그러려니 해도 `JSON` 방식보다도 속도가 느리다. 하지만 중요한 점은 데이터를 있는 그대로 복사해야 할 때는 `structuredClone()`을 쓰는 것이 좋다는 사실. 그러니 상황에 따라 적당히 잘 취사선택하자. 지금 구현해야 하는 상황에서 어떤 구조의 데이터가 들어오는지 확실히 알고, 에지 케이스를 무시할 수 있는 상황이라면 직접 구현하는 것도 좋다. 하지만 어떤 데이터가 들어오는지 모르고, 복사된 데이터의 무결성이 중요하다면 `structuredClone()`을 사용하자.
+
+### TMI
+
+"그리 중요하진 않은 내용들" 중에서도 더 자잘한 지식의 단계로 넘어가자. 내가 생각하기엔 여기서부턴 굳이 몰라도 `structuredClone()`을 쓰는 데 문제는 없을 것 같다. 하지만 이번에 정보를 찾다 보니 이것저것 눈에 밟히게 되어 한 번 정리해 보고자 한다.
+
+**1) `structuredClone()`은 비교적 최신기술이다.**  
+
+![역시 파이어폭스야](https://i.postimg.cc/xdHMWkkX/image.png)  
+이 바닥에서 2년 정도면 최신 기술이지. 
+{: .center .rounded-edge-16}
+
+[mdn web docs에서 브라우저 호환성 항목](https://developer.mozilla.org/ko/docs/Web/API/structuredClone#%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80_%ED%98%B8%ED%99%98%EC%84%B1)을 보면 브라우저 중 그나마 가장 빨리 지원을 시작한 파이어폭스도 2021년 11월에 지원을 시작한 것으로 나온다.
+
+![BOJ](https://i.postimg.cc/x8FBBp7y/image.png)  
+{: .center .rounded-edge-16}
+
+최신 기술이란 말의 의미는 "유망하다"일 수도 있지만, "아직은 부분적이다"가 될 수도 있다. 예를 들어 node.js는 2021년 10월, 브라우저들보다 비교적 빨리 `structuredClone()` API를 지원하기 시작했다. 하지만 2023년 기준 알고리즘 사이트 [백준(BOJ)에서는 아직 node.js를 v16.13.1 버전으로 사용](https://help.acmicpc.net/language/info)하고 있기 때문에 우리는 백준 사이트에서 Javascript로 알고리즘을 풀 때 `structuredClone()`을 사용할 수 없다. API 사용 시 이런 점을 고려하자.
+
+**2) `structuredClone()`은 ECMAScript가 아니라 HTML Living Standard에서 정의한 API다.**
+
+직관적으로 생각했을 때, `structuredClone()`은 Javascript에서 객체들을 다룰 때 사용하는 API기 때문에 `JSON.parse()` 처럼 Javascript의 명세(ECMAScript)에 포함되어 있어야 할 것 같다. 하지만 실제로는 HTML5의 명세(HTML Living Standard)에서 정의하고 있고, HTML DOM API로 분류된다. `structuredClone()`이 복사 실패 시 반환하는 에러도 `DOMException`이다. [이걸 궁금해하는 나 같은 사람도 있긴 한것 같다.](https://es.discourse.group/t/structuredclone-as-ecmascript-standard/1661) 질문의 요지는 DOM이나 파일 시스템 등의 기능에 포함되는 것 같지 않은데 왜 ECMAScript에 포함되지 않은 것이냐는 것.
+
+<div class="center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nQHBAdShgYI?si=aFXOOWcEE1S7IDh2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+나도 솔직히 확실한 이유는 모르겠다. 다만 왜 ECMAScript에 포함되어 있지 않느냐보다는 왜 HTML DOM API에 포함되어 있느냐에 대해서는 이렇게 추측할 수 있을 것 같다. 사실 `structuredClone()`은 오직 데이터의 깊은 복사에만 사용되는 것이 아니다. 웹 브라우저의 핵심적인 기능들과 긴밀하게 연계하는 API인 것이다. 위의 영상을 보면 이해가 될지 모르겠다.
+
+```javascript
+// 16MB = 1024 * 1024 * 16
+const uInt8Array = Uint8Array.from({ length: 1024 * 1024 * 16 }, (v, i) => i);
+
+console.log(uInt8Array.byteLength); // 16777216
+
+const transferred = structuredClone(uInt8Array, {
+  transfer: [uInt8Array.buffer],
+});
+
+console.log(uInt8Array.byteLength); // 0
+console.log(transferred.byteLength); // 16777216
+```
+
+[mdn 문서](https://developer.mozilla.org/ko/docs/Web/API/structuredClone#%EA%B0%92_%EC%A0%84%EC%86%A1)를 더 읽다 보면 발견할 수 있는 예제를 가져왔다. `structuredClone()`에 못 보던 옵션이 생겼다. `transfer`는 전송 가능한 객체(transferable objects)를 의미하는데, 원본 객체에 포함된 데이터 중 전송 가능한 객체를 지정하는 옵션이다. 여기서 `Uint8Array`는 일종의 버퍼 객체. 콘솔로 확인한 결과를 보면 마치 복사 과정을 통해 버퍼가 통째로 전송된 것처럼 보인다. 이런 특성을 기반으로 웹 브라우저에서 [웹 워커](https://developer.mozilla.org/ko/docs/Web/API/Web_Workers_API)사이의 메시지 교환, 데이터를 [IndexedDB](https://developer.mozilla.org/ko/docs/Web/API/IndexedDB_API)에 저장하는 기능에 사용되기 위해 `structuredClone()`이 HTML5 명세에서 정의된 것이다. 공부할 거리가 늘어나는군.
+
+**3) StructuredClone이 복사하지 못하는 데이터도 있다.**
+
+```javascript
+const original = {
+  a: () => 1,
+};
+
+const copied = structuredClone(original);
+/*
+오류 발생:
+DOMException [DataCloneError]: () => 1 could not be cloned.
+*/
+```
+
+`structuredClone()` 역시 만능은 아니다. [mdn의 Structured clone algorithm 문서](https://developer.mozilla.org/ko/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#supported_types)를 보면 지원하는 타입들이 나온다. 거기에 포함되지 않은 데이터를 복사하고자 한다면 직접 구현하는 수밖에. 그런 순간이 올진 모르겠으나 유스케이스는 일단 무궁무진하니.
+
+## 내가 배운 것
+
+그냥 객체에 대한 깊은 복사를 해주는 API라고 쉽게 설명할 수 있지만, 파고들수록 아주 어려운 내용들이 나온다. 일단 짚고 넘어야 할 부분은, 애초에 깊은 복사는 비싼 연산이란 점이다. 배열에 대해 깊은 복사를 수행한다면 그 배열의 요소 수만큼 연산을 해야 한다. 메모리도 2배로 필요하다. 프로그래밍 언어를 설계할 때 참조형 데이터는 주솟값을 복사하도록 만든 게 괜히 그런 것은 아니라는 점. `structuredClone()`이 소개된 배경에도 특정한 사용처(웹 워커, IndexedDB 등)가 존재한다. 이번 글에서 내가 `structuredClone()`이란 API를 소개하긴 했지만, 그 연산이 지금 내 요구사항에 정말 필요한 것인가를 먼저 고려하는 것도 중요할 것 같단 생각이 든다.
+
+```cpp
+Maybe<bool> ValueSerializer::WriteJSArray(Handle<JSArray> array) {
+  PtrComprCageBase cage_base(isolate_);
+  uint32_t length = 0;
+  bool valid_length = Object::ToArrayLength(array->length(), &length);
+  DCHECK(valid_length);
+  USE(valid_length);
+
+  // To keep things simple, for now we decide between dense and sparse
+  // serialization based on elements kind. A more principled heuristic could
+  // count the elements, but would need to take care to note which indices
+  // existed (as only indices which were enumerable own properties at this point
+  // should be serialized).
+  const bool should_serialize_densely =
+      array->HasFastElements(cage_base) && !array->HasHoleyElements(cage_base);
+```
+
+이번 기회에 [V8](https://github.com/v8/v8)의 코드를 훑어보면서 이런 대목을 발견했었다. 잘은 모르겠지만 배열을 직렬화할 때 배열이 가지고 있는 데이터의 밀집도에 따라 무슨 처리를 하는 건가. 이렇게 뭔가 API 내부적으로 최적화를 고려하고 있는 건가 싶었는데 위에서 진행한 성능 테스트에서 `structedClone()`이 가장 느린 거로 나와서 조금 뻘쭘해졌다. 배열을 포함하는 데이터로 다시 해봐야 하나? 일단 나는 이걸 더 붙잡고 있기엔 정신력이 바닥이라 엄두가 안 난다. GPT 녀석이 V8 코드 어디서 확인하냐는 질문에 [이렇게](https://i.postimg.cc/Bn5FK125/image.png) 대답할 때 그 경고를 받아들였어야 하는 건데...
+
+- 얕은 복사 vs 깊은 복사
+- 복잡한 구조를 가지는(구조화된) 데이터에 대한 깊은 복사는 까다롭다.
+  - 애초에 그게 당신에게 지금 필요하지 않을 수도 있다.
+  - 직접 필요한 로직을 구현하거나
+  - `JSON.parse(JSON.stringify())`를 사용하거나
+  - `structuredClone()`을 사용하자
+- `structuredClone()`은 웹 브라우저의 여러 핵심 기능과 긴밀한 관계를 가지고 있다.
+  - 웹 워커와 IndexedDB등
