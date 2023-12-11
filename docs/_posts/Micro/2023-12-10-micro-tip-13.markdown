@@ -280,7 +280,7 @@ console.log(transferred.byteLength); // 16777216
 
 [mdn 문서](https://developer.mozilla.org/ko/docs/Web/API/structuredClone#%EA%B0%92_%EC%A0%84%EC%86%A1)를 더 읽다 보면 발견할 수 있는 예제를 가져왔다. `structuredClone()`에 못 보던 옵션이 생겼다. `transfer`는 전송 가능한 객체(transferable objects)를 의미하는데, 원본 객체에 포함된 데이터 중 전송 가능한 객체를 지정하는 옵션이다. 여기서 `Uint8Array`는 일종의 버퍼 객체. 콘솔로 확인한 결과를 보면 마치 복사 과정을 통해 버퍼가 통째로 전송된 것처럼 보인다. 이런 특성을 기반으로 웹 브라우저에서 [웹 워커](https://developer.mozilla.org/ko/docs/Web/API/Web_Workers_API)사이의 메시지 교환, 데이터를 [IndexedDB](https://developer.mozilla.org/ko/docs/Web/API/IndexedDB_API)에 저장하는 기능에 사용되기 위해 `structuredClone()`이 HTML5 명세에서 정의된 것이다. 공부할 거리가 늘어나는군.
 
-**3) StructuredClone이 복사하지 못하는 데이터도 있다.**
+**3) `structuredClone()`이 복사하지 못하는 데이터도 있다.**
 
 ```javascript
 const original = {
