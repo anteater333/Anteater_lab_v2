@@ -419,7 +419,10 @@
   list-style: none;
 
   > li {
+    padding-bottom: $spacing-unit / 4;
     margin-bottom: $spacing-unit;
+
+    border-bottom: 2px solid $grey-color-dark;
   }
 }
 
