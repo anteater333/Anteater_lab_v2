@@ -35,6 +35,13 @@ layout: default
         <span class="p-author h-card" itemprop="name">{{ author }}</span></span
       >
       {%- if forloop.last == false %}, {% endif -%} {% endfor %} {%- endif -%}
+      <span>
+        {%- assign cat_info = site.pages | where: "title", page.categories[0] |
+        first -%} -
+        <a class="post-category" href="{{ cat_info.url | relative_url }}"
+          >{{ cat_info.title }}</a
+        >
+      </span>
     </p>
   </header>
 

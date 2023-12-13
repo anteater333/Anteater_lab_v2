@@ -59,6 +59,13 @@ body > .page-content {
 }
 
 /**
+ * Category button in a posting
+ */
+a.post-category {
+  color: $grey-color;
+}
+
+/**
  * Youtube iframe
  */
 .youtube-iframe {
