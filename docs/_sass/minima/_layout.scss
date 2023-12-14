@@ -113,9 +113,10 @@
     color: $text-color;
     line-height: $base-line-height;
 
+    margin-left: 0.5rem;
     // Gaps between nav items, but not on the last one
     &:not(:last-child) {
-      margin-right: 20px;
+      margin-right: 0.75rem;
     }
   }
 

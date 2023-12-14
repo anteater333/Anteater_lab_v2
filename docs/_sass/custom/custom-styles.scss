@@ -57,6 +57,13 @@ body > .page-content {
     font-size: 1rem;
   }
 }
+.category-link-split {
+  border-left: 1px solid $text-color;
+
+  &:first-child {
+    display: none;
+  }
+}
 
 /**
  * Category button in a posting
