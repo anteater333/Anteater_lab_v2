@@ -60,6 +60,9 @@ body > .page-content {
 .category-link-split {
   border-left: 1px solid $text-color;
 
+  cursor: default;
+  user-select: none;
+
   &:first-child {
     display: none;
   }
