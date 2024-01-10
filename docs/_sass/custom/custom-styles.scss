@@ -84,3 +84,11 @@ a.post-category {
     width: 100%;
   }
 }
+
+/**
+ * <a> tag not to turn blue
+ */
+a.a-not-colored,
+a.a-not-colored:visited {
+  color: $brand-color;
+}
