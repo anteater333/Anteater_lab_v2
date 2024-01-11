@@ -78,11 +78,16 @@ a.post-category {
 /**
  * Youtube iframe
  */
+div.center:has(> .youtube-iframe) {
+  margin-bottom: 0.5rem;
+}
 .youtube-iframe {
   @include media-query($on-palm) {
     min-width: 0;
     width: 100%;
   }
+
+  margin-bottom: -0.5rem;
 }
 
 /**

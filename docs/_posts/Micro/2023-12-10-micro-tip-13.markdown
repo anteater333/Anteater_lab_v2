@@ -259,7 +259,7 @@ console.log(`T3: ${t3Sum / testSize}ms`); // structuredCopy
 직관적으로 생각했을 때, `structuredClone()`은 Javascript에서 객체들을 다룰 때 사용하는 API기 때문에 `JSON.parse()` 처럼 Javascript의 명세(ECMAScript)에 포함되어 있어야 할 것 같다. 하지만 실제로는 HTML5의 명세(HTML Living Standard)에서 정의하고 있고, HTML DOM API로 분류된다. `structuredClone()`이 복사 실패 시 반환하는 에러도 `DOMException`이다. [이걸 궁금해하는 나 같은 사람도 있긴 한것 같다.](https://es.discourse.group/t/structuredclone-as-ecmascript-standard/1661) 질문의 요지는 DOM이나 파일 시스템 등의 기능에 포함되는 것 같지 않은데 왜 ECMAScript에 포함되지 않은 것이냐는 것.
 
 <div class="center">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/nQHBAdShgYI?si=aFXOOWcEE1S7IDh2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe class="youtube-iframe" width="560" height="315" src="https://www.youtube.com/embed/nQHBAdShgYI?si=aFXOOWcEE1S7IDh2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
 나도 솔직히 확실한 이유는 모르겠다. 다만 왜 ECMAScript에 포함되어 있지 않느냐보다는 왜 HTML DOM API에 포함되어 있느냐에 대해서는 이렇게 추측할 수 있을 것 같다. 사실 `structuredClone()`은 오직 데이터의 깊은 복사에만 사용되는 것이 아니다. 웹 브라우저의 핵심적인 기능들과 긴밀하게 연계하는 API인 것이다.
