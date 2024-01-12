@@ -97,3 +97,10 @@ a.a-not-colored,
 a.a-not-colored:visited {
   color: $brand-color;
 }
+
+/**
+ * <p> tag with img and text
+ */
+p.center:has(> img ~ br) {
+  margin-bottom: 0.6rem;
+}
