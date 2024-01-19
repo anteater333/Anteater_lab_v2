@@ -60,7 +60,7 @@ categories: [Hack]
   각각 클라이언트 측과 서버 측에서, 무엇을 렌더링한다는 의미일까?
 - 웹 브라우저의 **렌더링 엔진**  
 
-우린 **웹 브라우저(Web browser)**라는 존재에 대해 더 자세히 알 필요가 있다. 현대의 PC에서 웹 브라우저는 단순한 어플리케이션을 넘어, 컴퓨터 안에 존재하는 또다른 가상 컴퓨터의 위치에 있다고 말할 수 있을 것 같다. 웹 개발자의 결과물은 그 가상 환경 위에서 동작해야 한다. 웹 개발자가 만든 웹 페이지는 웹 브라우저에서 더 잘 그려저야한다.
+우린 **웹 브라우저(Web browser)**라는 존재에 대해 더 자세히 알 필요가 있다. 현대의 PC에서 웹 브라우저는 단순한 어플리케이션을 넘어, 컴퓨터 안에 존재하는 또다른 가상 컴퓨터의 위치에 있다고 말할 수 있을 것 같다. 웹 개발자의 결과물은 그 가상 환경 위에서 동작해야 한다. 다시말해 웹 개발자가 만든 웹 페이지는 웹 브라우저에서 더 잘 그려저야한다.
 
 ![프레임 차이](https://i.postimg.cc/tCNfMSTz/20170711024433-819334.gif){:loading="lazy"}  
 15fps vs 60fps
@@ -68,16 +68,33 @@ categories: [Hack]
 
 렌더링 성능을 측정하는 대표적인 지표로는 **FPS(Frames Per Seconds, 초당 프레임)**가 있다. 컴퓨터가 1초동안 그림을 몇 장이나 그릴 수 있는지를 나타내는 단위다. 그 숫자가 높을수록 화면의 움직임이 부드럽게 보인다. 그렇다고 마냥 높기만 하다고 좋은건 아니고, 그 숫자를 얼마나 잘 유지하느냐가 관건이다. 위 움짤에서도 왼쪽(15fps)은 귀엽고, 오른쪽(60fps)는 우아하다. 그런데 60fps로 움직여야 하는 화면이 갑자기 렌더링 과정의 오류로 인해 1~2초 정도 15fps로 떨어진다면 움직임이 어색하게 느껴질 것이다. 웹 브라우저는 기본적으로 웹 페이지를 60fps로 화면에 그려야 한다. 만약 우리가 만든 웹 페이지가 너무 복잡한 구조를 가진 탓에 스크롤을 한 번 했더니 화면 출력이 10fps까지 떨어진다면, 그건 웹 개발자가 신경을 써야 하는 문제가 되는 것이다.
 
-## 웹 브라우저의 웹 페이지 렌더링
+## 웹 브라우저에 URL을 입력하면
 
-본격적으로.
-주소창에 URL을 입력했을 때 어떤 일이 일어나나요? 의 뒷부분에 해당되는 이야기
+> "주소창에 URL을 입력하면 무슨 일이 일어나나요?"
+
+[] 간단한, 마지막 단계를 강조하는 도표 넣기
+
+CS 단골 질문 중 하나다. 구글에 검색해보면 여러 블로그에서 DNS, HTTP, TCP 등등 네트워크 관련 용어들에 집중해 해설한 내용들이 나올 것이다. 이것도 물론 중요한 내용이다, 다만 그 과정의 마지막 부분은 조금 짧게들 끝내더라고. 그 마지막 부분이 바로 웹 브라우저의 렌더링이다. [질문의 정답에 가까울 이 문서](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)를 보면 렌더(Render) 단락의 내용이 결코 적지 않을 것을 볼 수 있다. 지금부터 웹 브라우저는 네트워크 통신을 통해 얻어온 웹 페이지의 원재료들을 어떻게 완성하는지 알아보자.
 
 ### Rendering Engine
 
 Javascript Engine과 **Rendering Engine**
 
 ### 브라우저의 렌더링 과정 살펴보기
+
+---
+
+- Rendering in web browser.
+  - Browser의 엔진들: **Rendering Engine**, Javascript Engine.  
+  - [CRP](https://developer.mozilla.org/ko/docs/Web/Performance/Critical_rendering_path)  
+    - DOM (HTML 해석의 결과물)  
+    - CSSOM (Stylesheet 해석의 결과물)  
+    - Render Tree (DOM + CSSOM)  
+  - 프레임 속도 (Frame rate, FPS)  
+  > **프레임 속도(FPS)**는 브라우저가 콘텐츠를 다시 계산하고, 레이아웃을 설정하고 디스플레이에 그릴 수 있는 속도입니다. **초당 프레임 수(frames per second, fps)**는 1초에 다시 칠할 수 있는 프레임 수입니다. 웹사이트 컴퓨터 그래픽의 목표 프레임 속도는 **60fps**입니다.
+  - 결과적으로 앞서 말한 CG에서의 render와 비슷한 의미. 웹 페이지라는 그림을 60fps로 화면에 뿌리는 작업  
+  - **웹 어플리케이션의 성능과 직결되는 문제**  
+
 
 CRP
 
@@ -119,30 +136,6 @@ SSR, CSR의 렌더링.
 ----
 # 키워드 던져놓기
 
-- **확실하게 정하고 갈 부분**  
-- render라는 용어는 여러 분야에서 등장하는데 정확하게 어떤 분야에서의 render에 집중할 것인가.
-  - 보편적인 단어 render
-  - CG에서의 render
-  - Web 개발 환경에서의 render
-    - SSR, CSR의 render
-    - 웹 브라우저의 render
-    - 위 둘의 차이는?
-
-- render
-  - **만들다**, 주다, 제시하다.
-  - (어떤 상태가 되도록) 만들다
-  - to cause (someone or something) to be in a specified condition
-  - 원자재를 가지고 결과를 만들어내는 행위
-    - source -[Renderer]-> result
-- rendering
-  - 1. (특정한 해석을 가미한) 연주 2. 번역 3. (벽돌벽·석벽 등에 하는) 회반죽 칠
-  - 단순 변화보단 그 과정에 어떠한 특색 or 개성이 가미되는 변화?
-    - ex. cartoon rendering, 브라우저마다 다른 기본 UI 형태 등.
-
-- CG에서의 render
-  - render라는 단어가 가장 직관적으로 사용되는 분야?
-  - render, scene(w/ mesh, 그리고 자연 현상들), camera
-
 - SSR, CSR
   - 소스 코드 -[Renderer]-> 웹 페이지(HTML/CSS/JS)
   - Client side rendering
@@ -168,6 +161,7 @@ SSR, CSR의 렌더링.
 
 # Refs
 
+- [웹페이지를 표시한다는 것](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)
 - [웹 브라우저의 렌더링 프로세스](https://cresumerjang.github.io/2019/06/24/critical-rendering-path/)
 - [ToastUI(NHN Cloud FE) 블로그, 성능 최적화](https://ui.toast.com/fe-guide/ko_PERFORMANCE#1-%ED%8C%8C%EC%8B%B1)
 - [CSS Engine, Quantum CSS, 그림이 마음에 듬](https://hacks.mozilla.org/2017/08/inside-a-super-fast-css-engine-quantum-css-aka-stylo/)
