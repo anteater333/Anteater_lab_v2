@@ -66,7 +66,7 @@ categories: [Hack]
 15fps vs 60fps
 {: .center .w-3-quarter .rounded-edge-16}
 
-렌더링 성능을 측정하는 대표적인 지표로는 **FPS(Frames Per Seconds, 초당 프레임)**가 있다. 컴퓨터가 1초동안 그림을 몇 장이나 그릴 수 있는지를 나타내는 단위다. 그 숫자가 높을수록 화면의 움직임이 부드럽게 보인다. 그렇다고 마냥 높기만 하다고 좋은건 아니고, 그 숫자를 얼마나 잘 유지하느냐가 관건이다. 위 움짤에서도 왼쪽(15fps)은 귀엽고, 오른쪽(60fps)는 우아하다. 그런데 60fps로 움직여야 하는 화면이 갑자기 렌더링 과정의 오류로 인해 1~2초 정도 15fps로 떨어진다면 움직임이 어색하게 느껴질 것이다. 웹 브라우저는 기본적으로 웹 페이지를 60fps로 화면에 그려야 한다. 만약 우리가 만든 웹 페이지가 너무 복잡한 구조를 가진 탓에 스크롤을 한 번 했더니 화면 출력이 10fps까지 떨어진다면, 그건 웹 개발자가 신경을 써야 하는 문제가 되는 것이다.
+렌더링 성능을 측정하는 대표적인 지표로는 [FPS(Frames Per Seconds, 초당 프레임)](https://developer.mozilla.org/ko/docs/Glossary/FPS)가 있다. 컴퓨터가 1초 동안 그림을 몇 장이나 그릴 수 있는지를 나타내는 단위다. 그 숫자가 높을수록 화면의 움직임이 부드럽게 보인다. 그렇다고 마냥 높기만 하다고 좋은건 아니고, 그 숫자를 얼마나 잘 유지하느냐가 관건이다. 위 움짤에서도 왼쪽(15fps)은 귀엽고, 오른쪽(60fps)는 우아하다. 그런데 60fps로 움직여야 하는 화면이 갑자기 렌더링 과정의 오류로 인해 1~2초 정도 15fps로 떨어진다면 움직임이 어색하게 느껴질 것이다. 웹 브라우저는 기본적으로 웹 페이지를 60fps로 화면에 그려야 한다. 만약 우리가 만든 웹 페이지가 너무 복잡한 구조를 가진 탓에 스크롤을 한 번 했더니 화면 출력이 10fps까지 떨어진다면, 그건 웹 개발자가 신경을 써야 하는 문제가 되는 것이다.
 
 ## 웹 브라우저에 URL을 입력하면
 
@@ -74,11 +74,17 @@ categories: [Hack]
 
 [] 간단한, 마지막 단계를 강조하는 도표 넣기
 
-CS 단골 질문 중 하나다. 구글에 검색해보면 여러 블로그에서 DNS, HTTP, TCP 등등 네트워크 관련 용어들에 집중해 해설한 내용들이 나올 것이다. 이것도 물론 중요한 내용이다, 다만 그 과정의 마지막 부분은 조금 짧게들 끝내더라고. 그 마지막 부분이 바로 웹 브라우저의 렌더링이다. [질문의 정답에 가까울 이 문서](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)를 보면 렌더(Render) 단락의 내용이 결코 적지 않을 것을 볼 수 있다. 지금부터 웹 브라우저는 네트워크 통신을 통해 얻어온 웹 페이지의 원재료들을 어떻게 완성하는지 알아보자.
+CS 단골 질문 중 하나다. 구글에 검색해보면 여러 블로그에서 DNS, HTTP, TCP 등등 네트워크 관련 용어들에 집중해 해설한 내용들이 나올 것이다. 물론 네트워크와 관련된 내용도 핵심이긴 하다, 다만 그 과정의 마지막 부분도 중요한데 조금 짧게들 끝내더라고. 그 마지막 부분이 바로 웹 브라우저의 렌더링이다. [질문의 정답에 가까울 이 문서](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)를 보면 렌더(Render) 단락의 내용이 결코 적지 않을 것을 볼 수 있다. 지금부터 웹 브라우저가 네트워크 통신을 통해 얻어온 웹 페이지의 원재료들을 어떻게 완성하는지 알아보자.
 
-### Rendering Engine
+### Browser Engine
 
 Javascript Engine과 **Rendering Engine**
+
+Besides "browser engine", two other terms are in everyday use regarding related concepts: "layout engine" and "rendering engine".[1][2][3] In theory, layout and rendering (or "painting") could be handled by different engines. In practice, however, a given browser engine's rendering and layout components are tightly coupled and rarely encountered on their own outside the browser engine, unlike the case with browsers' scripting engines. 
+
+브라우저 엔진과 레이아웃(렌더링) 엔진이 분리되는 개념이긴 한데 둘은 강하게 결합되어 있기 때문에 일반적으로 묶어서 취급. (ex. Gecko 엔진이 둘 다 다루는 것)
+
+Webkit과 Gecko는 각각 렌더링 과정이 다름.
 
 ### 브라우저의 렌더링 과정 살펴보기
 
@@ -174,3 +180,4 @@ SSR, CSR의 렌더링.
   - 공부는 세상의 해상도를 높이는 일이라고, 웹 브라우저의 렌더링 과정에 대한 이해가 정말 필수불가결한 그런 지식까진 아니지만 이렇게 멋진 자료를 찾을 수 있는 계기가 될 수도 있다는말.
 - [CSS Transform vs Position](https://stackoverflow.com/questions/7108941/css-transform-vs-position)
   - 중요! 따로 단락 만들 수 있을 듯.
+- [How browsers work](http://taligarsiel.com/Projects/howbrowserswork1.htm#The_rendering_engine)
