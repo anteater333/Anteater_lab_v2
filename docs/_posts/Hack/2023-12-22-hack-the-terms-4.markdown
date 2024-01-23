@@ -55,28 +55,51 @@ categories: [Hack]
 개인적으로 3D 그래픽 분야에 조금 관심이 있어서 한 번 엮어 봤는데, 이걸 웹 프론트엔드 개발자가 알아야 할 이유가 있을까? 물론 있지. 웹 개발을 할 때에도 렌더링이란 단어를 자주 접할 수 있다.
 
 - Three.js 라이브러리의 `WebGLRenderer`  
-  물론 이건 예시로 들었던 3D 컴퓨터 그래픽과 똑같은 물건이다. 관심 없으면 굳이 신경 쓸 필요까진...
+  물론 이건 예시로 들었던 3D 컴퓨터 그래픽과 비슷한 물건이다. 관심 없으면 굳이 신경 쓸 필요까진...
 - **Client Side Rendering(CSR)**과 **Server Side Rendering(SSR)**  
   각각 클라이언트 측과 서버 측에서, 무엇을 렌더링한다는 의미일까?
-- 웹 브라우저의 **렌더링 엔진**  
+- 웹 브라우저의 **렌더링 과정**  
 
-우린 **웹 브라우저(Web browser)**라는 존재에 대해 더 자세히 알 필요가 있다. 현대의 PC에서 웹 브라우저는 단순한 어플리케이션을 넘어, 컴퓨터 안에 존재하는 또다른 가상 컴퓨터의 위치에 있다고 말할 수 있을 것 같다. 웹 개발자의 결과물은 그 가상 환경 위에서 동작해야 한다. 다시말해 웹 개발자가 만든 웹 페이지는 웹 브라우저에서 더 잘 그려저야한다.
+우린 **웹 브라우저(Web browser)**라는 존재에 대해 더 자세히 알 필요가 있다. 현대의 PC에서 웹 브라우저는 단순한 어플리케이션을 넘어, 컴퓨터 안에 존재하는 또다른 가상 컴퓨터의 위치에 있다고 말할 수 있을 것 같다. 웹 개발자의 결과물은 그 가상 환경 위에서 동작해야 한다. 다시말해 웹 개발자가 만든 웹 페이지는 웹 브라우저에서 잘 그려저야한다.
 
 ![프레임 차이](https://i.postimg.cc/tCNfMSTz/20170711024433-819334.gif){:loading="lazy"}  
 15fps vs 60fps
 {: .center .w-3-quarter .rounded-edge-16}
 
-렌더링 성능을 측정하는 대표적인 지표로는 [FPS(Frames Per Seconds, 초당 프레임)](https://developer.mozilla.org/ko/docs/Glossary/FPS)가 있다. 컴퓨터가 1초 동안 그림을 몇 장이나 그릴 수 있는지를 나타내는 단위다. 그 숫자가 높을수록 화면의 움직임이 부드럽게 보인다. 그렇다고 마냥 높기만 하다고 좋은건 아니고, 그 숫자를 얼마나 잘 유지하느냐가 관건이다. 위 움짤에서도 왼쪽(15fps)은 귀엽고, 오른쪽(60fps)는 우아하다. 그런데 60fps로 움직여야 하는 화면이 갑자기 렌더링 과정의 오류로 인해 1~2초 정도 15fps로 떨어진다면 움직임이 어색하게 느껴질 것이다. 웹 브라우저는 기본적으로 웹 페이지를 60fps로 화면에 그려야 한다. 만약 우리가 만든 웹 페이지가 너무 복잡한 구조를 가진 탓에 스크롤을 한 번 했더니 화면 출력이 10fps까지 떨어진다면, 그건 웹 개발자가 신경을 써야 하는 문제가 되는 것이다.
+렌더링 성능을 측정하는 대표적인 지표로는 [FPS(Frames Per Seconds, 초당 프레임)](https://developer.mozilla.org/ko/docs/Glossary/FPS)가 있다. 컴퓨터가 1초 동안 그림을 몇 장이나 그릴 수 있는지를 나타내는 단위다. 그 숫자가 높을수록 화면의 움직임이 부드럽게 보인다. 그렇다고 마냥 높기만 하다고 좋은건 아니고, 그 숫자를 얼마나 잘 유지하느냐가 관건이다. 위 움짤에서도 왼쪽(15fps)은 귀엽고, 오른쪽(60fps)는 우아하다. 그런데 60fps로 움직여야 하는 화면이 갑자기 렌더링 과정의 오류로 인해 1~2초 정도 15fps로 떨어진다면 움직임이 어색하게 느껴질 것이다. 웹 브라우저는 기본적으로 웹 페이지를 60fps로 화면에 그려야 한다. 만약 우리가 만든 웹 페이지가 너무 복잡한 구조를 가진 탓에 스크롤을 한 번 했더니 화면 출력이 10fps까지 떨어진다면, 그 순간부터 렌더링은 웹 개발자가 신경 써야 하는 문제가 되는 것이다.
 
-## 웹 브라우저에 URL을 입력하면
+## 브라우저 주소창에 URL을 입력하면
 
 > "주소창에 URL을 입력하면 무슨 일이 일어나나요?"
 
-[] 간단한, 마지막 단계를 강조하는 도표 넣기
+![주소창에 URL을 입력하면](https://i.postimg.cc/qvLWKn2P/whenurl.jpg){:loading="lazy"}  
+[이미지 출처](https://www.buymeacoffee.com/wassimchegham/hey-102339)  
+{: .center}
 
-CS 단골 질문 중 하나다. 구글에 검색해보면 여러 블로그에서 DNS, HTTP, TCP 등등 네트워크 관련 용어들에 집중해 해설한 내용들이 나올 것이다. 물론 네트워크와 관련된 내용도 핵심이긴 하다, 다만 그 과정의 마지막 부분도 중요한데 조금 짧게들 끝내더라고. 그 마지막 부분이 바로 웹 브라우저의 렌더링이다. [질문의 정답에 가까울 이 문서](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)를 보면 렌더(Render) 단락의 내용이 결코 적지 않을 것을 볼 수 있다. 지금부터 웹 브라우저가 네트워크 통신을 통해 얻어온 웹 페이지의 원재료들을 어떻게 완성하는지 알아보자.
+CS 단골 질문 중 하나다. 구글에 검색해보면 여러 블로그에서 DNS, HTTP, TCP 등등 네트워크 관련 용어에 집중해 해설한 내용들이 나온다. 물론 네트워크와 관련된 내용이 핵심이 맞다, 다만 그 과정의 마지막 부분도 중요한데 조금 짧게들 끝내더라고. 그 마지막 부분이 바로 웹 브라우저의 렌더링이다. [질문의 정답에 가까울 이 문서](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)를 보면 렌더(Render) 단락의 내용이 결코 적지 않을 것을 볼 수 있다. 지금부터 웹 브라우저가 네트워크 통신을 통해 얻어온 웹 페이지의 원재료들을 어떻게 완성하는지 알아보자.
 
-### Browser Engine
+### 브라우저 엔진(Browser Engine)
+
+![엔진](https://i.postimg.cc/SKL0V5yD/IC-engine.jpg){:loading="lazy"}  
+{: .center .rounded-edge-16 .w-half}
+
+앞서 웹 브라우저를 컴퓨터 안에 존재하는 또다른 가상 컴퓨터라고 표현했다. 이 가상의 기계를 움직이게 만드는 가장 중요한 부품을 **브라우저 엔진(Browser Engine)**이라고 부른다. 웹 브라우저의 구성요소 중 브라우저 엔진이란 용어가 지칭하는 특정한 대상이 있지만, 상황에 따라 그것이 혼용되거나 오용되는 경우가 있어서 조금 헷갈릴 수 있다. 한 번 정리하고 넘어가보자.
+
+[![자바스크립트 엔진과는 다르다](https://i.postimg.cc/FR47Y2Rv/image.png){:loading="lazy"}](https://en.wikipedia.org/wiki/Browser_engine){:target="_blank"}  
+{: .center .rounded-edge-16 .w-half}
+
+일단 "웹 브라우저에 존재하는 엔진"이라는 의미에서 **자바스크립트 엔진**과 묶어 부르는 방식으로 오용될 수 있다. 위키피디아에서도 그러지 말라고 이렇게 손수 알려주고 있다. **브라우저 엔진은 화면을 그리고 UI를 제어하는 역할을 수행한다.** 반면 자바스크립트 엔진은 웹 페이지에 달려있는 자바스크립트 소스코드를 실행하는 인터프리터다. 둘은 소프트웨어 공학의 기본 설계 원칙인 관심사의 분리 원칙에 따라 서로 구분되었다. 그리고 사실, 둘은 서로 동등한 수준에서 취급되는 구성요소가 아니다. 최근 웹 페이지에서 자바스크립트의 중요도가 너무 높아졌기 때문에 체감하기 어려울지도 모르겠지만, [사실 자바스크립트 엔진을 비활성화 해도 사용자는 웹 페이지에 접속할 수 있다](https://www.google.com/search?q=%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8+%EB%B9%84%ED%99%9C%EC%84%B1%ED%99%94){:target="_blank"}{: .a-not-colored}. 하지만 브라우저 엔진이 없다면 웹 브라우저라는 소프트웨어는 동작하지 않는다.
+
+![](https://i.postimg.cc/d1DbVNKB/layers.png){:loading="lazy"}  
+{: .center}  
+
+하지만 브라우저 엔진에 대해 엄밀히 따졌을 때, "화면을 그리는" 구성요소와 "UI를 제어하는" 구성요소도 서로 분리된다. 여기서 화면을 직접 그리는 부분은 **렌더링 엔진** 혹은 **레이아웃 엔진**이라고 불린다. 다시말해 브라우저 엔진은 UI와 렌더링 엔진(그리고 데이터 영역) 사이에서 교통 정리를 하는 역할을 한다.
+
+![대표 브라우저 엔진](https://i.postimg.cc/jj0K9XHk/0-I-8-CPu-SMOLx-Xm-CTB.png){:loading="lazy"}  
+대표적인 브라우저 엔진들  
+{: .center .rounded-edge-16 .w-3-quarter}
+
+
 
 Javascript Engine과 **Rendering Engine**
 
@@ -181,3 +204,4 @@ SSR, CSR의 렌더링.
 - [CSS Transform vs Position](https://stackoverflow.com/questions/7108941/css-transform-vs-position)
   - 중요! 따로 단락 만들 수 있을 듯.
 - [How browsers work](http://taligarsiel.com/Projects/howbrowserswork1.htm#The_rendering_engine)
+- [oh man, engineers like using terms differently for different contexts](https://stackoverflow.com/questions/46169376/whats-the-difference-between-a-browser-engine-and-rendering-engine)
