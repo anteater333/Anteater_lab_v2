@@ -83,33 +83,28 @@ CS 단골 질문 중 하나다. 구글에 검색해보면 여러 블로그에서
 ![엔진](https://i.postimg.cc/SKL0V5yD/IC-engine.jpg){:loading="lazy"}  
 {: .center .rounded-edge-16 .w-half}
 
-앞서 웹 브라우저를 컴퓨터 안에 존재하는 또다른 가상 컴퓨터라고 표현했다. 이 가상의 기계를 움직이게 만드는 가장 중요한 부품을 **브라우저 엔진(Browser Engine)**이라고 부른다. 웹 브라우저의 구성요소 중 브라우저 엔진이란 용어가 지칭하는 특정한 대상이 있지만, 상황에 따라 그것이 혼용되거나 오용되는 경우가 있어서 조금 헷갈릴 수 있다. 한 번 정리하고 넘어가보자.
+앞서 웹 브라우저를 컴퓨터 안에 존재하는 또다른 가상 컴퓨터라고 표현했다. 이 가상의 기계를 움직이게 만드는 가장 중요한 부품을 **브라우저 엔진(Browser Engine)**이라고 부른다. 웹 브라우저의 컴포넌트 중 브라우저 엔진이란 용어가 지칭하는 특정한 대상이 있지만, 상황에 따라 그것이 혼용되거나 오용되는 경우가 있어서 조금 헷갈릴 수 있다. 한 번 정리하고 넘어가보자.
 
 [![자바스크립트 엔진과는 다르다](https://i.postimg.cc/FR47Y2Rv/image.png){:loading="lazy"}](https://en.wikipedia.org/wiki/Browser_engine){:target="_blank"}  
 {: .center .rounded-edge-16 .w-half}
 
-일단 "웹 브라우저에 존재하는 엔진"이라는 의미에서 **자바스크립트 엔진**과 묶어 부르는 방식으로 오용될 수 있다. 위키피디아에서도 그러지 말라고 이렇게 손수 알려주고 있다. **브라우저 엔진은 화면을 그리고 UI를 제어하는 역할을 수행한다.** 반면 자바스크립트 엔진은 웹 페이지에 달려있는 자바스크립트 소스코드를 실행하는 인터프리터다. 둘은 소프트웨어 공학의 기본 설계 원칙인 관심사의 분리 원칙에 따라 서로 구분되었다. 그리고 사실, 둘은 서로 동등한 수준에서 취급되는 구성요소가 아니다. 최근 웹 페이지에서 자바스크립트의 중요도가 너무 높아졌기 때문에 체감하기 어려울지도 모르겠지만, [사실 자바스크립트 엔진을 비활성화 해도 사용자는 웹 페이지에 접속할 수 있다](https://www.google.com/search?q=%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8+%EB%B9%84%ED%99%9C%EC%84%B1%ED%99%94){:target="_blank"}{: .a-not-colored}. 하지만 브라우저 엔진이 없다면 웹 브라우저라는 소프트웨어는 동작하지 않는다.
+일단 "웹 브라우저에 존재하는 엔진"이라는 의미에서 **자바스크립트 엔진(JavaScript Engine)**과 묶어 부르는 방식으로 오용될 수 있다. 위키피디아에서도 그러지 말라고 이렇게 손수 알려주고 있다. **브라우저 엔진은 화면을 그리고 UI를 제어하는 역할을 수행한다.** 반면 자바스크립트 엔진은 웹 페이지에 달려있는 자바스크립트 소스코드를 실행하는 인터프리터다. 둘은 소프트웨어 공학의 기본 설계 원칙인 관심사의 분리 원칙에 따라 서로 구분되었다. 그리고 사실, 둘은 서로 동등한 수준에서 취급되는 컴포넌트가 아니다. 최근 웹 페이지에서 자바스크립트의 중요도가 너무 높아졌기 때문에 체감하기 어려울지도 모르겠지만, [자바스크립트 엔진을 비활성화 해도 사용자는 웹 페이지에 접속할 수 있다](https://www.google.com/search?q=%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8+%EB%B9%84%ED%99%9C%EC%84%B1%ED%99%94){:target="_blank"}{: .a-not-colored}. 하지만 브라우저 엔진이 없다면 웹 브라우저라는 소프트웨어는 동작하지 않는다.
 
 ![](https://i.postimg.cc/d1DbVNKB/layers.png){:loading="lazy"}  
+웹 브라우저의 컴포넌트들
 {: .center}  
 
-하지만 브라우저 엔진에 대해 엄밀히 따졌을 때, "화면을 그리는" 구성요소와 "UI를 제어하는" 구성요소도 서로 분리된다. 여기서 화면을 직접 그리는 부분은 **렌더링 엔진** 혹은 **레이아웃 엔진**이라고 불린다. 다시말해 브라우저 엔진은 UI와 렌더링 엔진(그리고 데이터 영역) 사이에서 교통 정리를 하는 역할을 한다.
+브라우저 엔진에 대해 더 엄밀히 따졌을 때, "화면을 그리는" 컴포넌트와 "UI를 제어하는" 컴포넌트도 서로 분리된다. 여기서 화면을 직접 그리는 부분을 **렌더링 엔진(Rendering Engine)** 혹은 **레이아웃 엔진(Layout Engine)**이라고 부른다. UI와 렌더링 엔진 사이에서 교통 정리를 하는 부분을 브라우저 엔진이라고 부른다. 하지만 두 컴포넌트는 서로 강하게 결합되어 있기 때문에 함께 묶어 "브라우저 엔진"이라고 부르는게 일반적이다.
 
 ![대표 브라우저 엔진](https://i.postimg.cc/jj0K9XHk/0-I-8-CPu-SMOLx-Xm-CTB.png){:loading="lazy"}  
 대표적인 브라우저 엔진들  
 {: .center .rounded-edge-16 .w-3-quarter}
 
-
-
-Javascript Engine과 **Rendering Engine**
-
-Besides "browser engine", two other terms are in everyday use regarding related concepts: "layout engine" and "rendering engine".[1][2][3] In theory, layout and rendering (or "painting") could be handled by different engines. In practice, however, a given browser engine's rendering and layout components are tightly coupled and rarely encountered on their own outside the browser engine, unlike the case with browsers' scripting engines. 
-
-브라우저 엔진과 레이아웃(렌더링) 엔진이 분리되는 개념이긴 한데 둘은 강하게 결합되어 있기 때문에 일반적으로 묶어서 취급. (ex. Gecko 엔진이 둘 다 다루는 것)
-
-Webkit과 Gecko는 각각 렌더링 과정이 다름.
+그리고 이런 브라우저 엔진은 각 웹 브라우저 개발 업체들이 직접 구현해 실제로 우리가 사용하는 웹 브라우저에 들어있다. 파이어폭스에선 Gecko, 사파리에선 Webkit, 그리고 크롬에선 그 Webkit을 기반으로 만든 Blink 엔진을 사용 중이다. 각 엔진들은 내부적으로 사용하는 구체적인 컴포넌트와 동작 흐름에 차이는 있지만, 웹 브라우저를 사용자 입력에 맞게 동작시키고 웹 페이지의 원재료를 사용해 화면을 그려낸다는 목적은 모두 동일하다.
 
 ### 브라우저의 렌더링 과정 살펴보기
+
+Webkit과 Gecko는 각각 렌더링 과정이 다름.
 
 ---
 
