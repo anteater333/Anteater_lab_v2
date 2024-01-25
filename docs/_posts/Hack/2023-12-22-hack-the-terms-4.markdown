@@ -68,9 +68,7 @@ categories: [Hack]
 
 렌더링 성능을 측정하는 대표적인 지표로는 [FPS(Frames Per Seconds, 초당 프레임)](https://developer.mozilla.org/ko/docs/Glossary/FPS)가 있다. 컴퓨터가 1초 동안 그림을 몇 장이나 그릴 수 있는지를 나타내는 단위다. 그 숫자가 높을수록 화면의 움직임이 부드럽게 보인다. 그렇다고 마냥 높기만 하다고 좋은건 아니고, 그 숫자를 얼마나 잘 유지하느냐가 관건이다. 위 움짤에서도 왼쪽(15fps)은 귀엽고, 오른쪽(60fps)는 우아하다. 그런데 60fps로 움직여야 하는 화면이 갑자기 렌더링 과정의 오류로 인해 1~2초 정도 15fps로 떨어진다면 움직임이 어색하게 느껴질 것이다. 웹 브라우저는 기본적으로 웹 페이지를 60fps로 화면에 그려야 한다. 만약 우리가 만든 웹 페이지가 너무 복잡한 구조를 가진 탓에 스크롤을 한 번 했더니 화면 출력이 10fps까지 떨어진다면, 그 순간부터 렌더링은 웹 개발자가 신경 써야 하는 문제가 되는 것이다.
 
-## 브라우저 주소창에 URL을 입력하면
-
-> "주소창에 URL을 입력하면 무슨 일이 일어나나요?"
+## 브라우저 주소창에 URL을 입력하면 무슨 일이 일어나나요?
 
 ![주소창에 URL을 입력하면](https://i.postimg.cc/qvLWKn2P/whenurl.jpg){:loading="lazy"}  
 [이미지 출처](https://www.buymeacoffee.com/wassimchegham/hey-102339)  
@@ -102,25 +100,57 @@ CS 단골 질문 중 하나다. 구글에 검색해보면 여러 블로그에서
 
 그리고 이런 브라우저 엔진은 각 웹 브라우저 개발 업체들이 직접 구현해 실제로 우리가 사용하는 웹 브라우저에 들어있다. 파이어폭스에선 Gecko, 사파리에선 Webkit, 그리고 크롬에선 그 Webkit을 기반으로 만든 Blink 엔진을 사용 중이다. 각 엔진들은 내부적으로 사용하는 구체적인 컴포넌트와 동작 흐름에 차이는 있지만, 웹 브라우저를 사용자 입력에 맞게 동작시키고 웹 페이지의 원재료를 사용해 화면을 그려낸다는 목적은 모두 동일하다.
 
-### 브라우저의 렌더링 과정 살펴보기
+### 브라우저의 렌더링 과정
 
-Webkit과 Gecko는 각각 렌더링 과정이 다름.
+![Gecko](https://i.postimg.cc/rmGRt468/gecko.jpg){:loading="lazy"}  
+Gecko 엔진의 렌더링 과정  
+{: .center}
 
----
+![Webkit](https://i.postimg.cc/RhDS3C0S/webkit.jpg){:loading="lazy"}  
+Webkit 엔진의 렌더링 과정  
+{: .center}
 
-- Rendering in web browser.
-  - Browser의 엔진들: **Rendering Engine**, Javascript Engine.  
-  - [CRP](https://developer.mozilla.org/ko/docs/Web/Performance/Critical_rendering_path)  
-    - DOM (HTML 해석의 결과물)  
-    - CSSOM (Stylesheet 해석의 결과물)  
-    - Render Tree (DOM + CSSOM)  
-  - 프레임 속도 (Frame rate, FPS)  
-  > **프레임 속도(FPS)**는 브라우저가 콘텐츠를 다시 계산하고, 레이아웃을 설정하고 디스플레이에 그릴 수 있는 속도입니다. **초당 프레임 수(frames per second, fps)**는 1초에 다시 칠할 수 있는 프레임 수입니다. 웹사이트 컴퓨터 그래픽의 목표 프레임 속도는 **60fps**입니다.
-  - 결과적으로 앞서 말한 CG에서의 render와 비슷한 의미. 웹 페이지라는 그림을 60fps로 화면에 뿌리는 작업  
-  - **웹 어플리케이션의 성능과 직결되는 문제**  
+그럼 브라우저 엔진이 어떻게 화면을 그려내는지 그 과정을 한 번 살펴보자. 설명하기 앞서, 위 사진처럼 브라우저 엔진들 사이에도 렌더링 과정에 차이가 조금씩 있다. 다만 전반적인 흐름은 비슷하기 때문에(사실 같은 단계인데 용어만 조금 다른 경우도 있고) 그 부분은 감안하고 보도록 하자.
+
+#### Critical Rendering Path
+https://cresumerjang.github.io/2019/06/24/critical-rendering-path/
+
+원재료 (HTML & CSS)  
+파싱 (DOM & CSSOM)  
+부착 (Render Tree)  
+레이아웃  
+  위치 결정
+페인트  
+  화면 그리기
+합성
+  페인팅된 요소들을 화면에 합성하는 단계 (레이어의 합성, 레이어의 상관관계를 계산 (서로간의 위치나 겹침 처리 등))
+  GPU의 관여
+  opacity, transform 등 => 뒤에서 설명: 이런 속성들은 실시간으로 변경되어도 앞선 두 단계를 재실행 할 필요가 없고 GPU의 연산만 있으면 됨.
+  In the final step, the browser combines the painted elements and layers to create the final composite, which is rendered on the screen. This includes blending layers, handling transparency, and optimizing performance using hardware acceleration when available.
+  
+
+#### Update UI
+
+https://cresumerjang.github.io/2019/06/24/critical-rendering-path/#Update-UI
+
+웹 페이지를 사용하는 중 변화가 생긴다면? (파싱/부착 과정을 다시 겪는건 비효율적이니깐)
 
 
-CRP
+#### 번외 1. 자바스크립트는 언제 실행되나요?
+
+JavaScript의 실행은 웹 페이지 로딩 과정 중 여러 시점에서 발생할 수 있습니다. 다음은 JavaScript가 실행될 수 있는 주요 시점들입니다:
+
+    HTML 파싱 중: HTML 문서를 파싱하는 도중 <script> 태그를 만나면, 브라우저는 그 시점에서 파싱을 일시 중지하고, 해당 스크립트를 실행합니다. 스크립트가 async 또는 defer 속성 없이 로드되면, 스크립트 로딩과 실행이 완료될 때까지 HTML 파싱이 블록됩니다.
+
+    DOM 생성 후: defer 속성이 있는 스크립트의 경우, HTML 문서의 파싱이 완료되고 DOM 트리가 완성된 직후에 실행됩니다. 이는 HTML 파싱이 완전히 끝난 뒤에야 실행되므로, DOM에 접근할 필요가 있는 스크립트에 유용합니다.
+
+    페이지 로드 완료 후: async 속성이 있는 스크립트는 병렬로 로드됩니다. 로드가 완료되면, 파싱 과정에 상관없이 즉시 실행됩니다. 또한, window.onload 같은 이벤트 핸들러를 사용하여 모든 리소스가 로드된 후에 스크립트를 실행할 수도 있습니다.
+
+    사용자 상호작용에 의해: 사용자가 클릭, 스크롤 등의 동작을 했을 때 이벤트 핸들러에 의해 JavaScript가 실행될 수도 있습니다.
+
+
+
+#### 번외 2. CSS, 알고쓰자
 
 [![뽀모도로](https://i.postimg.cc/VLFLykgd/pomodoro.png){:loading="lazy"}](https://domado.vercel.app/){:target="_blank"}  
 틈새 끼워팔기
@@ -187,7 +217,7 @@ SSR, CSR의 렌더링.
 
 - [웹페이지를 표시한다는 것](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)
 - [웹 브라우저의 렌더링 프로세스](https://cresumerjang.github.io/2019/06/24/critical-rendering-path/)
-- [ToastUI(NHN Cloud FE) 블로그, 성능 최적화](https://ui.toast.com/fe-guide/ko_PERFORMANCE#1-%ED%8C%8C%EC%8B%B1)
+- [ToastUI(NHN Cloud FE) 블로그, 성능 최적화](https://ui.toast.com/fe-guide/ko_PERFORMANCE)
 - [CSS Engine, Quantum CSS, 그림이 마음에 듬](https://hacks.mozilla.org/2017/08/inside-a-super-fast-css-engine-quantum-css-aka-stylo/)
 - [Navigation Timing API, 더 정확한 웹 사이트 성능 측정 API](https://developer.mozilla.org/ko/docs/Web/API/Performance_API/Navigation_timing)
 - [Understanding the critical path, web.dev](https://web.dev/learn/performance/understanding-the-critical-path?hl=en)
