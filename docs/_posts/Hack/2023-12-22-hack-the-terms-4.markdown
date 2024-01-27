@@ -68,7 +68,7 @@ categories: [Hack]
 
 렌더링 성능을 측정하는 대표적인 지표로는 [FPS(Frames Per Seconds, 초당 프레임)](https://developer.mozilla.org/ko/docs/Glossary/FPS)가 있다. 컴퓨터가 1초 동안 그림을 몇 장이나 그릴 수 있는지를 나타내는 단위다. 그 숫자가 높을수록 화면의 움직임이 부드럽게 보인다. 그렇다고 마냥 높기만 하다고 좋은건 아니고, 그 숫자를 얼마나 잘 유지하느냐가 관건이다. 위 움짤에서도 왼쪽(15fps)은 귀엽고, 오른쪽(60fps)는 우아하다. 그런데 60fps로 움직여야 하는 화면이 갑자기 렌더링 과정의 오류로 인해 1~2초 정도 15fps로 떨어진다면 움직임이 어색하게 느껴질 것이다. 웹 브라우저는 기본적으로 웹 페이지를 60fps로 화면에 그려야 한다. 만약 우리가 만든 웹 페이지가 너무 복잡한 구조를 가진 탓에 스크롤을 한 번 했더니 화면 출력이 10fps까지 떨어진다면, 그 순간부터 렌더링은 웹 개발자가 신경 써야 하는 문제가 되는 것이다.
 
-## 브라우저 주소창에 URL을 입력하면 무슨 일이 일어나나요?
+## 주소창에 URL을 입력하면 무슨 일이 일어나나요?
 
 ![주소창에 URL을 입력하면](https://i.postimg.cc/qvLWKn2P/whenurl.jpg){:loading="lazy"}  
 [이미지 출처](https://www.buymeacoffee.com/wassimchegham/hey-102339)  
@@ -112,22 +112,36 @@ Webkit 엔진의 렌더링 과정
 
 그럼 브라우저 엔진이 어떻게 화면을 그려내는지 그 과정을 한 번 살펴보자. 설명하기 앞서, 위 사진처럼 브라우저 엔진들 사이에도 렌더링 과정에 차이가 조금씩 있다. 다만 전반적인 흐름은 비슷하기 때문에(사실 같은 단계인데 용어만 조금 다른 경우도 있고) 그 부분은 감안하고 보도록 하자.
 
-#### Critical Rendering Path
+#### 중요 렌더링 경로(Critical Rendering Path)
+
+웹 브라우저의 렌더링 과정을 **[중요 렌더링 경로(Critical Rendering Path, CRP)](https://developer.mozilla.org/ko/docs/Web/Performance/Critical_rendering_path)**라고 부른다. CRP는 다음과 같은 공정으로 이루어져 결과물을 만들어낸다.
+
+**파싱(Parse) -> 부착(Attachment) -> 레이아웃(Layout) -> 페인트(Paint) -> 합성(Composite)**  
+{: .center .bold-middle}
+
+**파싱**  
+원재료를 가공
+(HTML & CSS) -> (DOM & CSSOM) 
+
+**부착**  
+두 Object Model을 합체
+(Render Tree)
+
+**레이아웃**  
+위치 결정
+
+**페인트**  
+화면 그리기
+
+**합성**
+CRP에 포함시켜 설명하는 자료도 있고 아닌 자료도 있음.  
+페인팅된 요소들을 화면에 합성하는 단계 (레이어의 합성, 레이어의 상관관계를 계산 (서로간의 위치나 겹침 처리 등))  
+GPU의 관여  
+opacity, transform 등 => 뒤에서 설명: 이런 속성들은 실시간으로 변경되어도 앞선 두 단계를 재실행 할 필요가 없고 GPU의 연산만 있으면 됨.  
+In the final step, the browser combines the painted elements and layers to create the final composite, which is rendered on the screen. This includes blending layers, handling transparency, and optimizing performance using hardware acceleration when available.  
+
 https://cresumerjang.github.io/2019/06/24/critical-rendering-path/
 
-원재료 (HTML & CSS)  
-파싱 (DOM & CSSOM)  
-부착 (Render Tree)  
-레이아웃  
-  위치 결정
-페인트  
-  화면 그리기
-합성
-  페인팅된 요소들을 화면에 합성하는 단계 (레이어의 합성, 레이어의 상관관계를 계산 (서로간의 위치나 겹침 처리 등))
-  GPU의 관여
-  opacity, transform 등 => 뒤에서 설명: 이런 속성들은 실시간으로 변경되어도 앞선 두 단계를 재실행 할 필요가 없고 GPU의 연산만 있으면 됨.
-  In the final step, the browser combines the painted elements and layers to create the final composite, which is rendered on the screen. This includes blending layers, handling transparency, and optimizing performance using hardware acceleration when available.
-  
 
 #### Update UI
 
