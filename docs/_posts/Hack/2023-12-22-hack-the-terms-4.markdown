@@ -114,16 +114,19 @@ Webkit 엔진의 렌더링 과정
 
 #### 중요 렌더링 경로(Critical Rendering Path)
 
-웹 브라우저의 렌더링 과정을 **[중요 렌더링 경로(Critical Rendering Path, CRP)](https://developer.mozilla.org/ko/docs/Web/Performance/Critical_rendering_path)**라고 부른다. CRP는 다음과 같은 공정으로 이루어져 결과물을 만들어낸다.
+웹 브라우저의 렌더링 과정을 **[중요 렌더링 경로(Critical Rendering Path, CRP)](https://developer.mozilla.org/ko/docs/Web/Performance/Critical_rendering_path){:target="_blank"}**라고 부른다. CRP는 다음과 같은 공정으로 이루어져 결과물을 만들어낸다.
 
 **파싱(Parse) -> 부착(Attachment) -> 레이아웃(Layout) -> 페인트(Paint) -> 합성(Composite)**  
 {: .center .bold-middle}
 
-**파싱**  
-원재료를 가공
-(HTML & CSS) -> (DOM & CSSOM) 
+[중간중간 도식으로 진행단계 그리기]
+
+**파싱(Parse)**  
+CRP의 첫 번째 단계는 **파싱(Parse)**이다. 첫 번째 단계인 만큼 공정에 쓰일 원재료를 입력받는 위치이기도 한데, 여기서 원재료는 URL을 통해 요청한 웹 페이지의 HTML 소스 코드가 된다. 파싱 단게에서 브라우저 엔진은 HTML을 읽어 웹 페이지의 논리적인 구조, **문서 객체 모델(Document Object Model, DOM)**을 생성한다.  
+HTML의 계층 구조를 나타낼 수 있도록 DOM은 트리 구조를 가지며, 파싱 과정에서 DOM 트리는 소스 코드 위에서 아래 순으로 점진적으로 구축된다. 이 과정에서 `<link>`나 `<script>` 등 외부 자원을 찾을 때 마다 브라우저는 HTML의 파싱을 멈추고(이를 **Render blocking**이라고 한다) 추가적인 네트워크 요청을 하고 자원에 대한 처리를 진행한다. 특히 스타일 시트, CSS에 대해서는 브라우저 엔진이 또 다른 파싱을 진행한다. 그 결과물은 웹 페이지의 스타일에 대한 논리적인 구조, **CSS 객체 모델(CSS Object Model, CSSOM)**이 된다.
 
 **부착**  
+부착 혹은 프레임 구축 혹은 스타일  
 두 Object Model을 합체
 (Render Tree)
 
@@ -165,6 +168,10 @@ JavaScript의 실행은 웹 페이지 로딩 과정 중 여러 시점에서 발�
 #### 번외 2. CSS 알고쓰자  
 
 뽀모도로 타이머의 그래픽 깨짐 효과. css를 사용한 트렌지션 구현 시 CPU가 관여하는 속성이 있고 GPU가 관여하는 속성이 있음.
+
+선택자 성능 최적화
+
+또한 CSS는 JavaScript와 마찬가지로 Render bloking 요소. 이것이 너무 커질 경우 페이지 렌더링 경험에 대한 악영향.
 
 ## CSR? SSR?
 SSR, CSR의 렌더링.
