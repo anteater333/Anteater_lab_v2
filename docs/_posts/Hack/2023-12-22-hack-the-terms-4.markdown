@@ -129,20 +129,17 @@ HTML의 계층 구조를 나타낼 수 있도록 DOM은 트리 구조를 가진�
 두 번째 단계는 여러 이름으로 불리는데, 자료에 따라 프레임 구축(Frame Construction), 스타일링(Style) 등의 이름을 가진다. 여기선 **부착(Attachment)**이라고 하자. 아무튼 중요한 것은 이 단계에서 무슨 일을 하느냐이다. 부착 단계에서 브라우저 엔진은 앞서 결과로 얻어낸 DOM에 CSSOM을 붙여 **렌더링 트리(Render Tree)**를 만든다. 렌더링 트리는 웹 페이지의 계층 구조와 스타일에 대한 정보를 한 데 담아두고 있기 때문에 이름대로 브라우저 엔진이 화면에 그림을 그리기 위한 핵심 재료가 된다. 따라서 화면에 그릴 필요가 없는 DOM 트리 노드들은 렌더링 트리 생성 과정에서 제외된다. 메타 정보나 외부 자원 정보가 담긴 `<head>` 태그, CSSOM에서 `display: none;` 속성이 확인된 노드들이 그 대상이 된다.
 
 **레이아웃(Layout)**  
-앞선 단계에서 렌더링 트리를 만들면서 각 노드들에 스타일을 부여했다. 세 번째 단계인 **레이아웃(Layout)**에서는 부여된 스타일들의 상대적인 값을 절대적인 값으로 계산한다. CSS에서는 크기와 위치를 나타내는 다양한 단위들이 있는데, 대부분의 단위들은 웹 페이지의 여러 요소들에 대해 상대적인 값을 가진다. 예를 들어, `%`나 `vw`, `vh` 등의 단위는 상위 노드나 웹 브라우저의 현재 화면 영역(뷰포트, Viewport) 크기에 비례한 값을 가진다. `em`이나 `rem`은 상위 혹은 루트 노드의 폰트 크기에 비례한 값을 가진다. 레이아웃 단계에서 브라우저 엔진은 이런 상대값들의 절대적인 `px`값을 계산해 화면에서 구체적으로 어떤 위치에 어떤 크기로 웹 페이지의 엘리먼트들이 배치되어야 하는지를 결정한다.
+앞선 단계에서 렌더링 트리를 만들면서 각 노드들에 스타일을 부여했다. 세 번째 단계인 **레이아웃(Layout)**에서는 부여된 스타일들의 상대적인 값을 절대적인 값으로 계산한다. CSS에서는 크기와 위치를 나타내는 다양한 단위들이 있는데, 대부분의 단위들은 웹 페이지의 여러 요소들에 대해 상대적인 값을 가진다. 예를 들어, `%`나 `vw`, `vh` 등의 단위는 상위 노드나 웹 브라우저의 현재 화면 영역(뷰포트, Viewport) 크기에 비례한 값을 가진다. `em`이나 `rem`은 상위 혹은 루트 노드의 폰트 크기에 비례한 값을 가진다. 레이아웃 단계에서 브라우저 엔진은 이런 상대값들의 절대적인 `px` 값을 계산해 화면에서 구체적으로 어떤 위치에 어떤 크기로 웹 페이지의 엘리먼트들이 배치되어야 하는지를 결정한다.
 
-**페인트**  
-화면 그리기
+**페인트(Paint)**  
+다음 단계는 **페인트(Paint)** 또는 **래스터화(Rasterization)**라고 부른다. 페인트는 우리가 흔히 사용하는 그 단어 그대로의 의미다. 래스터화는 컴퓨터 그래픽 렌더링에서 화면의 객체를 픽셀이라는 격자에 매핑하는 것을 의미한다. 이 단계에서는 레이아웃 단계에서 계산된 `px` 값을 이용해 브라우저 엔진이 렌더링 트리의 각 노드를 화면상의 실제 픽셀에 그리게 된다.
 
-**합성**
-CRP에 포함시켜 설명하는 자료도 있고 아닌 자료도 있음.  
-페인팅된 요소들을 화면에 합성하는 단계 (레이어의 합성, 레이어의 상관관계를 계산 (서로간의 위치나 겹침 처리 등))  
-GPU의 관여  
-opacity, transform 등 => 뒤에서 설명: 이런 속성들은 실시간으로 변경되어도 앞선 두 단계를 재실행 할 필요가 없고 GPU의 연산만 있으면 됨.  
-In the final step, the browser combines the painted elements and layers to create the final composite, which is rendered on the screen. This includes blending layers, handling transparency, and optimizing performance using hardware acceleration when available.  
+(병렬적으로 진행된 Paint를 합성하는 도식)
 
-https://cresumerjang.github.io/2019/06/24/critical-rendering-path/
+**합성(Composite)**  
+CRP의 마지막 단계는 자료마다 다르게 설명한다. 페인트가 마지막 단계인 자료도 있고, 한 단계를 더 설명하는 자료도 있다. 그 마지막 단계는 **합성(Composite)**단계이다. 합성 단계에서 브라우저 엔진은 페인트의 결과로 그려진 각 요소를 화면에서 합치는 연산을 수행한다. 이때 합쳐질 각 요소를 **레이어(Layer)**라고 부른다. 레이어는 무턱대고 많이 생성되는 것이 아니라 필요한 상황에만 생성된다. `z-index`로 대표되는 [중첩 컨텍스트(Stacking Context)](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context)가 레이어를 만드는 대표적인 사례이다.
 
+합성 단계에 대한 설명이 자료마다 다른 이유는 웹 페이지가 발전함에 따라 점점 더 복잡해졌기 때문이다. 엘리먼트간 겹침, 전체 웹 페이지 중 일부 엘리먼트만 이동 등 페이지를 구획화 해서 처리하는 것이 유리한 경우가 많아졌기 때문에 이러한 단계가 현대 브라우저 엔진에 새롭게 추가되었다고 볼 수 있다.
 
 #### Update UI
 
@@ -151,7 +148,7 @@ https://cresumerjang.github.io/2019/06/24/critical-rendering-path/#Update-UI
 웹 페이지를 사용하는 중 변화가 생긴다면? (파싱/부착 과정을 다시 겪는건 비효율적이니깐)
 
 
-#### 번외 1. 자바스크립트는 언제 실행되나요?
+#### 자바스크립트는 언제 실행될까?
 
 JavaScript의 실행은 웹 페이지 로딩 과정 중 여러 시점에서 발생할 수 있습니다. 다음은 JavaScript가 실행될 수 있는 주요 시점들입니다:
 
@@ -163,7 +160,7 @@ JavaScript의 실행은 웹 페이지 로딩 과정 중 여러 시점에서 발�
 
     사용자 상호작용에 의해: 사용자가 클릭, 스크롤 등의 동작을 했을 때 이벤트 핸들러에 의해 JavaScript가 실행될 수도 있습니다.
 
-#### 번외 2. CSS 알고쓰자  
+#### CSS 알고쓰자  
 
 뽀모도로 타이머의 그래픽 깨짐 효과. css를 사용한 트렌지션 구현 시 CPU가 관여하는 속성이 있고 GPU가 관여하는 속성이 있음.
 
@@ -237,3 +234,6 @@ SSR, CSR의 렌더링.
   - 중요! 따로 단락 만들 수 있을 듯.
 - [How browsers work](http://taligarsiel.com/Projects/howbrowserswork1.htm#The_rendering_engine)
 - [oh man, engineers like using terms differently for different contexts](https://stackoverflow.com/questions/46169376/whats-the-difference-between-a-browser-engine-and-rendering-engine)
+- [크롬 브라우저는 어떻게 웹사이트를 화면에 그리나요?](https://blog.areumsheep.vercel.app/contents/how-browser-works/)
+- [웹 브라우저의 작동 원리.md](https://github.com/im-d-team/Dev-Docs/blob/master/Browser/%EC%9B%B9%20%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EC%9D%98%20%EC%9E%91%EB%8F%99%20%EC%9B%90%EB%A6%AC.md), [Layer_Model.md](https://github.com/im-d-team/Dev-Docs/blob/master/Browser/Layer_Model.md)
+- [How does browser work step by step [latest] — rendering phase (part 3)](https://cabulous.medium.com/how-does-browser-work-in-2019-part-iii-rendering-phase-i-850c8935958f)
