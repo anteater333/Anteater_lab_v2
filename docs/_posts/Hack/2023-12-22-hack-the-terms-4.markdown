@@ -114,7 +114,7 @@ Webkit 엔진의 렌더링 과정
 
 #### 중요 렌더링 경로(Critical Rendering Path)
 
-웹 브라우저의 렌더링 과정을 **[중요 렌더링 경로(Critical Rendering Path, CRP)](https://developer.mozilla.org/ko/docs/Web/Performance/Critical_rendering_path){:target="_blank"}**라고 부른다. CRP는 다음과 같은 공정으로 이루어져 결과물을 만들어낸다.
+웹 브라우저가 소스 코드 형태의 웹 페이지를 화면에 픽셀로 렌더링하는 과정을 **[중요 렌더링 경로(Critical Rendering Path, CRP)](https://developer.mozilla.org/ko/docs/Web/Performance/Critical_rendering_path){:target="_blank"}**라고 부른다. CRP는 다음과 같은 공정으로 이루어져 결과물을 만들어낸다.
 
 **파싱(Parse) -> 부착(Attachment) -> 레이아웃(Layout) -> 페인트(Paint) -> 합성(Composite)**  
 {: .center .bold-middle}
@@ -146,21 +146,46 @@ HTML의 계층 구조를 나타낼 수 있도록 DOM은 트리 구조를 가진�
 ![paint](https://i.postimg.cc/hP9ZZJH8/4paint.png){:loading="lazy"}  
 {: .center}
 
-앞선 단계들을 거쳐 이제 렌더링의 대상이 자세히 정의되어 관념적으로 존재하는 상태가 되었다. 이 다음 단계는 **페인트(Paint)** 또는 **래스터화(Rasterization)**라고 부른다. 페인트는 우리가 흔히 사용하는 그 단어 그대로의 의미다. 래스터화는 컴퓨터 그래픽 렌더링에서 화면의 객체를 **픽셀(Pixel)**이라는 격자에 매핑하는 것을 의미한다. 이 단계에서는 레이아웃 단계에서 계산된 `px` 값을 이용해 브라우저 엔진이 렌더링 트리의 각 노드를 화면상의 실제 픽셀에 그리게 된다. 관념적으로 존재하는 대상을 실제 화면에 그려 구현하는 단계가 페인트 단계이다.
+앞선 단계들을 거쳐 이제 렌더링의 대상이 자세히 정의되었다. 이 다음 단계는 **페인트(Paint)** 또는 **래스터화(Rasterization)**라고 부른다. 페인트는 우리가 흔히 사용하는 그 단어 그대로의 의미다. 래스터화는 컴퓨터 그래픽 렌더링에서 화면의 객체를 **픽셀(Pixel)**이라는 격자에 매핑하는 것을 의미한다. 이 단계에서는 레이아웃 단계에서 계산된 `px` 값을 이용해 브라우저 엔진이 렌더링 트리의 각 노드를 화면상의 실제 픽셀에 매핑하게 된다.
 
 **합성(Composite)**  
 
 ![Composite](https://i.postimg.cc/sDV95SBb/5composite.png){:loading="lazy"}  
 {: .center}
 
-CRP의 마지막 단계는 자료마다 다르게 설명한다. 페인트가 마지막 단계인 자료도 있고, 한 단계를 더 설명하는 자료도 있다. 그 마지막 단계는 **합성(Composite)**단계이다. 합성 단계에서 브라우저 엔진은 페인트의 결과로 그려진 각 요소를 화면에서 합치는 연산을 수행한다. 이때 합쳐질 각 요소를 **레이어(Layer)**라고 부른다. 레이어는 무턱대고 많이 생성되는 것이 아니라 필요한 상황에만 생성된다. `z-index`로 대표되는 [중첩 컨텍스트(Stacking Context)](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context)가 레이어를 만드는 대표적인 사례이다.  
-합성 단계에 대한 설명이 자료마다 다른 이유는 웹 페이지가 발전함에 따라 점점 더 복잡해졌기 때문이다. 엘리먼트간 겹침, 전체 웹 페이지 중 일부 엘리먼트만 이동 등 페이지를 구획화 해서 처리하는 것이 유리한 경우가 많아졌기 때문에 이러한 단계가 현대 브라우저 엔진에 새롭게 추가되었다고 볼 수 있다.
+CRP의 마지막 단계는 자료마다 다르게 설명한다. 페인트가 마지막 단계인 자료도 있고, 한 단계를 더 설명하는 자료도 있다. 그 마지막 단계는 **합성(Composite)**단계이다. 합성 단계에서 브라우저 엔진은 페인트의 결과로 그려진 각 요소를 화면에서 합치는 연산을 수행한다. 이때 합쳐질 각 요소를 **레이어(Layer)**라고 부른다. 레이어는 무턱대고 많이 생성되는 것이 아니라 필요한 상황에만 생성된다. 레이어는 레이아웃 단계 이후에 **레이어 트리 업데이트(Update Layer Tree)**라는 추가 과정을 거친 다음 **레이어 트리(Layer Tree)**라는 자료 구조로 저장된다. 레이어를 만드는 기준에는 `z-index`로 대표되는 [쌓임 맥락(Stacking Context)](https://developer.mozilla.org/ko/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context)이나 `<canvas>`와 `<video>` 등 멀티미디어 자원을 나타내는 태그 등이 있다.  
 
-#### Update UI
+마지막 단계에 대한 설명이 자료마다 다른 이유는 웹 페이지가 발전함에 따라 점점 더 복잡해졌고 브라우저가 거기에 대응하며 발전해왔기 때문이다. 엘리먼트간 겹침, 전체 웹 페이지 중 일부 엘리먼트만 이동 등 페이지를 구획화 해서 처리하는 것이 유리한 경우가 많아졌다. 그래서 현대 브라우저 엔진은 기존 CRP 과정에 "레이어 트리 업데이트"와 "합성" 단계를 새롭게 추가하게 되었고, 자료마다 내용이 조금씩 다른 이유도 이 때문인 것으로 추측된다.
 
-https://cresumerjang.github.io/2019/06/24/critical-rendering-path/#Update-UI
+#### 살아있는 웹 페이지
 
-웹 페이지를 사용하는 중 변화가 생긴다면? (파싱/부착 과정을 다시 겪는건 비효율적이니깐)
+CRP는 웹 페이지의 소스 코드를 화면에 그리는 일련의 과정이다. 하지만 브라우저의 렌더링은 그것으로 끝이 아니다. 사용자 입장에서 웹 페이지는 계속 살아 움직여야 한다. 따라서 그림이 완전히 그려진 이후 이제 웹 브라우저는 초당 60장의 속도로 그림을 계속 화면에 그려야 한다. 내용이 변하지 않는 화면이라면 그렸던 그림을 계속 보여주고 있기만 해도 되겠지만, 웹 페이지는 사용자의 입력에 따라 언제든 변할 수 있다.  
+
+이 블로그 글을 읽는 당신 처럼 화면에 스크롤을 입력하면 웹 페이지는 위 아래로 움직여야 한다. 블로그 상단에 나오는 프로그레스 바의 모양도 변해야 한다. 웹 브라우저의 윈도우 크기를 사용자가 조절해 뷰포트의 크기가 변할 수도 있다. 버튼을 누르면 없었던 엘리먼트가 화면에 새로 등장하기도 한다. 렌더링 트리는 웹 페이지가 동작하는 중 언제든지 변할 수 있다. 화면 변경에 대응해 화면을 다시 렌더링하는 두 과정을 **리플로우(Reflow)**와 **리페인트(Repaint)**라고 부른다. 이 두 과정은 CRP의 레이아웃과 페인트 과정과 같다.  
+
+![update](https://i.postimg.cc/V6ThQwDt/6update.png){:loading="lazy"}  
+{: .center}
+
+**리플로우(Reflow)**  
+리플로우는 레이아웃 단계부터 다시 진행하는 것을 의미한다. 뷰포트의 크기가 변경되면 `<body>` 태그 노드부터 그 크기에 영향을 받는 자식들까지 다시 그려야한다. 꼭 뷰포트가 아니라 렌더링 트리의 일부 노드가 변경되어도 그 자식들의 크기를 다시 계산해야한다.
+
+**리페인트(Repaint)**  
+리페인트는 이름처럼 페인트 단계부터 다시 진행하는 것을 의미한다. 리플로우 다음에는 항상 리페인트가 따라온다. 하지만 리플로우는 없이 리페인트만 발생할 수도 있다. 예를 들어 레이아웃에 영향을 주지 않는 배경 색상(`background-color`), 테두리(`outline`) 등의 CSS 속성 변화는 리페인트만 발생시킨다. 따라서 개발자는 필요에 따라 리플로우를 발생시키지 않고 리페인트만 발생시키는 속성을 선택할 수도 있다.
+
+**합성만 발생시키기**  
+앞서 말했듯이 현대 브라우저는 화면을 레이어로 나누어 처리하고 그 레이어를 합성(Composite)해 화면을 그린다고 했다. CSS 속성 중에는 레이어를 직접 조작해 리플로우와 리페인트 둘 다 발생시키지 않는 부류도 있다. 대표적으로 엘리먼트의 트랜지션을 구현하는데 사용하는 `transform` 속성과 투명도를 변경하는 `opacity` 속성이 있다. 쉽게 생각해 엘리먼트의 위치 변경 때문에 리페인트가 발생할 경우, 기존 레이어 그림을 지우고 새 위치에 레이어 그림을 새로 다시 그리는 것이라고 생각하면 된다. 굳이 그럴 필요 없이 기존 레이어 그림의 위치를 변경하기만 하면 되는 방식이 `transform` 속성을 조작해 합성(Composite)만을 다시 발생시키는 방법인 것이다.
+
+#### CSS 알고쓰자  
+
+뽀모도로 타이머의 그래픽 깨짐 효과. css를 사용한 트렌지션 구현 시 CPU가 관여하는 속성이 있고 GPU가 관여하는 속성이 있음.
+
+선택자 성능 최적화
+
+또한 CSS는 JavaScript와 마찬가지로 Render bloking 요소. 이것이 너무 커질 경우 페이지 렌더링 경험에 대한 악영향.
+
+display visibility opacity의 차이  
+
+https://blinders.tistory.com/93
 
 
 #### 자바스크립트는 언제 실행될까?
@@ -174,14 +199,6 @@ JavaScript의 실행은 웹 페이지 로딩 과정 중 여러 시점에서 발�
     페이지 로드 완료 후: async 속성이 있는 스크립트는 병렬로 로드됩니다. 로드가 완료되면, 파싱 과정에 상관없이 즉시 실행됩니다. 또한, window.onload 같은 이벤트 핸들러를 사용하여 모든 리소스가 로드된 후에 스크립트를 실행할 수도 있습니다.
 
     사용자 상호작용에 의해: 사용자가 클릭, 스크롤 등의 동작을 했을 때 이벤트 핸들러에 의해 JavaScript가 실행될 수도 있습니다.
-
-#### CSS 알고쓰자  
-
-뽀모도로 타이머의 그래픽 깨짐 효과. css를 사용한 트렌지션 구현 시 CPU가 관여하는 속성이 있고 GPU가 관여하는 속성이 있음.
-
-선택자 성능 최적화
-
-또한 CSS는 JavaScript와 마찬가지로 Render bloking 요소. 이것이 너무 커질 경우 페이지 렌더링 경험에 대한 악영향.
 
 ## CSR? SSR?
 SSR, CSR의 렌더링.
@@ -252,3 +269,5 @@ SSR, CSR의 렌더링.
 - [크롬 브라우저는 어떻게 웹사이트를 화면에 그리나요?](https://blog.areumsheep.vercel.app/contents/how-browser-works/)
 - [웹 브라우저의 작동 원리.md](https://github.com/im-d-team/Dev-Docs/blob/master/Browser/%EC%9B%B9%20%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80%EC%9D%98%20%EC%9E%91%EB%8F%99%20%EC%9B%90%EB%A6%AC.md), [Layer_Model.md](https://github.com/im-d-team/Dev-Docs/blob/master/Browser/Layer_Model.md)
 - [How does browser work step by step [latest] — rendering phase (part 3)](https://cabulous.medium.com/how-does-browser-work-in-2019-part-iii-rendering-phase-i-850c8935958f)
+- [Understanding Reflow and Repaint in the browser](https://dev.to/gopal1996/understanding-reflow-and-repaint-in-the-browser-1jbg)
+- [[CSS] opacity는 reflow가 발생 안 한다구요...? 정말??](https://blinders.tistory.com/93)
