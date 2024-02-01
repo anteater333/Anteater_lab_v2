@@ -173,20 +173,22 @@ CRP는 웹 페이지의 소스 코드를 화면에 그리는 일련의 과정이
 리페인트는 이름처럼 페인트 단계부터 다시 진행하는 것을 의미한다. 리플로우 다음에는 항상 리페인트가 따라온다. 하지만 리플로우는 없이 리페인트만 발생할 수도 있다. 예를 들어 레이아웃에 영향을 주지 않는 배경 색상(`background-color`), 테두리(`outline`) 등의 CSS 속성 변화는 리페인트만 발생시킨다. 따라서 개발자는 필요에 따라 리플로우를 발생시키지 않고 리페인트만 발생시키는 속성을 선택할 수도 있다.
 
 **합성만 발생시키기**  
-앞서 말했듯이 현대 브라우저는 화면을 레이어로 나누어 처리하고 그 레이어를 합성(Composite)해 화면을 그린다고 했다. CSS 속성 중에는 레이어를 직접 조작해 리플로우와 리페인트 둘 다 발생시키지 않는 부류도 있다. 대표적으로 엘리먼트의 트랜지션을 구현하는데 사용하는 `transform` 속성과 투명도를 변경하는 `opacity` 속성이 있다. 쉽게 생각해 엘리먼트의 위치 변경 때문에 리페인트가 발생할 경우, 기존 레이어 그림을 지우고 새 위치에 레이어 그림을 새로 다시 그리는 것이라고 생각하면 된다. 굳이 그럴 필요 없이 기존 레이어 그림의 위치를 변경하기만 하면 되는 방식이 `transform` 속성을 조작해 합성(Composite)만을 다시 발생시키는 방법인 것이다.
+앞서 말했듯이 현대 브라우저는 화면을 레이어로 나누어 처리하고 그 레이어를 합성(Composite)해 화면을 그린다고 했다. CSS 속성 중에는 레이어를 직접 조작해 리플로우와 리페인트 둘 다 발생시키지 않는 부류도 있다. 대표적으로 엘리먼트의 트랜지션을 구현하는데 사용하는 `transform` 속성이 있다. 쉽게 생각해 만약 엘리먼트의 위치 변경 때문에 리페인트가 발생할 경우, 기존 레이어 그림을 지우고 새 위치에 레이어 그림을 새로 다시 그리는 것이라고 생각하면 된다. 굳이 그럴 필요 없이 기존 레이어 그림의 위치를 변경하기만 하면 되는 방식이 `transform` 속성을 조작해 합성(Composite)만을 다시 발생시키는 방법인 것이다.
 
 #### CSS 알고쓰자  
 
-뽀모도로 타이머의 그래픽 깨짐 효과. css를 사용한 트렌지션 구현 시 CPU가 관여하는 속성이 있고 GPU가 관여하는 속성이 있음.
+![CSS 알고쓰자](https://i.postimg.cc/QCJYrkRL/7css.png){:loading="lazy"}  
+{: .center}
 
-선택자 성능 최적화
+리플로우와 리페인트에 대한 설명을 보면 알 수 있듯이 CSS의 속성만 잘 써줘도 어느정도 렌더링 과정의 최적화가 가능해진다. 기능 구현에 어떤 속성을 선택할지 고려할 때 그 속성이 렌더링 과정에서 어떻게 관여하는지를 이해하는 것이 중요하다. 앞서 언급했던 [쌓임 맥락](https://developer.mozilla.org/ko/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context)에 따라 레이어를 생성하는 CSS 속성들을 숙지해두면 도움이 될 것이다. 단순히 특정 속성을 쓰면 레이어가 생성되고 리플로우를 발생시키지 않을 수 있는 것이 아니라, 그럴 수 있는 조건이 만족되어야 하기 때문에 한 번 문서를 읽어 보는 것을 추천한다.
 
-또한 CSS는 JavaScript와 마찬가지로 Render bloking 요소. 이것이 너무 커질 경우 페이지 렌더링 경험에 대한 악영향.
+CSS에 대한 최적화는 이 뿐만이 아니다. 다음과 같은 최적화 작업이 추가로 가능하다.
 
-display visibility opacity의 차이  
+- 선택자(Selector) 최적화  
+  CSS는 한 번에 다양한 선택자를 조합해서 사용할 수 있다. 이 때 한 번에 사용된 선택자의 개수가 너무 많거나 트리 탐색에 불리한 구조일 경우 브라우저 엔진이 렌더링 트리를 생성하는데 시간이 더 소요된다. 다만 이에 대해 그것이 정말 큰 차이를 결정지을 정도인지를 묻는 의문의 목소리도 있기 때문에 지금 상황에 정말 필요한지 충분히 고려한 다음 시도하자.
 
-https://blinders.tistory.com/93
-
+- Render Blocking 회피  
+  파싱 단계에서 HTML에 포함된 외부 자원 태그가 발견되면 렌더링은 차단되고 리소스를 처리하게 된다. CSS 파일 또한 렌더링을 차단하는 외부 자원에 해당된다. 만약 우리 웹 페이지가 반응형 디자인을 지원하고, 각 환경별 스타일이 서로 다른 CSS 파일에 작성되어 있다고 생각해보자. 노트북에서 웹 페이지를 접속했다고 하더라도 최초 페이지 렌더링 시 `<head>` 태그에서 발견된 `pc.css`, `mobile.css`를 모두 불러와 처리해야 렌더링이 진행된다. 이런 상황을 피하기 위해 CSS를 연결하는 `<link>` 태그에 `media` 속성을 사용해 최초 렌더링에서 필요한 CSS만 처리하도록 만들 수 있다.
 
 #### 자바스크립트는 언제 실행될까?
 
@@ -271,3 +273,4 @@ SSR, CSR의 렌더링.
 - [How does browser work step by step [latest] — rendering phase (part 3)](https://cabulous.medium.com/how-does-browser-work-in-2019-part-iii-rendering-phase-i-850c8935958f)
 - [Understanding Reflow and Repaint in the browser](https://dev.to/gopal1996/understanding-reflow-and-repaint-in-the-browser-1jbg)
 - [[CSS] opacity는 reflow가 발생 안 한다구요...? 정말??](https://blinders.tistory.com/93)
+- [Gecko:Overview](https://wiki.mozilla.org/Gecko:Overview)
