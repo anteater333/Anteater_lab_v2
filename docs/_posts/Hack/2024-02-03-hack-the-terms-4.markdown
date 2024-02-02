@@ -2,11 +2,11 @@
 layout: post
 title: "Hack🪓 the #4 Rendering"
 description: 
-date: 2023-12-22 10:49:00 +0900
+date: 2024-02-03 12:40:00 +0900
 categories: [Hack]
 ---
 
-## 금손🖐️ 작가, 컴퓨터
+## 🖐️금손 작가, 컴퓨터
 
 ![노예비유법](https://i.postimg.cc/x8nrcbJs/image.png)
 {:loading="lazy"}  
@@ -245,39 +245,11 @@ CSS에 대한 최적화는 이 뿐만이 아니다. 다음과 같은 최적화 �
 틈새 끼워팔기
 {: .center .w-3-quarter .rounded-edge-16}
 
-이건 최근에 내가 만들어 본 뽀모도로 타이머 웹 페이지다. 아직 모바일 페이지는 지원하지 않는다. 아무튼 중요한건 그게 아니라, 이 타이머를 내 노트북에서 사용하는 중 발견한 증상이 있다. 왼쪽은 윈도우에서 제공하는 화면 캡쳐 기능으로 찍은 스크린샷이다. 오른쪽은 내 휴대폰의 카메라를 이용해 노트북 화면을 찍은 사진이다. 화면 중앙의 타이머 영역이 천천히 왼쪽으로 이동하는데, 그 영역의 색상이 실제 화면에서는 오른쪽 처럼 미묘하게 깨져서 나타나는 것이다.
+이건 최근에 내가 만들어 본 뽀모도로 타이머 웹앱이다. 아직 모바일 페이지는 지원하지 않는다. 아무튼 중요한건 그게 아니라, 이 타이머를 내 노트북에서 사용하는 중 발견한 증상이 있다. 왼쪽은 윈도우에서 제공하는 화면 캡쳐 기능으로 찍은 스크린샷이다. 오른쪽은 내 휴대폰의 카메라를 이용해 노트북 화면을 찍은 사진이다. 화면 중앙의 타이머 영역이 천천히 왼쪽으로 이동하는데, 그 영역의 색상이 실제 화면에서는 오른쪽 처럼 미묘하게 깨져서 나타나는 것이다.
 
+이 증상은 노트북에 전원을 연결하지 않았을 때 나타난다. 즉, 렌더링을 수행하는 연산 장치의 파워 절약이 웹 페이지에 직접적으로 영향을 주고 있다는 것이다. 타이머를 움직이는 것이 브라우저 엔진 입장에서 꽤 무거운 연산이었기 때문에. 이 증상이 이 글에 대한 아이디어를 던져줬던 것 같다. 웹 페이지는 날이 갈수록 화려해지고 있지만, 그 화려함을 만드는 비용은 생각보다 비싸다. 요구사항을 구현해야 하는 엔지니어의 입장으로써 그 트레이드 오프를 더 잘 다룰 수 있도록 열심히 공부하자.
 
-
-
-이하 GPT의 요약.
-
->웹 페이지의 렌더링 과정을 이해하는 것은 프론트엔드 개발자에게 매우 중요한 부분입니다. 이에는 여러 가지 이유가 있습니다:
-1. 성능 최적화: 렌더링 과정을 이해하면, 웹 페이지의 로딩 속도를 향상시키고, 사용자 경험을 개선하는 데 도움이 됩니다. 예를 들어, 불필요한 리플로우나 리페인트를 방지하거나, CSS와 JavaScript를 효과적으로 활용하여 렌더링 성능을 최적화할 수 있습니다.
-2. 복잡한 UI 구현: 렌더링 과정을 이해하면, 복잡한 사용자 인터페이스를 구현하는 데 필요한 기술을 더 잘 이해하고 활용할 수 있습니다. 예를 들어, 애니메이션, 스크롤 이벤트, 레이아웃 변경 등의 기능을 구현할 때 이해력이 필요합니다.
-3. 크로스 브라우징 이슈 해결: 브라우저마다 렌더링 엔진이 다르기 때문에, 동일한 웹 페이지가 브라우저마다 다르게 보일 수 있습니다. 렌더링 과정을 이해하면 이러한 크로스 브라우징 이슈를 더 잘 해결할 수 있습니다.
-4. 프로그래시브 웹 앱 (PWA) 개발: 최근에는 웹 앱이 네이티브 앱과 같은 사용자 경험을 제공하려는 추세입니다. 이를 위해서는 웹 페이지의 렌더링 과정을 이해하고 최적화하는 것이 중요합니다.  
-결과적으로, 프론트엔드 개발자가 웹 페이지의 렌더링 과정을 깊게 이해하고 있으면, 더 나은 사용자 경험을 제공하고, 더 효과적인 코드를 작성할 수 있습니다.
-
-(렌더링에 대해 파악하는 것은 웹 개발자에게 아주 실용적인 문제임)
-
-
-----
-# 키워드 던져놓기
-
-- SSR, CSR
-  - 소스 코드 -[Renderer]-> 웹 페이지(HTML/CSS/JS)
-  - Client side rendering
-    - 클라이언트가 최초에 전달받은 Javascript(소스 코드)에 정의된대로 HTML 페이지를 만듬
-    - 동적 렌더링
-  - Server side rendering
-    - 요청에 따라 서버에서 미리 HTML을 만들어서 전달해줌
-    - 그 이후 hydration이란 과정을 거쳐 웹 페이지를 동적으로 만듬.
-
-- 위 렌더링의 결과물을 웹 브라우저의 렌더링 엔진이 렌더링
-  (헷갈리는 포인트, 렌더링의 결과물을 렌더링, 의미적으로 안될건 없음.)
-
-# Refs
+그리고 이번 글은 정말 오래 걸렸다. 연말연초에 몸과 마음 상할 일이 너무 많긴 했다. 1월 중에 이 글을 포스팅하는게 목표였는데 어느덧 2월이구나. 글을 작성하는 기간이 길어지니까 자연스럽게 참고한 자료도 많아졌는데, 일단 아래에 이렇게 첨부해 놓겠다. 사실 전부 다 정독하진 않았고, 몇개는 그냥 뺄까 싶었는데 그냥 다 놔두기로 했다. 심심하면 뽑기 하듯이 몇개만 골라서 읽어보자. 예상치도 못한 좋은 정보를 얻을지도 모른다.
 
 - [웹페이지를 표시한다는 것](https://developer.mozilla.org/ko/docs/Web/Performance/How_browsers_work)
 - [웹 브라우저의 렌더링 프로세스](https://cresumerjang.github.io/2019/06/24/critical-rendering-path/)
@@ -287,11 +259,8 @@ CSS에 대한 최적화는 이 뿐만이 아니다. 다음과 같은 최적화 �
 - [Understanding the critical path, web.dev](https://web.dev/learn/performance/understanding-the-critical-path?hl=en)
 - [웹에서 렌더링](https://web.dev/articles/rendering-on-the-web?hl=ko)
 - [최신 브라우저 내부 살펴보기 1 - CPU, GPU, 메모리 그리고 다중 프로세스 아키텍처](https://d2.naver.com/helloworld/2922312)
-  - 이 시리즈 전체를 한 번 읽어볼 필요가 있음. 3번 글도 중요해보임.
 - [RenderingNG](https://meetup.nhncloud.com/posts/293)
-  - 공부는 세상의 해상도를 높이는 일이라고, 웹 브라우저의 렌더링 과정에 대한 이해가 정말 필수불가결한 그런 지식까진 아니지만 이렇게 멋진 자료를 찾을 수 있는 계기가 될 수도 있다는말.
 - [CSS Transform vs Position](https://stackoverflow.com/questions/7108941/css-transform-vs-position)
-  - 중요! 따로 단락 만들 수 있을 듯.
 - [How browsers work](http://taligarsiel.com/Projects/howbrowserswork1.htm#The_rendering_engine)
 - [oh man, engineers like using terms differently for different contexts](https://stackoverflow.com/questions/46169376/whats-the-difference-between-a-browser-engine-and-rendering-engine)
 - [크롬 브라우저는 어떻게 웹사이트를 화면에 그리나요?](https://blog.areumsheep.vercel.app/contents/how-browser-works/)
@@ -302,3 +271,10 @@ CSS에 대한 최적화는 이 뿐만이 아니다. 다음과 같은 최적화 �
 - [Gecko:Overview](https://wiki.mozilla.org/Gecko:Overview)
 - [defer, async](https://ko.javascript.info/script-async-defer)
 - [이쪽 주제의 바이블 같은 존재](https://d2.naver.com/helloworld/59361)
+
+그리고 요즘 글 쓸때 GPT의 도움을 상당히 많이 받는다. 특히 [뤼튼](https://wrtn.ai/)이란 서비스를 통해 GPT를 사용하고 있다. 몇 달 전에 온라인 스터디 들어갔다가 우연히 알게 된 서비스인데, 좋은건 널리 알려야지.
+
+![소마 제15기](https://i.postimg.cc/J0gM31xN/image.png){:loading="lazy"}
+{: .center}  
+
+진짜 마지막으로, 잊을만하면 한 번씩 메일을 보내 내 메일함에서 그 존재감을 뽐내는 소프트웨어 마에스트로가 어느덧 벌써 15기 연수생을 모집하고 있다. 그래도 나름 이거 해서 작년도 먹고 살 수 있었다. 혹시라도 이 글을 본 사람 중에 지원자격이 되는 사람이 있다면 아주 좋은 기회니까 너무 부담가지지 말고 도전해보자.
