@@ -180,7 +180,7 @@ CRP는 웹 페이지의 소스 코드를 화면에 그리는 일련의 과정이
 ![CSS 알고쓰자](https://i.postimg.cc/QCJYrkRL/7css.png){:loading="lazy"}  
 {: .center}
 
-리플로우와 리페인트에 대한 설명을 보면 알 수 있듯이 CSS의 속성만 잘 써줘도 어느 정도 렌더링 과정의 최적화가 가능해진다. 기능 구현에 어떤 속성을 선택할지 고려할 때 그 속성이 렌더링 과정에서 어떻게 관여하는지를 이해하는 것이 중요하다. 앞서 언급했던 **[쌓임 맥락(Stacking Context)](https://developer.mozilla.org/ko/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context){:target="_blank"}**에 따라 레이어를 생성하는 CSS 속성들을 숙지해 두면 도움이 될 것이다. 단순히 특정 속성을 쓰면 레이어가 생성되고 리플로우를 발생시키지 않을 수 있는 것이 아니라, 그럴 수 있는 조건이 만족해야 하므로 번 문서를 읽어 보는 것을 추천한다.
+리플로우와 리페인트에 대한 설명을 보면 알 수 있듯이 CSS의 속성만 잘 써줘도 어느 정도 렌더링 과정의 최적화가 가능해진다. 기능 구현에 어떤 속성을 선택할지 고려할 때 그 속성이 렌더링 과정에서 어떻게 관여하는지를 이해하는 것이 중요하다. 앞서 언급했던 **[쌓임 맥락(Stacking Context)](https://developer.mozilla.org/ko/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context){:target="_blank"}**에 따라 레이어를 생성하는 CSS 속성들을 숙지해 두면 도움이 될 것이다. 단순히 특정 속성을 쓰면 레이어가 생성되고 리플로우를 발생시키지 않을 수 있는 것이 아니라, 그럴 수 있는 조건이 만족해야 하므로 위 문서를 한 번 읽어 보는 것을 추천한다.
 
 CSS에 대한 최적화는 이뿐만이 아니다. 다음과 같은 최적화 작업이 추가로 가능하다.
 
