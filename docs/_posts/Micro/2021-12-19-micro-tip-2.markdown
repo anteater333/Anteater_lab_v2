@@ -136,10 +136,17 @@ WSL에 열린 포트는 `wslhost.exe` 프로세스에 의해 윈도우의 포트
 [WSLHostPatcher](https://github.com/CzBiX/WSLHostPatcher)는 간단히 말하자면 `wslhost.exe`가 `127.0.0.1`이 아닌 `0.0.0.0`로 주소를 설정하도록 만드는 프로그램이다. README에 따르면 윈도우에 설치해서 WSL 실행시 마다 실행해줘야 한다는데, 일단 WSL에 설치해서 실행해도 잘 작동하더라.
 
 ```shell
-~/wsl$ wget https://github.com/CzBiX/WSLHostPatcher/releases/download/v0.1.0/release.zip
-~/wsl$ unzip release.zip
+~/wsl$ wget https://github.com/CzBiX/WSLHostPatcher/releases/download/v0.1.2/WSLHostPatcher.zip
+~/wsl$ unzip WSLHostPatcher.zip
 ~/wsl$ chmod 755 WSLHostPatcher.exe
 ```
+
+---
+
+**(2024년 2월 14일 추가)**  
+2023년 3월 31일에 있었던 WSL 업데이트에서 [`wslhost.exe`의 일부 기능을 `wslrelay.exe` 라는 새로운 프로세스가 담당하도록 구조가 변경되었다](https://github.com/microsoft/WSL/discussions/9874#discussion-5024039). 따라서 기존 글에서 다운로드 했던 WSLHostPathcer 0.1.0 버전에선 기능이 제대로 동작하지 않을 것이다. 일단 0.1.2 버전을 다운로드 하도록 글을 업데이트 해두었으나 위 명령어를 그냥 따라하지 말고, [`wget`으로 다운로드 받을 URL이 최신 버전인지 꼭 확인하자](https://github.com/CzBiX/WSLHostPatcher/releases).
+
+---
 
 ![요로코롬](https://i.postimg.cc/bwyfv0ch/image.png)  
 요로코롬. 실행 권한 주는것도 까먹지 말자.  
