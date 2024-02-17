@@ -1,0 +1,107 @@
+---
+layout: post
+title: "자잘한 도움말 #14 웹 페이지에서 장치의 화면 절전 막는 법"
+subtitle: "Screen Wake Lock API"
+description: "JavaScript, 웹 페이지 화면 절전, 화면 절전 막기, 절전 모드, Wake Lock, wakeLock, Screen Wake Lock API, 기기를 켜진 상태로 유지, 화면 자동 꺼짐 방지"
+date: 2024-02-17 23:46:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+
+---
+
+## 이하 그리 중요하진 않은 내용들
+
+모바일 디바이스와 웹 어플리케이션
+
+PWA는 특정 기술이나 도구를 칭한다기보단 개발 패러다임에 가깝지 않나?
+
+### 화면 절전
+
+### Screen Wake Lock API
+
+### Screen Wake Lock API를 사용하는 React Custom Hook 만들기
+
+## 내가 배운 것
+
+---
+
+- Screen Wake Lock API
+  - 웹 페이지에 화면 자동 꺼짐 방지 기능을 넣자
+  - https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API
+  - 커스텀 React Hook (from DoMaDo)
+    - 생길 수 있는 문제에 대해 설명하기
+    - 여러 웹 워커에 의해 요청이 올 수 있으므로 인스턴스를 생성하는 방식
+    - DOMException: The requesting page is not visible
+
+
+```typescript
+import { useCallback, useEffect, useState } from 'react';
+
+export const useWakeLock = () => {
+  const [wakeLock, setWakeLock] = useState<WakeLockSentinel | null>(null);
+
+  /** 각 callback들이 직접 조작하지 않고 useEffect 훅에서 WakeLock을 조작할 수 있도록 별도 상태 선언 */
+  const [wakeLockStatus, setWakeLockStatus] = useState<
+    'requested' | 'released' | 'idle'
+  >('idle');
+
+  const isSupported = 'wakeLock' in navigator;
+
+  /** 경고 문구 출력 hook (개발자 참고용) */
+  useEffect(() => {
+    if (!isSupported)
+      console.log(
+        'DoMaDo: 현재 브라우저는 Screen Wake Lock API를 지원하지 않습니다.\nhttps://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API',
+      );
+  }, [isSupported]);
+
+  /** 실질적으로 Wake Lock을 변경하는 useEffect 훅 (core 로직) */
+  useEffect(() => {
+    // known issue.
+    // requested case가 발생한 순간에 웹 페이지의 탭이 백그라운드에 위치할 시 DOMException을 발생시킴.
+    // 에러 타입에 대한 조사 후 handling 필요.
+    switch (wakeLockStatus) {
+      case 'requested':
+        if (!isSupported) setWakeLockStatus('idle');
+        else
+          navigator.wakeLock.request('screen').then((newWakeLock) => {
+            setWakeLock((prevWakeLock) => {
+              prevWakeLock?.release();
+              setWakeLockStatus('idle');
+              return newWakeLock;
+            });
+          });
+        break;
+      case 'released':
+        if (!wakeLock) setWakeLockStatus('idle');
+        else
+          wakeLock.release().then(() => {
+            setWakeLock(null);
+            setWakeLockStatus('idle');
+          });
+        break;
+    }
+  }, [wakeLock, wakeLockStatus, isSupported]);
+
+  /** Wake Lock을 사용하는 상태로 변경, API 형태로 포장 */
+  const requestWakeLock = useCallback(() => {
+    setWakeLockStatus('requested');
+  }, []);
+
+  /** Wake Lock을 사용하지 않는 상태로 변경, API 형태로 포장 */
+  const releaseWakeLock = useCallback(() => {
+    setWakeLockStatus('released');
+  }, []);
+
+  return {
+    /** Wake Lock 사용 */
+    requestWakeLock,
+    /** Wake Lock 해제 */
+    releaseWakeLock,
+    /** 현재 웹 브라우저의 기능 지원 여부 */
+    isSupported,
+  };
+};
+```
