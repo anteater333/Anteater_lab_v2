@@ -26,8 +26,10 @@ categories: [Micro]
   ```javascript
   isSupported = "wakeLock" in navigator;
   ```
-- Screen Wake Lock API는 웹 페이지를 HTTPS 환경에서 접속할 때에만 제공된다.
-  - 개발 중 테스트를 원하면 개발 서버가 HTTPS 프로토콜을 사용하도록 설정해야 한다.
+- Screen Wake Lock API는 [보안 컨텍스트(Secure contexts)](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts)에서만 제공된다.
+  - HTTPS 혹은 로컬 호스트를 나타내는 URL에 접속할 때에만 제공된다.
+  - 테스트 시 장치가 서버에 보안 컨텍스트 상황에 맞게 접속하고 있는지 확인해야 한다.
+    - 특정 브라우저에서는 로컬 호스트를 보안 컨텍스트로 인식하지 못할수도 있다.
 
 ---
 
