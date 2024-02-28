@@ -79,3 +79,6 @@ google_analytics: "G-XY1FSXXJM2"
 
 # Remote theme (for latest version of theme plugin)
 remote_theme: jekyll/minima
+
+# FUTURE
+future: true
