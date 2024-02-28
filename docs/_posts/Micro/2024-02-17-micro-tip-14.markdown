@@ -113,19 +113,9 @@ const isSupported = "wakeLock" in navigator;
 
 아무튼, 이런 API들은 섬세하게 다뤄져야 하다. 심한 경우 보안 컨텍스트로 제한할 뿐만 아니라 자바스크립트 입장에서 사용하기 불편하게 설계하는 경우도 있다. 예를 들어 앞서 소개한 도마도에서는 [Notification API](https://developer.mozilla.org/en-US/docs/Web/API/Notification){:target="_blank"}도 사용되었다. 이 API는 웹 페이지에서 권한을 따로 얻어야하고, 심지어 그 권한을 얻으려면 꼭 사용자 입력을 처리하는 이벤트 핸들러에서 API를 호출해야 한다.
 
+### React Custom Hook으로 만들어보자
 
-## 내가 배운 것
-
----
-
-- Screen Wake Lock API
-  - 웹 페이지에 화면 자동 꺼짐 방지 기능을 넣자
-  - https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API
-  - 커스텀 React Hook (from DoMaDo)
-    - 생길 수 있는 문제에 대해 설명하기
-    - 여러 웹 워커에 의해 요청이 올 수 있으므로 인스턴스를 생성하는 방식
-    - DOMException: The requesting page is not visible
-
+도마도는 React로 개발한 프로젝트다. 이런 기능은 훅(Hook)으로 묶어 쓰기 딱이지. 나는 아래 코드처럼 만들어봤다. 에러 처리 안된 부분까지 가감없이 공개해본다. 이 코드가 별로라면 [이런 npm 패키지도 있으니](https://github.com/jorisre/react-screen-wake-lock/tree/main) 소스 코드를 참고해보면 좋을 것 같다.
 
 ```typescript
 import { useCallback, useEffect, useState } from 'react';
@@ -144,7 +134,7 @@ export const useWakeLock = () => {
   useEffect(() => {
     if (!isSupported)
       console.log(
-        'DoMaDo: 현재 브라우저는 Screen Wake Lock API를 지원하지 않습니다.\nhttps://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API',
+        '[useWakeLock] 현재 브라우저는 Screen Wake Lock API를 지원하지 않습니다.\nhttps://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API',
       );
   }, [isSupported]);
 
@@ -196,3 +186,11 @@ export const useWakeLock = () => {
   };
 };
 ```
+
+## 내가 배운 것
+
+- 화면 절전 방지 기능을 Wake Lock이라고 부른다.
+  - 그리고 해당 기능은 Web API (Screen Wake Lock API)로 제공된다.
+- 특정 Web API들은 보안 컨텍스트 (Secure Context) 상황에서만 사용할 수 있다.
+  - 보안 컨텍스트는 HTTPS 환경 혹은 로컬 호스트 환경을 의미한다.
+- PWA에 발끝 정도 담궈본 것 같다.
