@@ -3,7 +3,7 @@ layout: post
 title: "자잘한 도움말 #14 웹 페이지의 화면 절전 방지 구현하기"
 subtitle: "Screen Wake Lock API"
 description: "JavaScript, 웹 페이지 화면 절전, 화면 절전 막기, 절전 모드, 슬립 모드, 슬립 모드 진입 방지, Wake Lock, wakeLock, Screen Wake Lock API, 기기를 켜진 상태로 유지, 화면 자동 꺼짐 방지, PWA, PWA 화면 절전, PWA 슬립 모드, 프로그레시브 웹 앱, 프로그레시브 웹 어플리케이션, 프로그레시브 웹 애플리케이션, Progressive Web Application"
-date: 2024-02-28 17:40:00 +0900
+date: 2024-02-27 17:40:00 +0900
 categories: [Micro]
 ---
 
