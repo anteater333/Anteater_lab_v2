@@ -26,6 +26,7 @@
     @include media-query($on-half) {
       width: 100%;
       margin: 0;
+      min-width: 0;
     }
 
     @include media-query($on-palm) {
