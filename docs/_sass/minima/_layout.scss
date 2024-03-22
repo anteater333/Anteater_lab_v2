@@ -67,6 +67,7 @@
     @include media-query($on-half) {
       display: flex;
       flex: 1;
+      margin-left: $spacing-unit / 2;
 
       a img {
         height: 1.5rem;
@@ -85,6 +86,10 @@
   align-items: center !important;
   justify-content: right !important;
   margin-left: $spacing-unit / 2;
+
+  @include media-query($on-palm) {
+    margin-right: $spacing-unit / 1.5;
+  }
 }
 
 .bmc-btn {
@@ -96,11 +101,16 @@
 
 .bmc-btn-text {
   font-size: 18px;
+
+  @include media-query($on-palm) {
+    display: none !important;
+  }
 }
 ////////////////
 
 .site-hits {
   height: fit-content;
+  margin-left: $spacing-unit / 2;
 }
 
 .site-title {
@@ -431,6 +441,10 @@
     align-items: center;
     justify-content: flex-end;
     margin-right: $spacing-unit;
+
+    @include media-query($on-laptop) {
+      margin-right: $spacing-unit / 2;
+    }
   }
 }
 
@@ -473,6 +487,10 @@
   & p {
     margin-top: 0.5rem;
   }
+
+  @include media-query($on-palm) {
+    @include relative-font-size(1);
+  }
 }
 
 /**
@@ -487,8 +505,8 @@
   letter-spacing: -1px;
   line-height: 1;
 
-  @include media-query($on-laptop) {
-    @include relative-font-size(2.25);
+  @include media-query($on-palm) {
+    @include relative-font-size(1.75);
   }
 }
 
@@ -501,16 +519,22 @@
 .post-content {
   margin-bottom: $spacing-unit;
 
+  word-break: break-all;
+
+  @include media-query($on-palm) {
+    @include relative-font-size(0.8);
+  }
+
   p {
-    text-align: justify;
+    text-align: start;
   }
 
   h2,
   h2 > code {
     @include relative-font-size(2);
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.75);
+    @include media-query($on-palm) {
+      @include relative-font-size(1.5);
     }
   }
 
@@ -518,8 +542,8 @@
   h3 > code {
     @include relative-font-size(1.625);
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.375);
+    @include media-query($on-palm) {
+      @include relative-font-size(1.2);
     }
   }
 
@@ -527,8 +551,8 @@
   h4 > code {
     @include relative-font-size(1.25);
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.125);
+    @include media-query($on-palm) {
+      @include relative-font-size(1);
     }
   }
 }

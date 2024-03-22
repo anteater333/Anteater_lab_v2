@@ -195,6 +195,10 @@ code {
   // border: 1px solid $grey-color-light;
   border-radius: 3px;
   background-color: $code-background-color;
+
+  @include media-query($on-palm) {
+    @include relative-font-size(0.75);
+  }
 }
 
 code {
