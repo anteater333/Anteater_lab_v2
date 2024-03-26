@@ -94,7 +94,7 @@ const isSupported = "wakeLock" in navigator;
 ### 보안 컨텍스트(Secure Context)
 
 [![성](https://i.postimg.cc/kXwD85W1/image.jpg){:loading="lazy"}  
-웹 브라우저는 격리된 환경이다.](/micro/2022/05/04/micro-tip-5.html#wsl%EC%9D%80-vm%EC%9D%B4%EB%8B%A4){:target="_blank"}{: .a-not-colored}
+웹 브라우저는 격리된 환경이다.](/micro/2022/05/05/micro-tip-5.html#wsl%EC%9D%80-vm%EC%9D%B4%EB%8B%A4){:target="_blank"}{: .a-not-colored}
 {: .center}
 
 웹 페이지는 웹 브라우저라는 철저히 제한된 환경 안에서만 동작한다. 파일 시스템 접근조차 불가능해서 사용자에게 "제발 파일 좀 골라주십쇼" 하고 파일 선택을 위임해야 한다. 그런 웹 페이지가 지금 사용자의 디바이스를 직접 조작하려고 한다. PWA는 웹 어플리케이션이 기존 웹을 초월한 능력을 보여주길 요구한다.
