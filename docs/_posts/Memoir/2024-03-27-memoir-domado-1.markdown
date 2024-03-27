@@ -1,8 +1,8 @@
 ---
 layout: post
 title: '회고록 #3 - 도마도 (1)'
-date: 2024-03-09 00:00:00 +0900
-description: ""
+date: 2024-03-27 10:00:00 +0900
+description: "도마도, 뽀모도로 타이머, domado, pomofocus, 뽀모도로, 프로젝트 회고록, React, yarn berry, recoil, vercel, yarn dlx @yarnpkg/sdks vscode, PWA, Progressive Web Application, Screen Wake Lock API, Notification API, 기술 부채, setTimeout, setInterval, 디스콰이엇"
 categories: [Memoir]
 ---
 
