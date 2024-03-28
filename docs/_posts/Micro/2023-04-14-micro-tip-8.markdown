@@ -30,7 +30,7 @@ const waiter =
 
 ### 무한 루프
 
-![무한 루프](https://i.postimg.cc/6qnpJnsj/image.jpg){:loading="lazy"}  
+![무한 루프](https://i.postimg.cc/6qnpJnsj/image.jpg)  
 {: .center}
 
 세상에 무조건 나쁜 것은 잘 없다. 무한 루프는 반복문의 잘못된 사용으로 컴퓨터 프로그램이 끝없이 동작하는 것을 말하는데, 위키피디아의 ["같이 보기"](https://ko.wikipedia.org/wiki/%EB%AC%B4%ED%95%9C_%EB%A3%A8%ED%94%84#%EA%B0%99%EC%9D%B4_%EB%B3%B4%EA%B8%B0) 단락에 참조되어 있듯이 일반적으로 **버그**로 간주된다. 하지만 우리는 이 순간에도 무한 루프를 이용하고 있다. 지금 당신의 OS는 무한 루프 속에서 키보드 입력을 기다리고 있다. 당신의 웹 브라우저는 이 글을 화면에 보여주면서 무한 루프 안에서 마우스 휠이 돌아가기를 기다리고 있다. 의도되지 않은 무한 루프는 버그지만, 의도된 무한 루프는 기능이다. 오늘은 자바스크립트가 가지고 있는 아주 유명한 루프, **이벤트 루프**와 이벤트 루프의 동작을 이용해 특정 값이 변하기를 기다리는 Promise 객체를 만드는 방법에 대해서 알아보자.
@@ -39,7 +39,7 @@ const waiter =
 
 자바스크립트는 싱글 스레드 언어다. 그렇다면 어째서 싱글 스레드에서 돌아가는 자바스크립트는 내 30초 짜리 AJAX 요청이 완료될 때 까지 프로그램을 정지시키지 않는 것일까?
 
-![자바스크립트 실행 환경](https://i.postimg.cc/SK06Bwd5/Javascript-Runtime.png){:loading="lazy"}  
+![자바스크립트 실행 환경](https://i.postimg.cc/SK06Bwd5/Javascript-Runtime.png)  
 상당히 많은 부분을 축약했지만 대략적으로 이런 구조
 {: .center}
 
@@ -49,7 +49,7 @@ const waiter =
 
 자바스크립트는 기존의 정적이었던 웹 페이지가 동적으로 브라우저를 조작할 수 있도록 글루 코드로 설계된 언어다. 즉 자바스크립트가 가장 잘하는 일은 브라우저에게 일을 떠넘기고 그 결과를 받는 것이다. 자바스크립트가 남에게 일을 시킬 때 사용하는 명령 모음집을 바로 **Web API** 라고 한다. Web API는 조금 광범위한 느낌인데, **Browser API**라는 표현이 좀 더 와닿을지 모르겠다. 둘을 구분한다 해도 어쨌든 자바스크립트 입장에서 기대하는 기능은 같다고 볼 수 있겠다.
 
-![브라우저의 구조](https://i.postimg.cc/dVSFPTGt/browser.png){:loading="lazy"}  
+![브라우저의 구조](https://i.postimg.cc/dVSFPTGt/browser.png)  
 자바스크립트는 브라우저의 이 쯤에 위치한 채 API로 브라우저에게 명령을 내린다. ([이미지 출처](https://web.dev/howbrowserswork/))
 {: .center}
 
@@ -57,7 +57,7 @@ const waiter =
 
 ### 이벤트 루프
 
-![이벤트 루프](https://i.postimg.cc/3wBQF8Tm/Event-Loop.png){:loading="lazy"}  
+![이벤트 루프](https://i.postimg.cc/3wBQF8Tm/Event-Loop.png)  
 {: .center}
 
 그리고 그 30초 짜리(라고 했지만 정확하게 30초일지 29초일지 예상할 수 없는) 요청의 응답을 가지고 해야 할 일을 명시한 것이 **콜백 함수**이다. 웹 API의 결과가 담긴 콜백 함수는 자바스크립트 실행 환경의 작업 큐(Task Queue)에 저장된다. 말했듯이 자바스크립트는 이 작업이 정확하게 언제 끝나는지 예상할 수 없기 때문에 큐에 담긴 콜백 함수를 알아서 가져올 수 없다. 여기에서 **이벤트 루프**가 등장한다.
@@ -76,7 +76,7 @@ const waiter =
   });
 ```
 
-![기다려](https://i.postimg.cc/rs8G3Rfy/20210623-60d2f2c8010ec.gif){:loading="lazy"}  
+![기다려](https://i.postimg.cc/rs8G3Rfy/20210623-60d2f2c8010ec.gif)  
 50만번 기다리면 사료 먹음(거짓말)
 {: .center}
 
@@ -137,7 +137,7 @@ const waiter = new Promise<boolean>((resolve, reject) => {
 
 기술 발전이란 무섭구나. 아직 취직도 못했는데 벌써 인공지능한테 일자리를 뺏길 위험에 처한 기분...은 아직 안든다.
 
-![히~하](https://i.postimg.cc/vHpXMc1t/2023-04-14-233556.png){:loading="lazy"}  
+![히~하](https://i.postimg.cc/vHpXMc1t/2023-04-14-233556.png)  
 {: .center}
 
 ... 아무튼 위기감을 조금은 갖고 열심히 해보자. 지금은 그저 네이버 코테도 못치고 서류 탈락을 당해서 조금 멘탈이 아플 뿐.

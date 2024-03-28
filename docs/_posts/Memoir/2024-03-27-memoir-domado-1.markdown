@@ -12,7 +12,7 @@ categories: [Memoir]
 ## 도마도(domado) - 뽀모도로 타이머
 {: .center .big}
 
-[![도마도](https://raw.githubusercontent.com/anteater333/domado/main/docs/screen.png){:loading="lazy"}  
+[![도마도](https://raw.githubusercontent.com/anteater333/domado/main/docs/screen.png)  
 도마도 뽀모도로 타이머](https://domado.vercel.app/){:target="_blank"}  
 {: .center .rounded-edge-16}
 
@@ -24,7 +24,7 @@ categories: [Memoir]
 
 아니 이제 와서 비슷한 사이트가 이미 있다는 말이 무엇이냐, 사실 이 프로젝트 자체가 아주 가벼운 마인드로 시작했다는 반증이다. **[도마도](https://domado.vercel.app){:target="_blank"}**는 웹 어플리케이션 형태로 구현한 뽀모도로 타이머다. 뽀모도로, 짧은 휴식, 긴 휴식 세 가지 형태의 타이머를 제공해준다. 어... 더 설명할 기능은 딱히 없다. 이 프로젝트를 시작한 이유는, 앞서 원래 내가 쓰고 있다고 말했던 뽀모도로 타이머 어플리케이션이 갑자기 나에게 돈을 요구했기 때문이다. 이렇게 말하니까 뭔가 위험한 어플리케이션을 사용한 것처럼 들리는데, 사실 그 어플리케이션은 구독 형태로 사용하는 서비스였고, 나는 그 체험판을 쓰고 있었던 것이었다.
 
-![구두쇠](https://i.postimg.cc/zfRvcMF9/Ez-Ev-Im-UUAAHj9-P.jpg){:loading="lazy"}  
+![구두쇠](https://i.postimg.cc/zfRvcMF9/Ez-Ev-Im-UUAAHj9-P.jpg)  
 헛돈 나가는 건 절대 안 되지
 {: .center .rounded-edge-16}
 이런 간단한 서비스에 내 돈을 줄 순 없다. 차라리 직접 만들고 말지! 이것이 그 역사적인 도마도 뽀모도로 타이머의 시작이었다...
@@ -35,12 +35,12 @@ categories: [Memoir]
 
 궁상 그만 떨고 프로젝트 기획에 대해서 더 말해보자. 디자인이 꽤 이쁘게 나왔습니다. 이공계 출신 프로그래머의 디자인 감각이라곤 도저히 상상조차 못 할 색상 감각.
 
-![뽀모도로 타이머(찐)](https://i.postimg.cc/qBnhcFpx/temp-Image1b-PW19.avif){:loading="lazy"}  
+![뽀모도로 타이머(찐)](https://i.postimg.cc/qBnhcFpx/temp-Image1b-PW19.avif)  
 {: .center .rounded-edge-16 .w-half}
 
 뽀모도로(pomodoro)는 이탈리아 사람이 만들었는데, 이탈리아어로 토마토를 뜻한다. 그래서 인터넷에 검색하면 위 사진과 같은 타이머를 찾아볼 수 있다. 일종의 아이디어 상품. 나는 처음 프로젝트를 떠올렸을 때 머릿속에 함께 그려진 이 토마토 모양 타이머를 그대로 디자인에 채용했다.
 
-![원시고대 도마도](https://i.postimg.cc/jd1kPCc1/image.png){:loading="lazy"}  
+![원시고대 도마도](https://i.postimg.cc/jd1kPCc1/image.png)  
 이렇게
 {: .center .rounded-edge-16 .w-3-quarter}
 
@@ -48,7 +48,7 @@ categories: [Memoir]
 
 ## Drafts
 
-![브랜치 전략](https://i.postimg.cc/vHbxw7Q2/temp-Image-DEgn-O8.avif){:loading="lazy"}  
+![브랜치 전략](https://i.postimg.cc/vHbxw7Q2/temp-Image-DEgn-O8.avif)  
 {: .center .rounded-edge-16}
 
 여기서부터는 다시 개발 블로그의 자세로 돌아오자. 나는 이번 프로젝트를 진행하면서 개발 기간을 "드래프트(Draft)"라는 단위로 나누어 관리했다. 프로젝트의 개발 흐름은 이렇게 진행됐다. 드래프트를 시작하기 전에 먼저 어떤 기능들을 만들지 기획하고 그림을 그려본다. 그렇게 도출한 기능들을 기반으로 이슈를 생성하고 개발을 진행하면서 그 이슈들을 하나씩 제거한다. 모든 이슈가 제거되면 드래프트 끝. 꼭 드래프트가 끝나지 않았더라도 어느 정도 기능이 해당 드래프트의 dev 브랜치에 쌓이면 main 브랜치에 병합해 배포도 틈틈이 진행한다. 그렇게 운영하다 발생하는 버그들은 dev 브랜치에서 바로 hotfix를 진행하고 병합한다.
@@ -59,7 +59,7 @@ categories: [Memoir]
 
 첫 번째 드래프트의 목표는 프로토타이핑과 개발 환경 세팅. 특히 여기서 집중해 보고 싶은 내용은 개발환경과 관련된 내용들이다. 아무리 개인 만족을 위한 프로젝트일지라도 항상 제자리걸음이 아닌 이전보다 한 걸음이라도 더 나아가는 것을 목표로 삼고 있다. 도마도의 경우 기능 그 자체에는 구현에 큰 어려움이 없을 것으로 예상되었기 때문에 나는 시도해 보지 않았던 개발 환경을 적극적으로 도입해 보기로 했다.
 
-![채신기술](https://i.postimg.cc/ydQ370VC/temp-Image-Fu-Gz-PX.avif){:loading="lazy"}  
+![채신기술](https://i.postimg.cc/ydQ370VC/temp-Image-Fu-Gz-PX.avif)  
 {: .center .rounded-edge-16}
 
 **npm 대신 yarn**  
@@ -73,7 +73,7 @@ categories: [Memoir]
 
 ### 두 번째 Draft
 
-![회색지대](https://i.postimg.cc/sgqBtJDk/2024-03-25-4-14-33.png){:loading="lazy"}  
+![회색지대](https://i.postimg.cc/sgqBtJDk/2024-03-25-4-14-33.png)  
 77일 전에서 갑자기 48일 전으로 점프
 {: .center .rounded-edge-16}
 
@@ -81,17 +81,17 @@ categories: [Memoir]
 
 지금 돌이켜보면 이때 까딱하면 프로젝트가 드랍될 수도 있었다는 생각이 든다. 그러다 2월 초, 오랜만에 만난 친구들과 대화를 나누다가 Vercel에 올라간 도마도를 보여주게 되었는데 거기서 한 친구가 아주 좋은 반응을 보내주더라. 심지어 실제로 써보면서 어떤 걸 고치면 좋을지 피드백도 넣어 주더라고. 너무 고맙..😭 아무튼 나는 이렇게 얻은 소중한 첫 번째 사용자를 기점으로 다른 친구들에게도 도마도를 보여주고 피드백을 수집했다. 그렇게 나온 두 번째 드래프트의 목표들:
 
-![2ndDraft](https://i.postimg.cc/1zXFFXhD/2024-03-25-5-13-33.png){:loading="lazy"}  
+![2ndDraft](https://i.postimg.cc/1zXFFXhD/2024-03-25-5-13-33.png)  
 개발 일지에서 발췌
 {: .center .rounded-edge-16}
 
 두 번째 드래프트를 진행하면서 도마도는 **PWA(Progressive Web Application)**를 일부 지원하기 시작했다. [지난 글에서 도마도를 살짝 언급하면서 다뤘던](/micro/2024/02/28/micro-tip-14.html) **Screen Wake Lock API**를 사용해 디바이스를 제어하고, **Notification API**를 사용해 디바이스의 OS가 타이머 완료 알림을 보내도록 만들고, 그리고 브라우저가 백그라운드로 넘어가도 타이머가 계속 흘러가도록 하는 등 두 번째 드래프트가 요구하는 기능들을 구현하면서 나는 도마도를 약간이나마 PWA스럽게 만들어냈다.
 
-![맥북 자랑](https://i.postimg.cc/CLqrZDWp/2024-03-25-9-43-10.png){:loading="lazy"}  
+![맥북 자랑](https://i.postimg.cc/CLqrZDWp/2024-03-25-9-43-10.png)  
 PWA 자랑 겸 새로 산 맥북 자랑 ㅎㅎ 😆
 {: .center .rounded-edge-16}
 
-![Galaxy](https://i.postimg.cc/dtg16MHT/image.png){:loading="lazy"}  
+![Galaxy](https://i.postimg.cc/dtg16MHT/image.png)  
 갤럭시에서도 쓸 수 있답니다.
 {: .center .rounded-edge-16 .w-1-quarter}
 
@@ -103,18 +103,18 @@ PWA로 구현한 덕에 이렇게 디바이스에 설치해서 사용할 수도 
 
 ### 지금 완전 빚쟁이 다 됐음
 
-![기술 부채](https://i.postimg.cc/T3Dc2QVm/technical-debt-2.png){:loading="lazy"}  
+![기술 부채](https://i.postimg.cc/T3Dc2QVm/technical-debt-2.png)  
 [거지됐다! 거지 (으앙 ㅜ.ㅜ)](https://www.google.com/search?q=%EA%B1%B0%EC%A7%80%EB%90%90%EB%8B%A4+%EA%B1%B0%EC%A7%80&tbm=isch){:target="_blank"}{: .a-not-colored}
 {: .center .rounded-edge-16}
 
 투박하고 어딘가 잘못된 것 같은 코드들이 만든 **기술 부채**가 너무 커졌다. 이전에 내가 실패했던 프로젝트들은 설계만 너무 오래 붙잡고 있다가, 혹은 이것저것 온갖 고민을 다 하다 정작 기능이 늦게 완성되며 흐지부지되었던 기억이 있다. 이번 프로젝트는 그 반대에 가까웠다. 일단 만들고 보자. 그렇게 정신없이 개발을 진행하다 두 번째 드래프트 막바지쯤엔 React Hook들이 너무 얽혀있어서 기능 하나 추가하다가 머리에 쥐가 나려 하더라고.
 
-![컴포넌트 구조](https://i.postimg.cc/fyVcPMw1/hierachy.png){:loading="lazy"}  
+![컴포넌트 구조](https://i.postimg.cc/fyVcPMw1/hierachy.png)  
 {: .center .rounded-edge-16}
 
 지금 도마도의 컴포넌트는 대략 이렇게 구성되어 있다. 그리고 이들 중 문제아는 바로 `<GlobalTimer />`. 타이머는 화면이 전환되어도 계속 돌아가야 한다. 그래서 나는 `<App />` 컴포넌트 바로 아래에 `null` 을 반환하는 Dummy 컴포넌트를 두고 거기서 타이머 관련 전역 상태들을 관리하도록 만들었다. 이 구조 자체가 동작에 오류를 만들진 않았으나, HTML은 만들지 않고 로직만 사용하는 React 컴포넌트라니. 아니 이거 그냥 React 훅으로 만들었어야 하는 거 아니야? 아니면 `<GlobalTimer />`가 `<AppBody />`를 감싸는(Wrapping) 구조로 만들었어야 하는 거 아닌가?
 
-![dependency array](https://i.postimg.cc/HkmRDMbH/image.png){:loading="lazy"}  
+![dependency array](https://i.postimg.cc/HkmRDMbH/image.png)  
 {: .center .rounded-edge-16 .w-1-quarter}
 
 더 큰 문제는 `<GlobalTimer />` 내부에 있다. 우선 나는 이걸 일종의 코어 모듈로 생각하면서 개발했다. 타이머 어플리케이션에 제일 중요한 건 타이머 기능이니까. 시간 계산도 여기서 제어하도록 만들었고, 타이머의 시작, 정지, 종료 등의 상태 변화도 여기서 감지한다. 이 컴포넌트의 중앙에 [(실제 주석 발췌)`/* 타이머 상태 변화를 감지하는 useEffect 훅 */`](https://github.com/anteater333/domado/blob/2ee3621b3a010089da50a29ee01be55452199007/src/components/GlobalTimer.tsx#L80){:target="_blank"}이 있다. 그리고 이게 지금 너무 크다. 위에 첨부한 저 캡처, 저거 지금 그 `useEffect` 훅의 의존성 배열(Dependency Array)이다. 기능 구현하다 상태 하나 잘못 건드리는 순간, 이 "코어 모듈" 이 바로 고장 나 버린다. 드래프트 막바지 기능 추가를 위해 이 훅을 건드릴 때 마다 나는 버그에 치를 떨었다.
@@ -127,7 +127,7 @@ PWA로 구현한 덕에 이렇게 디바이스에 설치해서 사용할 수도 
 
 사실 JavaScript의 Timeout들은 시간을 그렇게 정교하게 계산하지 않는다. '아 몇초 정도 오차는 괜찮아.'라는 생각이 드는가? [브라우저는 부하를 줄이기 위해 비활성화된 탭에선 Timeout의 최소 딜레이를 강제한다](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#timeouts_in_inactive_tabs){:target="_blank"}. 나는 25분짜리 타이머가 50분이 지나도 완료되지 않는 것을 경험했다. 이뿐만이 아니다. 백 그라운드로 보내진 웹 브라우저는 몇 분 뒤 JavaScript의 동작을 정지시켜 버린다.
 
-![도마도 모바일](https://i.postimg.cc/MT8gLTWs/image.png){:loading="lazy"}  
+![도마도 모바일](https://i.postimg.cc/MT8gLTWs/image.png)  
 {: .center .rounded-edge-16 .w-half}
 
 나는 1초마다 타이머의 숫자를 줄이는 방식이 아니라 시작 시각
@@ -139,13 +139,13 @@ PWA로 구현한 덕에 이렇게 디바이스에 설치해서 사용할 수도 
 
 ## 자신감을 갖자
 
-![전국에서 도마도를 사용 중입니다](https://i.postimg.cc/PJYp30yy/2024-03-25-11-25-09.png){:loading="lazy"}  
+![전국에서 도마도를 사용 중입니다](https://i.postimg.cc/PJYp30yy/2024-03-25-11-25-09.png)  
 와 전국구!
 {: .center .rounded-edge-16}
 
 온 대한민국이 사용하고 있는 도마도! 라고 하기엔 좀 부족하긴 하다. 그치만 [이런 마인드](https://twitter.com/pits_verse/status/1643289641142087680){:target="_blank"}도 필요하댔어. 특히 이번 프로젝트는 좋게 바라봐 준 한 친구 덕에 더 힘을 얻을 수 있었다. 사실 나는 나름 [숲](/memoir/2023/09/09/memoir-soup-1.html){:target="_blank"}이나 도마도 말고도 꾸준히 뭔가를 만들어오고 있는 사람이긴 한데, 또 그것을 남들에게 공개하는 건 두려워하는 경향이 있다. 부정적인 의미의 완벽주의 성격을 가진 사람이 이런다는 것 같더라고. 조금 자신감을 가지는 게 좋지 않을까 싶은 생각도 든다.
 
-[![디스콰이엇](https://i.postimg.cc/JzghvZ40/disquiet.png){:loading="lazy"}
+[![디스콰이엇](https://i.postimg.cc/JzghvZ40/disquiet.png)
 디스콰이엇](https://disquiet.io){:target="_blank"}  
 {: .center .rounded-edge-16}
 

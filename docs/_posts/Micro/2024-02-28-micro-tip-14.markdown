@@ -35,14 +35,14 @@ categories: [Micro]
 
 ## 이하 그리 중요하진 않은 내용들
 
-![PWA](https://i.postimg.cc/bwJN0nqD/image.png){:loading="lazy"}  
+![PWA](https://i.postimg.cc/bwJN0nqD/image.png)  
 {: .center}
 
 오늘 주제는 PWA의 일부분을 다룬다. PWA라고 하니 뭔가 거창한 이야기를 해야 할 것 같지만, 사실 나도 PWA에 대해서는 잘 모른다. 웹과 네이티브 모두의 장점을 가지는 웹 어플리케이션이라는 개념 정도? 근데 이걸 달리 말하면, PWA를 위해선 웹 개발자가 웹과 네이티브 모두의 장점을 신경 써가며 기능을 구현해야 한다는 말이기도 하겠지. 이번 주제 화면 절전 방지처럼, 웹 앱인데 네이티브 앱인 것 마냥 장치를 직접 제어할 수 있도록 만들어야 한다던가. 문득 PWA는 특정 기술이나 도구를 칭한다기보다는, 개발 지침 혹은 패러다임에 가깝다는 생각이 든다. 아무튼, 글을 시작하기에 앞서 딱히 할 말이 없어서 생각나는 대로 적어봤다. PWA에 대해서 이 글에서는 더 이상 언급할 일은 없을 것 같으니 자세한 정보를 원한다면 다른 글을 찾아보도록 하자. 좋은 글이 많더라고.
 
 ### 화면 절전
 
-[![도마도](https://raw.githubusercontent.com/anteater333/domado/main/docs/screen.png){:loading="lazy"}  
+[![도마도](https://raw.githubusercontent.com/anteater333/domado/main/docs/screen.png)  
 도마도 뽀모도로 타이머](https://domado.vercel.app/)
 {: .center .rounded-edge-16}
 
@@ -50,7 +50,7 @@ categories: [Micro]
 
 아무튼 이렇게 쪼잔하고 옹졸한 마인드에서 출발한 프로젝트였기에 PC를 제외한 다른 장치에 대한 고려가 부족했던 게 사실이다. 뒤늦게 페이지에 반응형 디자인을 적용하고 내 휴대폰에서 테스트를 시작했더니, 25분 타이머가 다 가기도 전에 갑자기 꺼지는 내 휴대폰의 화면. 모바일 디바이스는 배터리가 소중해요. 쓰지도 않는 디스플레이 뭐 하러 켜두니. 하지만 애석하게도 화면이 꺼진다는 것은 웹 브라우저가 백그라운드로 넘어간다는 뜻이고, 아직 나의 도마도는 기술적인 문제로 인해 백그라운드에서 타이머가 제대로 동작하지 않았다. 백그라운드 기능을 구현하는 게 더 좋은 방법이겠지만 일단 더 쉬워 보이는 길부터 가보자. 그냥 화면이 꺼지지 않게 만들면 되잖아. [(물론 글을 쓰고 있는 지금은 백그라운드에서도 돌아가도록 구현해놨다)](https://github.com/anteater333/domado/commit/58f39a0674ff65d189de1e65b307995935e48a23){:target="_blank"}{: .small .a-not-colored}
 
-![옵션](https://i.postimg.cc/NFJWkTwB/image.png){:loading="lazy"}  
+![옵션](https://i.postimg.cc/NFJWkTwB/image.png)  
 이 옵션을 추가하는 게 이번 목표  
 {: .center .w-3-quarter .rounded-edge-16}
 
@@ -58,7 +58,7 @@ categories: [Micro]
 
 문제를 해결하는 일에서 가장 핵심은 그 문제를 한 단어로 정리해 줄 키워드를 찾는 거라고 생각한다. 이 문제를 설명하는 나의 장황한 언어를 어떻게 고정해 검색어로 사용할 것인가. 몇 년 전에는 이걸 정말 어려워했는데, 요즘엔 GPT가 있어 너무나 행복하구나.
 
-![GPT](https://i.postimg.cc/3xYCgwqB/image.png){:loading="lazy"}  
+![GPT](https://i.postimg.cc/3xYCgwqB/image.png)  
 {: .center .w-3-quarter .rounded-edge-16}
 
 **Web API인 [Screen Wake Lock API](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API){:target="_blank"}를 사용하자.** 문제 해결, 끝.
@@ -93,13 +93,13 @@ const isSupported = "wakeLock" in navigator;
 
 ### 보안 컨텍스트(Secure Context)
 
-[![성](https://i.postimg.cc/kXwD85W1/image.jpg){:loading="lazy"}  
+[![성](https://i.postimg.cc/kXwD85W1/image.jpg)  
 웹 브라우저는 격리된 환경이다.](/micro/2022/05/05/micro-tip-5.html#wsl%EC%9D%80-vm%EC%9D%B4%EB%8B%A4){:target="_blank"}{: .a-not-colored}
 {: .center}
 
 웹 페이지는 웹 브라우저라는 철저히 제한된 환경 안에서만 동작한다. 파일 시스템 접근조차 불가능해서 사용자에게 "제발 파일 좀 골라주십쇼" 하고 파일 선택을 위임해야 한다. 그런 웹 페이지가 지금 사용자의 디바이스를 직접 조작하려고 한다. PWA는 웹 어플리케이션이 기존 웹을 초월한 능력을 보여주길 요구한다.
 
-![Secure Context](https://i.postimg.cc/Gh5BjC4g/image.png){:loading="lazy"}  
+![Secure Context](https://i.postimg.cc/Gh5BjC4g/image.png)  
 {: .rounded-edge-16 .center}
 
 > 이 기능은 오직 **보안 컨텍스트(HTTPS)**에서만 사용할 수 있습니다.
@@ -108,7 +108,7 @@ const isSupported = "wakeLock" in navigator;
 
 보안 컨텍스트의 요점은 너무 강력한 API를 쓸 때 그 힘이 폭주하지 않도록 하자는 것이다. 혹시라도 웹 페이지에 HTTP로 접속했다가 통신 중간에 위치한 공격자가 자바스크립트를 수정해서 몰래 Wake Lock을 켜버리면 안 되니까. 배터리가 얼마나 빨리 따르겠어.  
 
-![권한](https://i.postimg.cc/KvNd5RKx/image.png){:loading="lazy"}  
+![권한](https://i.postimg.cc/KvNd5RKx/image.png)  
 {: .rounded-edge-16 .center}
 
 아무튼, 이런 API들은 섬세하게 다뤄져야 하다. 심한 경우 보안 컨텍스트로 제한할 뿐만 아니라 자바스크립트 입장에서 사용하기 불편하게 설계하는 경우도 있다. 예를 들어 앞서 소개한 도마도에서는 [Notification API](https://developer.mozilla.org/en-US/docs/Web/API/Notification){:target="_blank"}도 사용되었다. 이 API는 웹 페이지에서 권한을 따로 얻어야 하고, 심지어 그 권한을 얻으려면 꼭 사용자 입력을 처리하는 이벤트 핸들러에서 API를 호출해야 한다.

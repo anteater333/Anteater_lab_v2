@@ -30,12 +30,12 @@ exit                                # diskpart 종료
 
 ### 구구절절
 
-![저장장치](https://i.postimg.cc/RCDt8Fmc/storage.jpg){:loading="lazy"}  
+![저장장치](https://i.postimg.cc/RCDt8Fmc/storage.jpg)  
 {: .center}
 
 내 개발 장비는 Thinkpad X1 Carbon. 몇 세대인지는 기억이 안 난다. 2년 전에 구매했으니 9세대쯤이려나. 당시 연수생 신분에 주어진 기기 지원금 상한 아래 어느 정도 타협을 봤다. 성능에 대해 불만은 대체로 없지만 단 한 가지, **256GB**라는 부족한 저장 공간은 후회가 된다.
 
-![현재상태](https://i.postimg.cc/k4jMhfV7/image.png){:loading="lazy"}  
+![현재상태](https://i.postimg.cc/k4jMhfV7/image.png)  
 현재 상태, 그나마 한 번 정리해서 11GB
 {: .center .rounded-edge-16}
 
@@ -43,12 +43,12 @@ exit                                # diskpart 종료
 
 ### 한지붕 두가족
 
-![OS가 최소 이정도는 사용중](https://i.postimg.cc/Sx0nSs5Y/system-File.png){:loading="lazy"}  
+![OS가 최소 이정도는 사용중](https://i.postimg.cc/Sx0nSs5Y/system-File.png)  
 {: .center .rounded-edge-16}
 
 WSL을 운용한다는 것은 내 윈도우 PC 안에 리눅스로 돌아가는 또 다른 가상 PC를 하나 더 마련하는 것으로 볼 수 있다. 아이디어는 구미가 당기는데, 물리적인 문제가 존재한다. PC 2개의 저장소 수요를 하나의 물리 디스크가 감당해야 한다는 것. 물론 결국 사용자는 1명이기에 용량이 극적으로 폭발하지는 않겠지만, 각 OS의 기본 구성 파일만 해도 그 크기가 작지 않다.
 
-![파일탐색기](https://i.postimg.cc/3R85KqzV/image.png){:loading="lazy"}  
+![파일탐색기](https://i.postimg.cc/3R85KqzV/image.png)  
 (이것저것 바꾸다 보니 용량 변화가 더 생김)
 {: .center .rounded-edge-16}
 
@@ -58,7 +58,7 @@ WSL을 운용한다는 것은 내 윈도우 PC 안에 리눅스로 돌아가는 
 
 안드로이드가 전기양의 꿈을 꾸듯, 가상 머신은 가상 저장 장치를 사용한다. 가상 드라이브 혹은 가상 디스크(Virtual Drive/Virtual Disk)는 실제 저장 장치의 동작을 모방하는 소프트웨어를 뜻한다. 가상 디스크는 가상 머신의 파일 시스템 역할을 수행하게 되는데, 실제 저장 장치에서는 일반적인 파일의 형태로 존재하게 된다. 예를 들어 윈도우에선 [가상 하드 디스크(VHD)](https://ko.wikipedia.org/wiki/VHD_(%ED%8C%8C%EC%9D%BC_%ED%8F%AC%EB%A7%B7))라는 기술을 사용해 `.vhd` 혹은 `.vhdx`라는 단일 파일로 제공한다.
 
-![VHD](https://i.postimg.cc/NFxrCtMN/image.png){:loading="lazy"}  
+![VHD](https://i.postimg.cc/NFxrCtMN/image.png)  
 {: .center .rounded-edge-16}
 
 WSL도 물론 VM이라서 가상 디스크를 사용한다. 윈도우 탐색기로 `%localappdata%\Packages`에 들어가 `*.vhd`를 검색해 보자. `ext4.vhdx`라는 파일을 발견할 수 있을 것이다. 약 80GB, 이 파일 하나에 내 Ubuntu의 모든 파일이 들어있다.
@@ -67,7 +67,7 @@ WSL도 물론 VM이라서 가상 디스크를 사용한다. 윈도우 탐색기�
 
 파일을 효율적으로 다루는 방식엔 어떤 게 있을까. 파일 이동이 파일 복사보다 빠른 이유는 파일의 물리적 위치를 실제로 옮기는 것이 아니라 파일의 위치 정보만 바꾸면 되기 때문이다. 파일 삭제 명령도 비슷하게 실행할 수 있다. KB, MB 단위를 넘어서는 파일의 실제 데이터를 삭제하는 게 아니라 파일의 참조(Reference)만 삭제하면 해당 파일은 개념적으로 저장 장치에 존재하지 않는 것이 된다.
 
-![공갈빵](https://i.postimg.cc/ydJNSS2X/image.png){:loading="lazy"}  
+![공갈빵](https://i.postimg.cc/ydJNSS2X/image.png)  
 {: .center .w-half}  
 
 불필요한 임시 파일, 단편화된 파일, 삭제되었지만 디스크에는 아직 남아있는 파일 등. 가상 머신을 오래 사용할수록 이런 찌꺼기 데이터가 계속 쌓여 가상 디스크가 파일 시스템에서 실제보다 더 큰 공간을 차지하고 있다고 나타나게 된다. 따라서 우리는 가상 디스크를 주기적으로 압축해서 최적화해 줘야 하는 것이다.

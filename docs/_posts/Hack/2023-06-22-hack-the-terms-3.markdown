@@ -18,7 +18,7 @@ categories: [Hack]
 
 ## Language
 
-![언어!](https://i.postimg.cc/sDGsZFPY/image.jpg){:loading="lazy"}  
+![언어!](https://i.postimg.cc/sDGsZFPY/image.jpg)  
 {: .center}
 
 컴퓨터는 훌륭한 일꾼이다. 말만 잘 하면 우리의 요구를 완벽히 수행해준다. 문제는 "말만 잘 하면", 우리의 모국어는 한국어인데 컴퓨터의 모국어는 0과 1로 이루어진 기계어라는 점이 발목을 잡는다. 그래서 수많은 박사와 석사, 회사원들은 컴퓨터와 사람 모두 이해 가능한 제 3의 언어를 만들기 위해 오늘도 힘쓰고 있다. 그 결과물이 바로 **[컴퓨터 언어(Computer Language)](https://en.wikipedia.org/wiki/Computer_language)**.
@@ -29,14 +29,14 @@ categories: [Hack]
 
 ### Query Language(QL)
 
-![질의](https://i.postimg.cc/8zjsXccV/image.png){:loading="lazy"}  
+![질의](https://i.postimg.cc/8zjsXccV/image.png)  
 {: .center}
 
 수많은 도메인 특화 언어 중에서도 HTML&CSS와 더불어 기본 소양으로 배우는 언어가 있다. 바로 데이터베이스를 다루기 위해 사용하는 SQL(Structured Query Language). [**질의어(Query Language)**](https://en.wikipedia.org/wiki/Query_language)란 데이터베이스나 정보 시스템에 질의를 하기 위해 사용되는 컴퓨터 언어를 뜻한다. 간단히 말해 질의어는 사용자가 원하는 데이터를 얻기 위해 시스템에 질문을 던지는데 특화된 언어다. 우리는 SQL을 데이터베이스라는 거대한 정보의 덩어리에서 원하는 데이터를 얻고 조작하기 위해 데이터베이스 관리 시스템(DBMS)에 질문을 던질 때 사용한다.
 
 ### Graph Query Language
 
-![Gㅣㄹ의](https://i.postimg.cc/Mp680Fd5/G.png){:loading="lazy"}  
+![Gㅣㄹ의](https://i.postimg.cc/Mp680Fd5/G.png)  
 {: .center}
 
 우리는 엔터티를 정점으로, 엔터티 사이의 관계를 간선으로 해 그래프를 그림으로서 데이터베이스를 설계한다(ERD). 이 그래프를 SQL의 `CREATE SCHEMA`문을 사용해 스키마의 형태로 변환하는 것이 데이터베이스 테이블을 만드는 것을 뜻한다. 시야를 조금 더 넓혀서, 일반적인 시스템 또한 컴포넌트와 그 관계로 그래프를 그려낼 수 있다. 이러한 관점에서 새로운 질의어가 만들어졌다. 우리는 **Graph**QL을 사용해 우리 시스템의 비즈니스 로직에 대한 스키마를 정의함으로서 시스템을 모델링 할 수 있는 것이다.
@@ -62,7 +62,7 @@ SQL이 데이터베이스에 질문하기 위해 사용하는 질의어이듯, G
 
 ## GraphQL - API를 위한 쿼리 언어
 
-![GraphQL](https://i.postimg.cc/L4L26wKq/Graph-QL-Logo-Wordmark-Stacked-Rhodamine.png){:loading="lazy"}  
+![GraphQL](https://i.postimg.cc/L4L26wKq/Graph-QL-Logo-Wordmark-Stacked-Rhodamine.png)  
 {: .center .w-half}
 
 [GraphQL](https://graphql.org/)은 2012년 페이스북(현 메타)가 개발을 시작해 2015년에 오픈 소스로 공개한 프로젝트이다. 사기업이 개발한 언어긴 하지만 현재는 별도의 재단을 설립해 비영리로 운영되고 있다. [페이스북이 직접 밝힌 개발 당시 배경](https://engineering.fb.com/2015/09/14/core-data/graphql-a-data-query-language/#Why-GraphQL)에서 재밌는 사실을 읽을 수 있는데, 지금으로부터 11년 전의 사례에서도 새 모바일 서비스를 개발할 때 웹뷰 -> 네이티브 앱 전환 이라는 익숙한 흐름이 적용된 것을 발견할 수 있다. 페이스북의 개발팀은 네이티브 앱 개발을 시작하면서 기존 HTML 형식의 데이터를 반환하던 API를 수정할 필요성을 느끼기 시작했다. 그들은 새 모바일 앱을 위한 API를 구현하는 방법들을 조사하는 중 기존 RESTful API 방식의 문제점을 인식하게 되었다.
@@ -71,7 +71,7 @@ SQL이 데이터베이스에 질문하기 위해 사용하는 질의어이듯, G
 
 ### GraphQL의 구성
 
-![TypeSystem](https://i.postimg.cc/t4fy1dyH/Type-System.png){:loading="lazy"}  
+![TypeSystem](https://i.postimg.cc/t4fy1dyH/Type-System.png)  
 {: .center}
 
 GraphQL 서비스를 구축하기 위해서, 우선 서버 측에서는 클라이언트가 사용할 수 있는 이 서비스의 GraphQL 문법을 정의해야 한다. 이는 마치 서비스의 **[타입 시스템(Type System)](https://en.wikipedia.org/wiki/Type_system)**을 정의하는 것과 같다. GraphQL의 타입 시스템은 백엔드 서비스의 **스키마(Schema)**로써 동작한다. 이 스키마는 **필드(Field)**를 가지는 **타입(Type)**들의 중첩된 구조로 구성된다.  
@@ -154,7 +154,7 @@ query getTodoById {
 
 **트리 재귀 질의**  
 
-![reddit](https://i.postimg.cc/MZR6Fxyh/reddit.png){:loading="lazy"}  
+![reddit](https://i.postimg.cc/MZR6Fxyh/reddit.png)  
 [r/OnePiece](https://www.reddit.com/r/OnePiece/)
 {: .center .w-3-quarter}
 
@@ -207,7 +207,7 @@ GraphQL의 N+1 문제는 서버 측에서 처리할 수 있다. 이 또한 역�
 
 ## 실습
 
-[![gqlcode](https://i.postimg.cc/rFc28gvV/gqlcode.png){:loading="lazy"}  ](https://graphql.org/code/)
+[![gqlcode](https://i.postimg.cc/rFc28gvV/gqlcode.png)  ](https://graphql.org/code/)
 {: .center .rounded-edge}
 
 GraphQL이 스키마와 쿼리 그 자체로 동작하는 것은 아니기 때문에 개발자는 GraphQL 서버와 GraphQL 클라이언트를 개발해야 한다. HTML을 렌더링하는 웹 브라우저가 다양하듯이 [개발에 도움을 줄 도구들은 언어별로 다양하게 존재한다](https://graphql.org/code/#javascript-tools). 그 중 현재(2023년) 가장 많이 사용되는 조합은 JavaScript/TypeScript와 [Apollo](https://www.apollographql.com/)의 [Apollo Server](https://www.apollographql.com/docs/apollo-server/)/[Apollo Client](https://www.apollographql.com/docs/react). 그 외에 서버에서는 [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server) 또한 많이 사용되고 있으며 클라이언트에서는 페이스북이 만든 프레임워크 [Relay](https://relay-ko.github.io/)를 사용하는 자료도 꽤 찾아볼 수 있었다. 여기선 Apollo 공식 문서를 따라 간단하게 실습해보자.
@@ -350,12 +350,12 @@ console.log(`🚀  Server ready at: ${url}`);
 ```bash
 npm start
 ```
-![apolloserver](https://i.postimg.cc/RFzz3LqT/apolloserver.png){:loading="lazy"}  
+![apolloserver](https://i.postimg.cc/RFzz3LqT/apolloserver.png)  
 {: .center .rounded-edge}
 
 서버를 실행한 후 웹 브라우저로 [http://localhost:8888](http://localhost:8888)에 접속하면 위와 같은 GraphiQL 기반 도구를 확인할 수 있다.
 
-![postman](https://i.postimg.cc/1t8x87r2/postman.png){:loading="lazy"}  
+![postman](https://i.postimg.cc/1t8x87r2/postman.png)  
 {: .center .rounded-edge}
 
 혹은 이렇게 포스트맨 같은 테스팅 도구를 활용해 질의를 보내볼 수도 있다. 포스트맨도 GraphQL에 대한 지원이 깔끔하게 되어있는 편.
@@ -447,7 +447,7 @@ export default App;
 ```
 라이브러리가 제공해주는 함수 리터럴 `gql`을 사용해 쿼리를 정의할 수 있다. `useQuery` 훅에 그 쿼리를 전달해 요청을 발생시키고 결과를 받아 사용할 수 있다.
 
-![apolloclient](https://i.postimg.cc/FH6GTLCS/apolloclient.png){:loading="lazy"}  
+![apolloclient](https://i.postimg.cc/FH6GTLCS/apolloclient.png)  
 이제 이 데이터를 프론트엔드에서 잘 요리하면 된다.
 {: .center .rounded-edge}
 
@@ -455,7 +455,7 @@ export default App;
 
 ## 마무리
 
-[![rickandmorthy](https://i.postimg.cc/wvFdy2FJ/rick.png){:loading="lazy"}  
+[![rickandmorthy](https://i.postimg.cc/wvFdy2FJ/rick.png)  
 Rick and Morty API](https://rickandmortyapi.com/documentation/)
 {: .center .rounded-edge}
 

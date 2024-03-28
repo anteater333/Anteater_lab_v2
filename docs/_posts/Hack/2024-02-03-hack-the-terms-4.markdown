@@ -9,12 +9,12 @@ categories: [Hack]
 ## 🖐️금손 작가, 컴퓨터
 
 ![노예비유법](https://i.postimg.cc/x8nrcbJs/image.png)
-{:loading="lazy"}  
+  
 {: .center .rounded-edge-16 .w-3-quarter}
 
 사람들은 가끔 컴퓨터를 노예로 비유해 설명하곤 한다. 재밌는 비유다. [다만 깃허브가 `master` 브랜치를 `main` 브랜치로 개명한 지 몇 년이나 된 마당에](https://github.com/github/renaming) 블로그에서 계속 이 비유를 사용하긴 좀 미안하니 그냥 "일꾼"이라고 하자. 아무튼, 이 일꾼은 복잡한 계산을 척척 해내며 20세기쯤부터 여러 사무 작업에서 활약해 왔다. 사람이 직접 계산하기엔 너무 복잡해 틀릴 가능성이 높은 계산들. 사람들은 그 계산 결과를 LED 점등으로 확인하기도, 종이에 글을 써내도록 만들어 확인하기도, 소리를 내도록 해서 확인하기도, 그러다 모니터라는 물건이 발전하자 컴퓨터를 여기에 연결해 가상의 문서를 그려내도록 만들어 확인하기도... 아니 가만 보니 이거 사무 작업에만 쓰기엔 너무 아까운데?
 
-![사람들은 이쯤부터](https://i.postimg.cc/DZZWXm9c/image.png){:loading="lazy"}  
+![사람들은 이쯤부터](https://i.postimg.cc/DZZWXm9c/image.png)  
 민망하니 굳이 번역은 하지 않겠다.
 {: .center .rounded-edge-16 .w-3-quarter}
 
@@ -34,12 +34,12 @@ categories: [Hack]
 
 "Render"는 똑같이 "만들다"란 의미를 가진 "make"와 비교하면 조금 더 고급진 표현이라고 한다. 만드는 주체가 독자적인 해석을 가미하거나, 어떤 가치를 더해 결과물을 만든다는 느낌에 가깝다. 영화 각본이나 클래식 악보를 보고, 감독과 지휘자가 자신만의 해석을 곁들여 작품으로 구현해 내는 일에 어울리는 단어다.
 
-![렌더링](https://i.postimg.cc/26tV2ZN7/image.png){:loading="lazy"}  
+![렌더링](https://i.postimg.cc/26tV2ZN7/image.png)  
 {: .center .rounded-edge-16}
 
 이 설명을 컴퓨터 세계의 render에 대입해 보자. 앞서 컴퓨터가 그림을 그리고 있음을 나타내는 단어가 렌더링(Rendering)이라고 했다. 컴퓨터는 그려야 하는 상황에 대한 정보를 입력받는다. 그 상황을 그린 그림을 결과물로 내보낸다. 입력과 출력 그사이에 존재하는 과정을 사람들은 렌더링이라고 부른다. 아니 그냥 같은 입력이면 같은 결과물이 나와야 하는 거 아닌가? 컴퓨터가 무슨 해석을 한다고?
 
-![비교](https://i.postimg.cc/gkrtZ1GZ/toon-shading-comparison.jpg){:loading="lazy"}  
+![비교](https://i.postimg.cc/gkrtZ1GZ/toon-shading-comparison.jpg)  
 {: .center}
 
 렌더링이란 단어가 가장 많이 사용되는 3D 컴퓨터 그래픽을 예시로 들어보자. 두 토끼 그림엔 같은 재료(동일한 토끼 모델링, 동일한 조명)가 사용되었다. 하지만 두 결과는 확연히 다르다. 왼쪽은 그림자 묘사가 더 자세하지만, 그 자세함이 허접한 토끼 모델링을 더 부각한다. 오른쪽은 자세한 묘사가 줄어들면서 그림이 좀 더 만화처럼 보인다. 다른 렌더링 설정, 즉 그림을 그리는 각 컴퓨터의 다른 해석이 가미되었기 때문에 같은 재료를 사용했음에도 다른 결과물이 나온 것이다. 하지만 엄밀히 따지면 이게 컴퓨터가 알아서 해석한다는 이야기는 아니다. 해석의 진짜 책임은 컴퓨터 그래픽을 담당하는 엔지니어에게 달려있다. 그것이 바로 우리가 렌더링에 대해 공부할 필요가 있는 이유.
@@ -62,7 +62,7 @@ categories: [Hack]
 
 우린 **웹 브라우저(Web browser)**라는 존재에 대해 더 자세히 알 필요가 있다. 현대의 PC에서 웹 브라우저는 단순한 어플리케이션을 넘어, 컴퓨터 안에 존재하는 또 다른 가상 컴퓨터의 위치에 있다고 말할 수 있을 것 같다. 웹 개발자의 결과물은 그 가상 환경 위에서 동작해야 한다. 다시 말해 웹 개발자가 만든 웹 페이지는 웹 브라우저에서 잘 그려져야 한다.
 
-![프레임 차이](https://i.postimg.cc/tCNfMSTz/20170711024433-819334.gif){:loading="lazy"}  
+![프레임 차이](https://i.postimg.cc/tCNfMSTz/20170711024433-819334.gif)  
 15 fps vs 60 fps
 {: .center .w-3-quarter .rounded-edge-16}
 
@@ -70,7 +70,7 @@ categories: [Hack]
 
 ## 주소창에 URL을 입력하면 무슨 일이 일어나나요?
 
-![주소창에 URL을 입력하면](https://i.postimg.cc/qvLWKn2P/whenurl.jpg){:loading="lazy"}  
+![주소창에 URL을 입력하면](https://i.postimg.cc/qvLWKn2P/whenurl.jpg)  
 [이미지 출처](https://www.buymeacoffee.com/wassimchegham/hey-102339)  
 {: .center}
 
@@ -78,23 +78,23 @@ CS 단골 질문 중 하나다. 구글에 검색해 보면 여러 블로그에�
 
 ### 브라우저 엔진(Browser Engine)
 
-![엔진](https://i.postimg.cc/SKL0V5yD/IC-engine.jpg){:loading="lazy"}  
+![엔진](https://i.postimg.cc/SKL0V5yD/IC-engine.jpg)  
 {: .center .rounded-edge-16 .w-half}
 
 앞서 웹 브라우저를 컴퓨터 안에 존재하는 또 다른 가상 컴퓨터라고 표현했다. 이 가상의 기계를 움직이게 만드는 가장 중요한 부품을 **브라우저 엔진(Browser Engine)**이라고 부른다. 웹 브라우저의 컴포넌트 중 브라우저 엔진이란 용어가 지칭하는 특정한 대상이 있지만, 상황에 따라 그것이 혼용되거나 오용되는 경우가 있어서 조금 헷갈릴 수 있다. 한번 정리해 보자.
 
-[![자바스크립트 엔진과는 다르다](https://i.postimg.cc/FR47Y2Rv/image.png){:loading="lazy"}](https://en.wikipedia.org/wiki/Browser_engine){:target="_blank"}  
+[![자바스크립트 엔진과는 다르다](https://i.postimg.cc/FR47Y2Rv/image.png)](https://en.wikipedia.org/wiki/Browser_engine){:target="_blank"}  
 {: .center .rounded-edge-16 .w-half}
 
 일단 "웹 브라우저에 존재하는 엔진"이라는 의미에서 **자바스크립트 엔진(JavaScript Engine)**과 묶어 부르는 방식으로 오용될 수 있다. 위키피디아에서도 그러지 말라고 이렇게 손수 알려주고 있다. **브라우저 엔진은 화면을 그리고 UI를 제어하는 역할을 수행한다.** 반면 자바스크립트 엔진은 웹 페이지에 달린 자바스크립트 소스코드를 실행하는 인터프리터다. 둘은 소프트웨어 공학의 기본 설계 원칙인 관심사의 분리 원칙에 따라 서로 구분되었다. 그리고 사실, 둘이 서로 동등한 수준에서 취급되는 컴포넌트는 아니다. 최근 웹 페이지에서 자바스크립트의 중요도가 너무 높아졌기 때문에 체감하기 어려울지도 모르겠지만, [자바스크립트 엔진을 비활성화해도 사용자는 웹 페이지에 접속할 수 있다](https://www.google.com/search?q=%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8+%EB%B9%84%ED%99%9C%EC%84%B1%ED%99%94){:target="_blank"}{: .a-not-colored}. 하지만 브라우저 엔진이 꺼진다면 웹 브라우저는 조금도 움직이지 않을 것이다.
 
-![컴포넌트들](https://i.postimg.cc/d1DbVNKB/layers.png){:loading="lazy"}  
+![컴포넌트들](https://i.postimg.cc/d1DbVNKB/layers.png)  
 웹 브라우저의 컴포넌트들
 {: .center}  
 
 브라우저 엔진에 대해 더 엄밀히 따졌을 때, "화면을 그리는" 컴포넌트와 "UI를 제어하는" 컴포넌트도 서로 분리된다. 여기서 화면을 직접 그리는 부분을 **렌더링 엔진(Rendering Engine)** 혹은 **레이아웃 엔진(Layout Engine)**이라고 부른다. UI와 렌더링 엔진 사이에서 교통정리를 하는 부분을 브라우저 엔진이라고 부른다. 하지만 두 컴포넌트는 서로 강하게 결합해 있기 때문에 함께 묶어 "브라우저 엔진"이라고 부르는 게 일반적이다.
 
-![대표 브라우저 엔진](https://i.postimg.cc/jj0K9XHk/0-I-8-CPu-SMOLx-Xm-CTB.png){:loading="lazy"}  
+![대표 브라우저 엔진](https://i.postimg.cc/jj0K9XHk/0-I-8-CPu-SMOLx-Xm-CTB.png)  
 대표적인 브라우저 엔진들  
 {: .center .rounded-edge-16 .w-3-quarter}
 
@@ -102,11 +102,11 @@ CS 단골 질문 중 하나다. 구글에 검색해 보면 여러 블로그에�
 
 ### 브라우저의 렌더링 과정
 
-![Gecko](https://i.postimg.cc/rmGRt468/gecko.jpg){:loading="lazy"}  
+![Gecko](https://i.postimg.cc/rmGRt468/gecko.jpg)  
 Gecko 엔진의 렌더링 과정  
 {: .center}
 
-![Webkit](https://i.postimg.cc/RhDS3C0S/webkit.jpg){:loading="lazy"}  
+![Webkit](https://i.postimg.cc/RhDS3C0S/webkit.jpg)  
 Webkit 엔진의 렌더링 과정  
 {: .center}
 
@@ -121,7 +121,7 @@ Webkit 엔진의 렌더링 과정
 
 **파싱(Parse)**  
 
-![parse](https://i.postimg.cc/XJjtb4Dt/1parse.png){:loading="lazy"}  
+![parse](https://i.postimg.cc/XJjtb4Dt/1parse.png)  
 {: .center}
 
 CRP의 첫 번째 단계는 **파싱(Parse)**이다. 첫 번째 단계인 만큼 공정에 쓰일 원재료를 입력받는 위치이기도 한데, 여기서 원재료는 URL을 통해 요청한 웹 페이지의 **HTML 소스 코드**가 된다. 파싱 단계에서 브라우저 엔진은 HTML을 읽어 웹 페이지의 논리적인 구조, **문서 객체 모델(Document Object Model, DOM)**을 생성한다.  
@@ -129,28 +129,28 @@ HTML의 계층 구조를 나타낼 수 있도록 DOM은 트리 구조를 가진�
 
 **부착(Attachment)**  
 
-![attachment](https://i.postimg.cc/Gh3G6QnM/2attatchmant.png){:loading="lazy"}  
+![attachment](https://i.postimg.cc/Gh3G6QnM/2attatchmant.png)  
 {: .center}
 
 두 번째 단계는 여러 이름으로 불리는데, 자료에 따라 프레임 구축(Frame Construction), 스타일링(Style) 등의 이름을 가진다. 여기선 **부착(Attachment)**이라고 하자. 아무튼 중요한 것은 이 단계에서 무슨 일을 하느냐이다. 부착 단계에서 브라우저 엔진은 앞서 결과로 얻어낸 DOM에 CSSOM을 붙여 **렌더링 트리(Render Tree)**를 만든다. 렌더링 트리는 웹 페이지의 계층 구조와 스타일에 대한 정보를 한 데 담아두고 있기 때문에 이름대로 브라우저 엔진이 화면에 그림을 그리기 위한 핵심 재료가 된다. 따라서 화면에 그릴 필요가 없는 DOM 트리 노드들은 렌더링 트리 생성 과정에서 제외된다. 메타 정보나 외부 자원 정보가 담긴 `<head>` 태그, CSSOM에서 `display: none;` 속성이 확인된 노드들이 그 대상이 된다.
 
 **레이아웃(Layout)**  
 
-![layout](https://i.postimg.cc/K8yDFrHH/3layout.png){:loading="lazy"}  
+![layout](https://i.postimg.cc/K8yDFrHH/3layout.png)  
 {: .center}
 
 앞선 단계에서 렌더링 트리를 만들면서 각 노드들에 스타일을 부여했다. 세 번째 단계인 **레이아웃(Layout)**에서는 부여된 스타일들의 상대적인 값을 절대적인 값으로 계산한다. CSS에서는 크기와 위치를 나타내는 다양한 단위들이 있는데, 대부분의 단위는 웹 페이지의 여러 요소에 대해 상대적인 값을 가진다. 예를 들어, `%`나 `vw`, `vh` 등의 단위는 상위 노드나 웹 브라우저의 현재 화면 영역(**뷰포트, Viewport**) 크기에 비례한 값을 가진다. `em`이나 `rem`은 상위 혹은 루트 노드의 폰트 크기에 비례한 값을 가진다. 레이아웃 단계에서 브라우저 엔진은 이런 상대값의 절대적인 `px` 값을 계산해 화면에서 구체적으로 어떤 위치에 어떤 크기로 웹 페이지의 엘리먼트들이 배치되어야 하는지를 결정한다.
 
 **페인트(Paint)**  
 
-![paint](https://i.postimg.cc/hP9ZZJH8/4paint.png){:loading="lazy"}  
+![paint](https://i.postimg.cc/hP9ZZJH8/4paint.png)  
 {: .center}
 
 앞선 단계들을 거쳐 이제 렌더링의 대상이 자세히 정의되었다. 이다음 단계는 **페인트(Paint)** 또는 **래스터화(Rasterization)**라고 부른다. 페인트는 우리가 흔히 사용하는 그 단어 그대로의 의미다. 래스터화는 컴퓨터 그래픽 렌더링에서 화면의 객체를 **픽셀(Pixel)**이라는 격자에 매핑하는 것을 의미한다. 이 단계에서는 레이아웃 단계에서 계산된 `px` 값을 이용해 브라우저 엔진이 렌더링 트리의 각 노드를 화면상의 실제 픽셀에 매핑하게 된다.
 
 **합성(Composite)**  
 
-![Composite](https://i.postimg.cc/sDV95SBb/5composite.png){:loading="lazy"}  
+![Composite](https://i.postimg.cc/sDV95SBb/5composite.png)  
 {: .center}
 
 CRP의 마지막 단계는 자료마다 다르게 설명한다. 페인트가 마지막 단계인 자료도 있고, 한 단계를 더 설명하는 자료도 있다. 그 마지막 단계는 **합성(Composite)**단계이다. 합성 단계에서 브라우저 엔진은 페인트의 결과로 그려진 각 요소를 화면에서 합치는 연산을 수행한다. 이때 합쳐질 각 요소를 **레이어(Layer)**라고 부른다. 레이어는 무턱대고 많이 생성되는 것이 아니라 필요한 상황에만 생성된다. 레이어는 레이아웃 단계 이후에 **레이어 트리 업데이트(Update Layer Tree)**라는 추가 과정을 거친 다음 **레이어 트리(Layer Tree)**라는 자료 구조로 저장된다. 레이어를 만드는 기준에는 `z-index`로 대표되는 [쌓임 맥락(Stacking Context)](https://developer.mozilla.org/ko/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context)이나 `<canvas>`와 `<video>` 등 멀티미디어 자원을 나타내는 태그 등이 있다.  
@@ -163,7 +163,7 @@ CRP는 웹 페이지의 소스 코드를 화면에 그리는 일련의 과정이
 
 이 블로그 글을 읽는 당신처럼 화면에 스크롤을 입력하면 웹 페이지는 위아래로 움직여야 한다. 블로그 상단에 나오는 프로그레스 바의 모양도 변해야 한다. 웹 브라우저의 윈도우 크기를 사용자가 조절해 뷰포트의 크기가 변할 수도 있다. 버튼을 누르면 없었던 엘리먼트가 화면에 새로 등장하기도 한다. 렌더링 트리는 웹 페이지가 동작하는 중 언제든지 변할 수 있다. 화면 변경에 대응해 화면을 다시 렌더링 하는 두 과정을 **리플로우(Reflow)**와 **리페인트(Repaint)**라고 부른다. 이 두 과정은 CRP의 레이아웃과 페인트 과정과 같다.  
 
-![update](https://i.postimg.cc/V6ThQwDt/6update.png){:loading="lazy"}  
+![update](https://i.postimg.cc/V6ThQwDt/6update.png)  
 {: .center}
 
 **리플로우(Reflow)**  
@@ -177,7 +177,7 @@ CRP는 웹 페이지의 소스 코드를 화면에 그리는 일련의 과정이
 
 #### CSS 알고 쓰자  
 
-![CSS 알고쓰자](https://i.postimg.cc/QCJYrkRL/7css.png){:loading="lazy"}  
+![CSS 알고쓰자](https://i.postimg.cc/QCJYrkRL/7css.png)  
 {: .center}
 
 리플로우와 리페인트에 대한 설명을 보면 알 수 있듯이 CSS의 속성만 잘 써줘도 어느 정도 렌더링 과정의 최적화가 가능해진다. 기능 구현에 어떤 속성을 선택할지 고려할 때 그 속성이 렌더링 과정에서 어떻게 관여하는지를 이해하는 것이 중요하다. 앞서 언급했던 **[쌓임 맥락(Stacking Context)](https://developer.mozilla.org/ko/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context){:target="_blank"}**에 따라 레이어를 생성하는 CSS 속성들을 숙지해 두면 도움이 될 것이다. 단순히 특정 속성을 쓰면 레이어가 생성되고 리플로우를 발생시키지 않을 수 있는 것이 아니라, 그럴 수 있는 조건이 만족해야 하므로 위 문서를 한 번 읽어 보는 것을 추천한다.
@@ -196,7 +196,7 @@ CSS에 대한 최적화는 이뿐만이 아니다. 다음과 같은 최적화 �
 
 자바스크립트는 CSS처럼 HTML 소스 코드 입장에서 외부 자원에 속한다. 파싱 단계에서 자바스크립트를 발견했을 때 렌더링 차단이 발생한다는 의미이다. 따라서 렌더링 과정에서 자바스크립트의 개입이 언제 일어나는지, 자바스크립트의 렌더링 차단을 회피하는 방법이 있는지 알아야 할 필요가 있다.
 
-![자바스크립트는 언제 실행될까](https://i.postimg.cc/3JdhHPxG/8js.png){:loading="lazy"}  
+![자바스크립트는 언제 실행될까](https://i.postimg.cc/3JdhHPxG/8js.png)  
 {: .center}
 
 **`<script>`**  
@@ -212,7 +212,7 @@ CSS에 대한 최적화는 이뿐만이 아니다. 다음과 같은 최적화 �
 
 ## CSR? SSR?
 
-[![엔지니어들이란](https://i.postimg.cc/Ss0gzJB6/ohman.png){:loading="lazy"}  
+[![엔지니어들이란](https://i.postimg.cc/Ss0gzJB6/ohman.png)  
 정말 엔지니어들은 용어를 맥락 따라 다르게 쓰는 걸 좋아한단 말이야.😒](https://stackoverflow.com/questions/46169376/whats-the-difference-between-a-browser-engine-and-rendering-engine){:target="_blank"}
 {: .center .rounded-edge-16 .w-3-quarter}
 
@@ -232,7 +232,7 @@ CSS에 대한 최적화는 이뿐만이 아니다. 다음과 같은 최적화 �
 
 ### 웹 어플리케이션 렌더링
 
-![CSR vs SSR](https://i.postimg.cc/vBrSkcHY/9warender.png){:loading="lazy"}  
+![CSR vs SSR](https://i.postimg.cc/vBrSkcHY/9warender.png)  
 {: .center}
 
 이 맥락에서 렌더링은 웹 어플리케이션의 소스 코드가 HTML/CSS/JS로 이루어진 웹 페이지로 변환되는 과정을 의미한다. 렌더링이라고 하지만 빌드라고 표현하는 게 더 적합하지 않을까 생각하고는 있는데, 왜 굳이 그렇게 이름을 붙였는지에 대해서는 GPT와 열심히 토론 중이지만 마땅한 답이 나오진 않는다. 이에 대해 명쾌한 설명이 가능한 분께선 그 고견을 아래쪽 댓글창에 달아주십사...
@@ -241,7 +241,7 @@ CSS에 대한 최적화는 이뿐만이 아니다. 다음과 같은 최적화 �
 
 ## 마무리
 
-[![뽀모도로](https://i.postimg.cc/VLFLykgd/pomodoro.png){:loading="lazy"}](https://domado.vercel.app/){:target="_blank"}  
+[![뽀모도로](https://i.postimg.cc/VLFLykgd/pomodoro.png)](https://domado.vercel.app/){:target="_blank"}  
 틈새 끼워팔기
 {: .center .w-3-quarter .rounded-edge-16}
 
@@ -274,7 +274,7 @@ CSS에 대한 최적화는 이뿐만이 아니다. 다음과 같은 최적화 �
 
 그리고 요즘 글 쓸 때 GPT의 도움을 상당히 많이 받는다. 특히 [뤼튼](https://wrtn.ai/)이란 서비스를 통해 GPT를 사용하고 있다. 몇 달 전에 온라인 스터디 들어갔다가 우연히 알게 된 서비스인데, 좋은 건 널리 알려야지.
 
-![소마 제15기](https://i.postimg.cc/J0gM31xN/image.png){:loading="lazy"}
+![소마 제15기](https://i.postimg.cc/J0gM31xN/image.png)
 {: .center}  
 
 진짜 마지막으로, 잊을만하면 한 번씩 메일을 보내 내 메일함에서 그 존재감을 뽐내는 소프트웨어 마에스트로가 어느덧 벌써 15기 연수생을 모집하고 있다. 그래도 나름 이거 해서 작년도 먹고살 수 있었다. 혹시라도 이 글을 본 사람 중에 지원자격이 되는 사람이 있다면 아주 좋은 기회니까 너무 부담 가지지 말고 도전해 보자.
