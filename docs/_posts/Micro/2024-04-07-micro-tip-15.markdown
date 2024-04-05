@@ -1,0 +1,36 @@
+---
+layout: post
+title: "자잘한 도움말 #15 프로젝트 별로 노드 버전이 다를 때"
+subtitle: ".nvmrc"
+description: ""
+date: 2024-04-07 17:40:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+
+- 
+
+
+
+---
+
+## 이하 그리 중요하진 않은 내용들
+
+
+## 내가 배운 것
+
+---
+
+- 레퍼런스
+- https://velog.io/@korany-lee/자동으로-nvm-use-해주는-script
+- https://stackoverflow.com/questions/23556330/run-nvm-use-automatically-every-time-theres-a-nvmrc-file-on-the-directory
+
+
+- 개발 경력이 쌓이다보니까 PC에 여러 node 버전이 산재하는구만
+- 노드 버전 매니저에 대해서 간략하게. 이건 다들 알죠?
+- 프로젝트별로 node 버전 다르게하기
+    - .nvmrc
+    - nvm use 하면 바로 파일 읽어서 환경 변경됨
+    - 문제는 프로젝트 워크스페이스 열때마다 저래줘야함.
+    - 위 zsh 버전 스크립트를 참고하자.
