@@ -26,9 +26,20 @@ Anteater의 블로그입니다. 나, [Anteater](https://github.com/anteater333)�
 
 ----
 
+- 그리고 더 자세한 이력은 여기에서
 
- - 부경대학교 교내 프로그래밍 동아리 WAP 회원 (18기, 활동기간: 2015년 ~ 2016년)
- - 제 12기 소프트웨어 마에스트로 연수생
+<div style="display:flex; justify-content:space-evenly;">
+  <p>
+    <a target="_blank" rel="noreferrer noopener" href="https://past-silver-b67.notion.site/Lee-Jihoon-Anteater-42a1ebc80b2e44688f0dd99598f019de">
+      <img width="200px" height="200px" src="https://i.postimg.cc/Wz8nnf1C/image.png"/>
+    </a>
+  </p>
+  <p>
+    <a target="_blank" rel="noreferrer noopener" href="https://blog.anteater-lab.link/portfolio/">
+      <img width="200px" height="200px" src="https://i.postimg.cc/zBYRK2cH/me-asset-char-small.png"/>
+    </a>
+  </p>
+</div>
 
 ## 연락처
 
