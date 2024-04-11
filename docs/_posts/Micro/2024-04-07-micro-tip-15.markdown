@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "자잘한 도움말 #15 프로젝트 별로 노드 버전이 다를 때"
-subtitle: ".nvmrc"
+subtitle: "작업 디렉토리가 바뀔 때 마다 자동으로 노드 버전을 바꾸는 방법"
 description: ""
 date: 2024-04-07 17:40:00 +0900
 categories: [Micro]
@@ -17,6 +17,84 @@ categories: [Micro]
 
 ## 이하 그리 중요하진 않은 내용들
 
+![일 많은 백수](https://i.postimg.cc/XqQQgQW3/temp-Image-PLY8-Np.avif)  
+
+백수 주제에 프로젝트는 뭐 그렇게 많은지...
+
+노드 버전을 관리하는 방법과 신문물에 대해. 이번 글을 쓰면서 나도 신문물을 도입해보기로 했고.
+
+### Node Version Manager
+
+Node.js를 설치하는 방법 (공식 홈페이지?)
+
+Version Manager의 등장
+
+https://nodejs.org/en/download/package-manager  
+공식 취급
+
+http://nvm.sh
+접속 안되는거 실화입니까
+
+https://github.com/nvm-sh/logos
+로고 필요하면 여기서
+
+### `.nvmrc`와 `nvm use`
+
+### 작업 디렉토리가 바뀔 때 마다 노드 버전 바꾸기
+
+```sh
+# nvm config
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+
+# place this after nvm initialization!
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local node_version="$(nvm version)"
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$node_version" ]; then
+      nvm use
+    fi
+  elif [ "$node_version" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+```
+https://stackoverflow.com/questions/23556330/run-nvm-use-automatically-every-time-theres-a-nvmrc-file-on-the-directory
+
+### fnm
+
+Shell Setup
+
+Environment variables need to be setup before you can start using fnm. This is done by evaluating the output of fnm env. To automatically run fnm use when a directory contains a .node-version or .nvmrc file, add the --use-on-cd option to your shell setup.
+
+Adding a .node-version to your project is as simple as:
+
+npm에서 yarn.. cra에서 vite.. nvm에서 fnm..
+
+auto completion 추가하기 (글 내용 보고 넣을지 말지 판단하기)
+```
+mkdir -p ~/.config/zsh/completions
+
+touch ~/.config/zsh/completions/_fnm
+
+fnm completions --shell=zsh > ~/.config/zsh/completions/_fnm
+```
+```
+fpath+=~/.config/zsh/completions/_fnm
+autoload -Uz compinit
+compinit
+```
+
 
 ## 내가 배운 것
 
@@ -25,6 +103,9 @@ categories: [Micro]
 - 레퍼런스
 - https://velog.io/@korany-lee/자동으로-nvm-use-해주는-script
 - https://stackoverflow.com/questions/23556330/run-nvm-use-automatically-every-time-theres-a-nvmrc-file-on-the-directory
+
+- 상당히 좋은 자료 - nvm vs fnm vs volta
+https://pozafly.github.io/node/node-version-manager/
 
 
 - 개발 경력이 쌓이다보니까 PC에 여러 node 버전이 산재하는구만
