@@ -18,27 +18,61 @@ categories: [Micro]
 ## 이하 그리 중요하진 않은 내용들
 
 ![일 많은 백수](https://i.postimg.cc/XqQQgQW3/temp-Image-PLY8-Np.avif)  
-어라 이상하다.. 나 백수인데..
+이상하다.. 나 백수인데..
 {: .center .w-1-quarter .rounded-edge-16}
 
-아무래도 나는 Node.js와는 떼려야 뗄 수 없는 사이가 되어버린 것 같다. 요즘 웹 프론트엔드 개발 하려면 거의 대부분은 일단 Node.js 기반으로 프로젝트를 생성해야 하니깐. 나는 지금까지 여러 프로젝트를 진행해왔는데, 그 중에는 올해 초에 코드 작성을 시작한 것도 있고 몇 년 전에 시작되어서 아직까지 운영되며 내 재정을 책임져주는 것도 있다. 내 개발 PC에 공존하는 프로젝트들. 문제는 그 몇 년 전 프로젝트는 지금 기준으론 조금 까다로운 면이 있어서, 오래된 Node.js 버전을 요구한다는 점이다.
+아무래도 나는 Node.js와는 떼려야 뗄 수 없는 사이가 되어버린 것 같다. 요즘 웹 프론트엔드 개발 하려면 거의 대부분은 일단 Node.js 기반으로 프로젝트를 생성해야 하니깐. 나는 지금까지 여러 프로젝트를 진행해왔는데, 그 중에는 올해 초에 코드 작성을 시작한 것도 있고 몇 년 전에 시작되어서 아직까지 운영되며 내 재정을 책임지는 서비스도 있다. 이렇듯 내 개발 PC에는 여러 프로젝트들이 공존한다. 문제는 그 몇 년 전 프로젝트는 지금 기준으론 조금 까다로운 면이 있어서, 오래된 Node.js 버전을 요구한다는 점이다.
 
-왠만하면 새로운 프로젝트에서는 최신 Node.js 버전을 쓰고 싶은데 옛날 프로젝트에 발목 잡히긴 싫어. [옛날 Node.js엔 `structuredClone()`도 없단 말야.](/micro/2023/12/10/micro-tip-13.html#tmi){:target="_blank"} 그럴 때 필요한 것이 이번 글이다. Node.js 버전을 관리하는 방법에 대하여.
+왠만하면 새로운 프로젝트에서는 최신 Node.js 버전을 쓰고 싶은데 옛날 프로젝트에 발목 잡히긴 싫어. [옛날 Node.js엔 `structuredClone()`도 없단 말야.](/micro/2023/12/10/micro-tip-13.html#tmi){:target="_blank"} 그럴 때 필요한 것이 이번 글이다. Node.js 버전을 관리하는 방법에 대해 알아보자.
 
 ### Node Version Manager
 
-Node.js를 설치하는 방법 (공식 홈페이지?)
+![nodejs install](https://i.postimg.cc/g2J3ZGxn/image.png)  
+{: .center}
 
-Version Manager의 등장
+구글에 Node.js 설치 방법을 검색하면 Node.js 공식 사이트가 가장 먼저 노출된다. [공식 사이트의 다운로드 페이지](https://nodejs.org/en/download){:target="_blank"}에 들어가 OS에 맞는 최신 버전 인스톨러를 다운 받아 실행하면 설치 끝. 인스톨러가 환경 변수도 알아서 등록해줄거고, 별 문제 없이 쉘에서 `node` 명령어를 사용할 수 있게 된다. 특정 버전의 Node.js 하나만 설치하고자 한다면 이렇게 하면 된다. 하지만 앞서 말했듯이 지금 우리는 여러 Node.js 버전이 필요하다. 그냥 다른 버전의 인스톨러를 새로 설치하면 환경변수가 꼬인다거나 하지 않을까? 이런 문제를 해결하기 위해선 내 PC에 설치된 Node.js의 버전을 관리해주는 별도의 프로그램이 필요하다. 그렇게 특정 도구의 버전을 관리해주는 프로그램을 버전 매니저(Version Manager)라고 부른다. Node.js에서 가장 대표적인 버전 매니저가 바로 **Node Version Manager, NVM**이다.
 
-https://nodejs.org/en/download/package-manager  
-공식 취급
+![NVM](https://i.postimg.cc/cLKwhY3f/nvm-logo-color.png)  
+{: .center}
 
-http://nvm.sh
-접속 안되는거 실화입니까
+NVM은 2010년 [Tim Caswell](https://twitter.com/creationix){:target="_blank"}에 의해 시작되어 현재는 Node.js에서 사실상 공식 취급을 받는 도구가 되었다. 아닌게 아니라, 아까 말했던 공식 사이트 다운로드 페이지에서도 직접 [NVM 사용해 Node.js를 설치하는 방법](https://nodejs.org/en/download/package-manager){:target="_blank"}을 알려주고 있다.
 
-https://github.com/nvm-sh/logos
-로고 필요하면 여기서
+```bash
+# Linux/Mac 기준
+
+# installs NVM (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+# download and install Node.js
+nvm install 20
+
+# verifies the right Node.js version is in the environment
+node -v # should print `v20.12.2`
+
+# verifies the right NPM version is in the environment
+npm -v # should print `10.5.0`
+```
+
+`curl`로 NVM을 설치한 다음 `nvm install 20` 명령어 한 줄이면 Node.js 20 버전이 설치된다. 자세한 사용법은 [NVM 리포지토리의 README](https://github.com/nvm-sh/nvm?tab=readme-ov-file#usage){:target="_blank"}에서 확인할 수 있다. 주로 사용하게될 명령어는 다음과 같을 것이다:
+
+```bash
+# 설치 가능한 node 버전을 확인
+nvm ls-remote
+
+# 최신 버전 node를 설치
+nvm install node
+
+# 구체적인 버전의 node를 설치
+nvm install 14.7.0
+
+# 이 PC에서 특정 버전의 node를 사용하도록 설정
+nvm use 14.7.0
+
+node -v # should print `v14.7.0`
+```
+
+참 쉽죠?
+
 
 ### `.nvmrc`와 `nvm use`
 
@@ -73,7 +107,7 @@ load-nvmrc
 ```
 https://stackoverflow.com/questions/23556330/run-nvm-use-automatically-every-time-theres-a-nvmrc-file-on-the-directory
 
-### fnm
+### New Challenger
 
 Shell Setup
 
