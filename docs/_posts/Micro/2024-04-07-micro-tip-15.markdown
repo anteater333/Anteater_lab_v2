@@ -30,7 +30,7 @@ categories: [Micro]
 ![nodejs install](https://i.postimg.cc/g2J3ZGxn/image.png)  
 {: .center}
 
-Node.js를 설치 하려면 어떻게 해야할까. 구글에 Node.js 설치 방법을 검색하면 Node.js 공식 사이트가 가장 먼저 노출된다. [공식 사이트의 다운로드 페이지](https://nodejs.org/en/download){:target="_blank"}에 들어가 OS에 맞는 최신 버전 인스톨러를 다운 받아 실행하면 설치 끝. 인스톨러가 환경 변수도 알아서 등록해줄거고, 별 문제 없이 쉘에서 `node` 명령어를 사용할 수 있게 된다. 특정 버전의 Node.js 하나만 설치하고자 한다면 이렇게 하면 된다. 하지만 앞서 말했듯이 지금 우리는 여러 Node.js 버전이 필요하다. 그냥 다른 버전의 인스톨러를 새로 설치하면 환경변수가 꼬인다거나 하지 않을까? 이런 문제를 해결하기 위해선 내 PC에 설치된 Node.js의 버전을 관리해주는 별도의 프로그램이 필요하다. 그렇게 특정 도구의 버전을 관리해주는 프로그램을 버전 매니저(Version Manager)라고 부른다. Node.js에서 가장 대표적인 버전 매니저가 바로 **Node Version Manager, NVM**이다.
+Node.js를 설치 하려면 어떻게 해야할까. 구글에 Node.js 설치 방법을 검색하면 Node.js 공식 사이트가 가장 먼저 노출된다. [공식 사이트의 다운로드 페이지](https://nodejs.org/en/download){:target="_blank"}에 들어가 OS에 맞는 최신 버전 인스톨러를 다운 받아 실행하면 설치 끝. 인스톨러가 환경 변수도 알아서 등록해줄거고, 별 문제 없이 쉘에서 `node` 명령어를 사용할 수 있게 된다. 특정 버전의 Node.js 하나만 설치하고자 한다면 이렇게 하면 된다. 하지만 앞서 말했듯이 지금 우리는 여러 Node.js 버전이 필요하다. 그냥 다른 버전의 인스톨러를 새로 설치하면 환경변수가 꼬인다거나 하지 않을까? 이런 문제를 해결하기 위해선 내 PC에 설치된 Node.js의 버전을 관리해주는 별도의 프로그램이 필요하다. 그렇게 특정 도구의 버전을 관리해주는 프로그램을 **버전 매니저(Version Manager)**라고 부른다. Node.js에서 가장 대표적인 버전 매니저가 바로 **Node Version Manager, NVM**이다.
 
 ![NVM](https://i.postimg.cc/cLKwhY3f/nvm-logo-color.png)  
 {: .center}
@@ -86,9 +86,12 @@ v16.16.0
 
 아무튼, 아무 폴더 하나에 `.nvmrc` 파일을 만들어보자. 그런 다음 해당 경로에서 `nvm use`를 입력하면 NVM은 알아서 `.nvmrc` 파일을 읽고 Node.js의 버전을 변경해준다. 이렇게 우리는 프로젝트 별로 필요한 Node.js 버전이 다를 때 그 버전을 명시하고 관리하는 문제를 해결했다.
 
-### 작업 디렉토리가 바뀔 때 마다 자동으로 노드 버전 바꾸기
+### 작업 디렉토리가 바뀔 때 마다 자동으로 Node.js 버전 바꾸기
+
+`.nvmrc` 파일이 있는 경로에서 `nvm use` 명령어를 입력하면 Node.js 버전이 바뀐다. 이 행위가 정말 쉽고 간단하고, **까먹기 좋다**. 자고로 개발자라면 이렇게 번거로운 반복 작업은 가만 둘수 없어야지. [스택 오버플로우에서 200개 이상의 upvote를 받은 이 글을 참고하자.](https://stackoverflow.com/questions/23556330/run-nvm-use-automatically-every-time-theres-a-nvmrc-file-on-the-directory){:target="_blank"}
 
 ```sh
+# ~/.zshrc
 # nvm config
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
@@ -115,7 +118,25 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 ```
-https://stackoverflow.com/questions/23556330/run-nvm-use-automatically-every-time-theres-a-nvmrc-file-on-the-directory
+
+```sh
+# ~/.bashrc
+_nvmrc_hook() {
+  if [[ $PWD == $PREV_PWD ]]; then
+    return
+  fi
+  
+  PREV_PWD=$PWD
+  [[ -f ".nvmrc" ]] && nvm use
+}
+
+if ! [[ "${PROMPT_COMMAND:-}" =~ _nvmrc_hook ]]; then
+  PROMPT_COMMAND="_nvmrc_hook${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+fi
+```
+
+본인이 사용하는 쉘 환경에 맞춰 위 스크립트를 각자의 .(~)shrc(Run Commands 파일) 파일에 추가해주자. 쉘 터미널을 재실행한 다음 `.nvmrc`가 있는 폴더로 이동하면 자동으로 `nvm use`가 실행되는 것을 볼 수 있다.
+
 
 ### New Challenger
 
