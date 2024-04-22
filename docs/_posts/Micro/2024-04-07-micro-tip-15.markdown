@@ -139,6 +139,13 @@ fi
 
 ### New Challenger
 
+![tools](https://i.postimg.cc/Pr6wRy0p/temp-Image-G1-HK7v.avif)  
+{: .center .rounded-edge-16 .w-3-quarter}
+
+SW라는 분야 전반적으로 그런 이미지가 있지만 특히 웹 프론트엔드 개발자들은 변화에 민감하단 이미지가 있는 것 같다. 당장 나도 새 프로젝트마다 개발 도구를 이전과 완전히 똑같이 가져간 적이 없는 것 같다. NPM은 Yarn으로, CRA는 Vite로. 그럼 NVM은 어떨까?
+
+버전 매니저들 소개
+
 Shell Setup
 
 Environment variables need to be setup before you can start using fnm. This is done by evaluating the output of fnm env. To automatically run fnm use when a directory contains a .node-version or .nvmrc file, add the --use-on-cd option to your shell setup.
