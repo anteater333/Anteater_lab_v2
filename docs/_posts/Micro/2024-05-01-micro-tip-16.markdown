@@ -15,7 +15,28 @@ categories: [Micro]
 
 ## 이하 그리 중요하진 않은 내용들
 
+내 코드를 나 혼자서만 계속 보고 있다는 것은 많은 사실을 놓치게 만든다. 예를 들면, 내가 당연하다는 듯이 계속 써왔던 방법이 사실은 **안티 패턴**에 가깝다던가. 사실 나도 내가 React를 언제부터, 어떻게 배워서 써왔는지 기억이 잘 안난다. 이것저것 많이 건드려본 것 치고는 기본기가 약하다는 뜻이다. 안그래도 요즘 React/Next.js 기반으로 블로그를 리모델링 할 계획을 짜고 있는데, React 자체에 대한 공부를 열심히 더 해봐야 할 것 같다. 오늘은 React에서 **메모이제이션(Memoization)**을 더 잘하는 방법에 대해서 알아보자.
+
 내가 당연하다는듯이 써왔던 안티 패턴에 대하여
+
+### 메모이제이션
+
+메모이제이션 개념
+
+useMemo
+
+### 컴포넌트는 메모 못하나?
+
+useMemo로 컴포넌트를 메모할 경우 발생하는 문제점
+
+React.Memo
+
+HoC -> 현대 리엑트에선 잘 안쓰이지만
+최신 공식 문서에서도 HoC라는 표현을 쓰고 있지 않음.
+
+### 애초에 왜 메모를 하려고 하십니까?
+
+비싸 보이는 것과 실제로 비싼 것
 
 ## 내가 배운 것
 
@@ -37,3 +58,9 @@ categories: [Micro]
 JSX 노드 객체는 시간이 지나도 변경될 수 없으므로 React는 리렌더링을 건너뛰어도 안전하다는 것을 알고 있습니다. 다만 이것이 작동하려면 노드가 단순히 코드에서 동일하게 보이는 것이 아니라 실제로 동일한 객체여야 합니다. 이 예시에서 useMemo는 바로 이런 역할을 합니다.
 JSX 노드를 수동으로 useMemo로 감싸는 것은 편리하지 않습니다. 예를 들어, 이 작업을 조건부로 수행할 수 없습니다. 일반적으로 JSX 노드를 useMemo로 감싸는 대신 memo로 컴포넌트를 감싸는 이유입니다.(이 부분이 중요하네요 ㅎㅎ )
 ```
+
+https://bum-developer.tistory.com/entry/React-useMemo%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%A7%80-%EB%A7%90%EC%95%84%EC%95%BC-%ED%95%9C%EB%8B%A4
+
+https://react.dev/reference/react/useMemo#how-to-tell-if-a-calculation-is-expensive
+
+https://ko.react.dev/reference/react/memo
