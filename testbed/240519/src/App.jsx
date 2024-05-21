@@ -1,71 +1,109 @@
 import { useState, memo, useMemo, useCallback, useEffect } from "react";
 import "./App.css";
-import { useComponentMemoCounter } from "./hooks/useComponentMemoCounter";
 
+/*
+  권장. React.memo 사용.
+  React 코어에 의해 다른 로직으로 관리되는 컴포넌트 (REACT_MEMO_TYPE)
+  App이 재렌더링 되어도 count, onClick이 변경되지 않으면 이 컴포넌트는 재렌더링되지 않음.
+*/
 const MemoedCounter = memo(function MemoedComponent({ count, onClick }) {
-  console.log("TEST :: memoed");
-  return <button onClick={onClick}>memoed count is {count}</button>;
+  console.log("TEST :: (A) rendered <MemoedCounter />");
+  return (
+    <button onClick={onClick}>
+      (A) {`<MemoedCounter />`} {count}
+    </button>
+  );
 });
 
+/*
+  아래 useMemo로 렌더링 함수가 아니라 JSX 자체를 반환하는 방법을 Custom Hook으로 만든 것
+  해당 방법에서 props 전달을 가능하도록 하는 법
+  여기까지 오면 너무 먼길을 온게 아닌가...
+*/
+const usePreRenderedCustomHookCounter = (onClick, count) => {
+  return useMemo(() => {
+    console.log(
+      "TEST :: (E) rendered and memoed <PreRenderedCustomHookCounter />"
+    );
+    return (
+      <button onClick={onClick}>
+        (E) {`<PreRenderedCustomHookCounter />`} {count}
+      </button>
+    );
+  }, [onClick, count]);
+};
+
 function App() {
-  console.log("TEST :: ROOT");
+  console.log("TEST :: (0) rendered <App />");
+
   const [count, setCount] = useState(0);
   const [isGood, setIsGood] = useState(false);
 
   const onCountHandler = useCallback(() => setCount((count) => count + 1), []);
 
-  const UseMemoedCount = useMemo(() => {
-    console.log("TEST :: useMemoed");
+  /**
+    useMemo로 컴포넌트 메모를 시도
+    => 렌더 함수를 메모한 것이기 때문에 App이 다시 렌더링 될때마다 이 컴포넌트도 재렌더링됨
+   */
+  const UseMemoedCounter = useMemo(() => {
+    console.log("TEST :: (B) memoed () => <UseMemoedCounter />");
     return ({ count, onClick }) => {
-      console.log("TEST :: useMemoed inner");
-
-      return <button onClick={onClick}>useMemoed count is {count}</button>;
-    };
-  }, []);
-
-  const UseMemoedCountAlt = useMemo(() => {
-    console.log("TEST :: useMemoed alt");
-    return () => {
-      console.log("TEST :: useMemoed alt inner");
+      console.log("TEST :: (B) rendered <UseMemoedCounter />");
 
       return (
-        <button onClick={onCountHandler}>useMemoed Alt count is {count}</button>
+        <button onClick={onClick}>
+          (B) {`<UseMemoedCounter />`} {count}
+        </button>
       );
     };
-  }, [count]);
-
-  const UseCallbackMemoedCount = useCallback(({ count, onClick }) => {
-    console.log("TEST :: useCallbackMemoed");
-    return (
-      <button onClick={onClick}>useCallbackMemoed count is {count}</button>
-    );
   }, []);
 
-  const UseCallbackMemoedAltCount = useCallback(() => {
-    console.log("TEST :: useCallbackMemoed alt");
+  /**
+    useMemo로 컴포넌트 메모를 시도 2
+    props 대신 의존성 배열을 사용
+    => 역시 App이 다시 렌더링 될때마다 이 컴포넌트도 재렌더링됨
+    => 심지어 deps가 변경될때마다 렌더링 함수 자체도 다시 메모됨
+   */
+  const UseMemoedCounterByDeps = useMemo(() => {
+    console.log("TEST :: (C) memoed () => <UseMemoedCounterByDeps />");
+    return () => {
+      console.log("TEST :: (C) rendered <UseMemoedCounterByDeps />");
+
+      return (
+        <button onClick={onCountHandler}>
+          (C) {`<UseMemoedCounterByDeps />`} {count}
+        </button>
+      );
+    };
+  }, [onCountHandler, count]);
+
+  /*
+    React.memo와 그나마 비슷한 효과를 내는 방법.
+    렌더링 함수를 반환하는것이 아니라 useMemo에서 바로 JSX Element를 렌더링
+    의존성 배열이 바뀔 때 마다 재렌더링 & 메모
+    App이 재렌더링 되어도 재렌더링 되지 않음
+    아래에 전달된 것이 렌더링 함수가 아니라 JSX Element 그 자체이기 때문에
+    하지만 이렇게는 props 전달이 불가능
+  */
+  const PreRenderedMemoedCounter = useMemo(() => {
+    console.log("TEST :: (D) rendered and memoed <PreRenderedMemoedCounter />");
     return (
       <button onClick={onCountHandler}>
-        useCallbackMemoed Alt count is {count}
-      </button>
-    );
-  }, [count]);
-
-  const ComponentMemoCount = useComponentMemoCounter(onCountHandler, count);
-
-  // React.memo와 그나마 비슷한 효과를 내는 방법.
-  // props 전달이 불가능
-  const UseUltimateMemoedCount = useMemo(() => {
-    console.log("TEST :: useUltimateMemoedCount");
-    return (
-      <button onClick={onCountHandler}>
-        useUltimateMemeod count is {count}
+        (D) {`<PreRenderedMemoedCounter />`} {count}
       </button>
     );
   }, [onCountHandler, count]);
 
+  /** 위 방식을 커스텀 hook 형태로 분리해서 사용 */
+  const PreRenderedCustomHookCounter = usePreRenderedCustomHookCounter(
+    onCountHandler,
+    count
+  );
+
+  // 로그 구분용
   useEffect(() => {
-    console.log("TEST :: useEffect");
-  }, []);
+    console.log("=============================");
+  }, [count, isGood]);
 
   return (
     <>
@@ -75,13 +113,25 @@ function App() {
           {isGood ? "Good" : "Bad"}
         </button>
         <p />
-        <MemoedCounter onClick={onCountHandler} count={count} />
-        <UseMemoedCount onClick={onCountHandler} count={count} />
-        <UseMemoedCountAlt />
-        <UseCallbackMemoedCount onClick={onCountHandler} count={count} />
-        <UseCallbackMemoedAltCount />
-        {UseUltimateMemoedCount}
-        {ComponentMemoCount}
+        {/* 재렌더링 관련 테스트를 원한다면 */}
+        {/* <>
+          <MemoedCounter onClick={onCountHandler} count={count} />
+          <UseMemoedCounter onClick={onCountHandler} count={count} />
+          <UseMemoedCounterByDeps />
+          {PreRenderedMemoedCounter}
+          {PreRenderedCustomHookCounter}
+        </> */}
+
+        {/* 조건부 렌더링 관련 테스트를 원한다면 */}
+        {isGood ? (
+          <>
+            <MemoedCounter onClick={onCountHandler} count={count} />
+            <UseMemoedCounter onClick={onCountHandler} count={count} />
+            <UseMemoedCounterByDeps />
+            {PreRenderedMemoedCounter}
+            {PreRenderedCustomHookCounter}
+          </>
+        ) : undefined}
       </div>
     </>
   );
