@@ -9,34 +9,198 @@ categories: [Micro]
 
 ## TL;DR
 
-- 
+- `useMemo()`는 JS 관점에서 연산 시간이 오래 걸리는 경우에 사용하자.
+  - ex. 배열 정렬, 대량 데이터 필터링, 아주 복잡한 방정식 풀이, 암호화 및 해시 계산 등등
+
+```javascript
+/** To Do 목록을 담고 있는 리스트 컴포넌트 */
+function TodoList({ todos, tag }) {
+  /** 컴포넌트에 실제로 표시할 To Do 목록 */
+  const visibleTodos = useMemo(() => {
+    /** 현재 todos에서 tag를 가지고 있는 todo만 골라 필터링 */
+    const filteredTodos = filterTodos(todos, tag);
+
+    // useMemo에 의해 메모됨, 아래 배열의 todos와 tag가 변경될 경우 이 값도 새로 연산
+    return filteredTodos;
+  }, [todos, tag]);
+
+  // ...
+}
+```
+
+- React 컴포넌트를 메모하려면 `React.memo()`를 사용하자.
+  - `React.memo()`는 컴포넌트를 받아 새 컴포넌트를 반환하는 고차 컴포넌트(HoC) 함수다.
+
+```javascript
+// React.memo 예제
+```
+
+> `memo`를 사용하면 컴포넌트의 props가 변경되지 않은 경우 리렌더링을 건너뛸 수 있습니다.  
+> [memo](https://ko.react.dev/reference/react/memo){:target="_blank"}, 리액트 공식 문서
+
+- 다만, 메모이제이션이 항상 좋은 것은 아니다.
+  - 그냥 불필요한 과정과 오버헤드를 추가하는 것에 불과한 경우도 있다.
 
 ---
 
 ## 이하 그리 중요하진 않은 내용들
 
-내 코드를 나 혼자서만 계속 보고 있다는 것은 많은 사실을 놓치게 만든다. 예를 들면, 내가 당연하다는 듯이 계속 써왔던 방법이 사실은 **안티 패턴**에 가깝다던가. 사실 나도 내가 React를 언제부터, 어떻게 배워서 써왔는지 기억이 잘 안난다. 이것저것 많이 건드려본 것 치고는 기본기가 약하다는 뜻이다. 안그래도 요즘 React/Next.js 기반으로 블로그를 리모델링 할 계획을 짜고 있는데, React 자체에 대한 공부를 열심히 더 해봐야 할 것 같다. 오늘은 React에서 **메모이제이션(Memoization)**을 더 잘하는 방법에 대해서 알아보자.
+내 코드를 나 혼자서만 계속 보고 있다는 것은 많은 사실을 놓치게 만든다. 예를 들면, 내가 당연하다는 듯이 계속 써왔던 방법이 사실은 **안티 패턴**에 가깝다던가. 사실 나도 내가 React를 언제부터, 어떻게 배워서 써왔는지 기억이 잘 안난다. 이것저것 많이 건드려본 것 치고는 기본기가 약하다는 뜻이다. 안그래도 요즘 React/Next.js 기반으로 블로그를 리모델링 할 계획을 짜고 있는데, 이런 실력으론 고생 깨나 하겠구만. React에 대한 공부를 열심히 더 해야겠다.
 
-내가 당연하다는듯이 써왔던 안티 패턴에 대하여
+오늘은 며칠 전에 발견한 나의 안티 패턴을 수정하면서, React에서 **메모이제이션(Memoization)**을 더 잘하는 방법에 대해서 알아보자.
 
-### 메모이제이션
+### 메모이제이션(Memoization)
 
-메모이제이션 개념
+![Memo](https://i.postimg.cc/7PcxK8Cp/image.png)  
+{: .center .rounded-edge}
 
-useMemo
+**[메모이제이션(Memoization)](https://ko.wikipedia.org/wiki/%EB%A9%94%EB%AA%A8%EC%9D%B4%EC%A0%9C%EC%9D%B4%EC%85%98)**은 컴퓨터 프로그램이 동일한 계산을 반복해야 할 때, 이전에 계산한 값을 메모리에 저장함으로써 동일한 계산의 반복 수행을 제거해 프로그램 실행 속도를 빠르게 하는 기술이다. 라고 위키피디아에서 설명하고 있다. 알고리즘 분야 공부의 첫 번째 관문인 다이나믹 프로그래밍 기법에서 핵심적으로 다루는 테크닉이다. 피보나치 수열 계산 알고리즘이 대표적인 사례인데 굳이 다루진 않을 생각이니까 궁금하면 검색해보자. 한 가지 의외의 사실은 이게 원래 있던 단어를 가져온게 아니라 1960년대에 나온 조어(造語)라는 점이다.
 
-### 컴포넌트는 메모 못하나?
+프론트엔드, 즉 GUI 어플리케이션을 만드는 기술인 리액트(React)에선 함수형 컴포넌트로 패러다임을 전환하면서 이 메모이제이션 개념을 적극적으로 도입하고 있다. 자바스크립트 함수로 컴포넌트를 정의하고 렌더링한다는 것은, 어플리케이션이 실행되는 동안 그 함수가 반복적으로 재실행된다는 것을 의미한다. [렌더링은 화면 한 번 그리고 끝인 과정이 아니기 때문에](/hack/2024/02/02/hack-the-terms-4.html#살아있는-웹-페이지){: .center .a-not-colored}. 그 함수 안에는 굳이 매번 다시 실행될 필요가 없는 로직들도 들어 있을 것이고, 함수가 다시 실행 될때마다 값이 초기화되어버리면 도저히 써먹을 수가 없는 변수들도 있을 것이다. 그런 다양한 목적의 코드 연산들을 저장하고 그것이 필요한 때에만 다시 실행되도록 만들어주는 리액트의 추상화된 API가 바로 **훅(Hook)**이다. 사실 훅은 메모이제이션이라고 설명하기보단 로직의 재사용을 가능하게 해준다고 설명하는게 더 바람직하겠지만.
+
+```javascript
+/** To Do 목록을 담고 있는 리스트 컴포넌트 */
+function TodoList({ todos, tag }) {
+  /** 컴포넌트에 실제로 표시할 To Do 목록 */
+  const visibleTodos = useMemo(() => {
+    /** 현재 todos에서 tag를 가지고 있는 todo만 골라 필터링 */
+    const filteredTodos = filterTodos(todos, tag);
+
+    // useMemo에 의해 메모됨, 아래 배열의 todos와 tag가 변경될 경우 이 값도 새로 연산
+    return filteredTodos;
+  }, [todos, tag]);
+
+  // ...
+}
+```
+
+리액트 기본 훅들 중에서도 가장 직접적으로 메모이제이션과 맞닿아 있는 훅이 바로 [`useMemo()`](https://react.dev/reference/react/useMemo){:target="_blank"}이다. `useMemo()`는 메모하고자 하는 값을 계산하는 콜백 함수와 의존성 배열을 인자로 받는다. 이 훅이 포함된 컴포넌트가 최초로 로드될 때 전달 받은 콜백이 실행되며 값이 메모되고, 의존성 배열의 변수값이 바뀔 때 마다 콜백이 재실행되며 값이 다시 메모된다. 이처럼 `useMemo()`는 개념적으로 크게 어려울 게 없는 기초적인 리액트 훅이다.
+
+### 컴포넌트는 메모 못해?
+
+![학부생을 보는 교수님](https://i.postimg.cc/wBcn27WF/image.gif)  
+(이케이케 하면 되려나...)  
+{: .center}
+
+정확히는, `const MyButton = <button>{ myValue }</button>` 처럼 상수값, 배열, 함수, 객체 등등 여타 다른 값들 처럼 사용 가능한 JSX 문법의 엘리먼트 표기법을 `useMemo`로 메모함으로써 (혹은 `useCallback`으로 함수헝 컴포넌트 구현법을 메모함으로써) 컴포넌트를 메모할 수 있지 않을까? 아니.. 컴포넌트를 만드는 연산이야말로 엄청 비싸 보이지 않음...?
+
+```javascript
+import { memo } from "react";
+```
+
+이래서 사람이 교재를 보면서 차근차근 배워야 하는거야. 정답부터 이야기히자면 그런 경우의 메모를 위한 방법은 이미 존재하고, 그것이 바로 `React.memo()` API이다. 사실 `"react"` 패키지에서 가져오는 `memo()` 메서드인데, 함수명 자체가 워낙 흔히 쓰이는 단어라 그런지 굳이 따로 `import` 하지 않고 `React.memo()` 형태로 쓰는 자료가 많더라.
+
+React.memo
+HoC -> 현대 리엑트에선 잘 안쓰이지만
+memo 최신 공식 문서에서도 HoC라는 표현을 쓰고 있지 않음.
+
+propsAreEqual
+```javascript
+  (prev, next) => {
+    console.log("TEST :: (A) checked props for <MemoedCounter />");
+    return prev.count === next.count && prev.onClick === next.onClick;
+  }
+```
+
+React 소스 코드를 훑어보면서 한 가지 유추할 수 있는 사실은, React 프레임워크 내부에서도 memo로 만든 컴포넌트는 꽤나 특별한 위치에 있는 것 같다.
+18버전 기준 단 13개만이 존재하는 Symbol 중 하나. 단순 훅 몇개로 어쩌구 할 일이 아니란 말일지도 몰라. 훅의 응용같은게 아니라, 아에 둘이 위치하는 영역이 다른 수준.
+
+```javascript
+function memo(type, compare) {
+  {
+    if (!isValidElementType(type)) {
+      error('memo: The first argument must be a component. Instead ' + 'received: %s', type === null ? 'null' : typeof type);
+    }
+  }
+
+  var elementType = {
+    $$typeof: REACT_MEMO_TYPE,
+    type: type,
+    compare: compare === undefined ? null : compare
+  };
+
+  {
+    var ownName;
+    Object.defineProperty(elementType, 'displayName', {
+      enumerable: false,
+      configurable: true,
+      get: function () {
+        return ownName;
+      },
+      set: function (name) {
+        ownName = name; // The inner component shouldn't inherit this display name in most cases,
+        // because the component may be used elsewhere.
+        // But it's nice for anonymous functions to inherit the name,
+        // so that our component-stack generation logic will display their frames.
+        // An anonymous function generally suggests a pattern like:
+        //   React.memo((props) => {...});
+        // This kind of inner function is not used elsewhere so the side effect is okay.
+
+        if (!type.name && !type.displayName) {
+          type.displayName = name;
+        }
+      }
+    });
+  }
+
+  return elementType;
+}
+```
+
+메모로 생성한 컴포넌트는 이렇게 REACT_MEMO_TYPE값을 주는데, 저 타입에 따라 컴포넌트를 처리하는 로직이 달라지는게 아닐까.
+
+```javascript
+var REACT_ELEMENT_TYPE = Symbol.for('react.element');
+var REACT_PORTAL_TYPE = Symbol.for('react.portal');
+var REACT_FRAGMENT_TYPE = Symbol.for('react.fragment');
+var REACT_STRICT_MODE_TYPE = Symbol.for('react.strict_mode');
+var REACT_PROFILER_TYPE = Symbol.for('react.profiler');
+var REACT_PROVIDER_TYPE = Symbol.for('react.provider');
+var REACT_CONTEXT_TYPE = Symbol.for('react.context');
+var REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
+var REACT_SUSPENSE_TYPE = Symbol.for('react.suspense');
+var REACT_SUSPENSE_LIST_TYPE = Symbol.for('react.suspense_list');
+var REACT_MEMO_TYPE = Symbol.for('react.memo');
+var REACT_LAZY_TYPE = Symbol.for('react.lazy');
+var REACT_OFFSCREEN_TYPE = Symbol.for('react.offscreen');
+```
+
+안티패턴을 그렇게 바보같이 써왔으니 거기에 반성한다는 의미에서 조금 딥 다이브를 해보자
 
 useMemo로 컴포넌트를 메모할 경우 발생하는 문제점
 
-React.Memo
+testbed의 예제
 
-HoC -> 현대 리엑트에선 잘 안쓰이지만
-최신 공식 문서에서도 HoC라는 표현을 쓰고 있지 않음.
+가독성 문제.
+=> 비슷한 효과를 내려면 코드를 꼬고 꼬아야 된다.
+=> useMemo로 뭔가 된 것 처럼 보여도 리렌더링을 발생시킨다.
+
+그렇다고 어떻게 방법을 찾아내서 구현하면
+=> Props로 값을 전달하기 어려움
+
+Props 전달 구현을 위해 별도의 코드 템플릿을 만들어내고..
+=> 이쯤되면 그냥 React.memo를 쓰는게 훨씬 낫지 않습니까?
+
+조건부 렌더링
+조건부 렌더링에 의해 최초 렌더링에서 바로 해당 컴포넌트들이 렌더링 될 필요가 없다고 해도, 메모는 미리 진행된다.
+useMemo를 써서 JSX를 직접 리턴하는 경우엔 메모되는 동시에 렌더링도 되어버린다.
+React.memo는 미리 메모되고 조건 분기에 의해 렌더링이 필요한 순간에 메모된다.
+
+비싼 연산 이라는게 조금 모호하지?
+네트워크 IO도 비싼 연산이라고 볼 수 있지만 이런 경우엔 useMemo보단 외부 라이브러리의 도움을 받아 useQuery를 쓰는게 더 좋잖아.
+
+특별히 useMemo만을 필요로 하는 경우는
+JS 코드의 연산을 기준으로 시간 복잡도가 클 것으로 예상되는 동작들
+배열 정렬, 대량 데이터 필터링, 아주 복잡한 방정식 풀이, 암호화 및 해시 계산 등등
 
 ### 애초에 왜 메모를 하려고 하십니까?
 
 비싸 보이는 것과 실제로 비싼 것
+
+메모이제이션은 공짜가 아니다.
+
+사람이 들여야 하는 비용
+컴퓨터가 들여야 하는 비용
 
 ## 내가 배운 것
 
@@ -64,3 +228,6 @@ https://bum-developer.tistory.com/entry/React-useMemo%EB%A5%BC-%EC%82%AC%EC%9A%A
 https://react.dev/reference/react/useMemo#how-to-tell-if-a-calculation-is-expensive
 
 https://ko.react.dev/reference/react/memo
+
+https://github.com/facebook/react/issues/14463
+뜨거운감자
