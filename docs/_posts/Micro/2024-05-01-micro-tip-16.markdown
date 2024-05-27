@@ -99,6 +99,18 @@ import { memo } from "react";
 
 이래서 사람이 교재를 보면서 차근차근 배워야 하는거야. 정답부터 이야기히자면 그런 경우의 메모를 위한 방법은 이미 존재하고, 그것이 바로 `React.memo()` API이다. 사실 `"react"` 패키지에서 가져오는 `memo()` 메서드인데, 함수명 자체가 워낙 흔히 쓰이는 단어라 그런지 굳이 따로 `import` 하지 않고 `React.memo()` 형태로 쓰는 자료가 많더라.
 
+```jsx
+/**
+ * React.memo를 통해 메모한 컴포넌트, 매개변수로 메모할 함수형 컴포넌트를 넣는다.
+ * 전달 받은 프로퍼티 name이 변경될 때에만 다시 렌더링 된다.
+ */
+const MemoedGreeting = memo(function Gretting({ name }) {
+  return <h1>Hello, {name}!</h1>
+});
+```
+
+`React.memo()`는 이렇게 사용하면 된다.
+
 React.memo
 HoC -> 현대 리엑트에선 잘 안쓰이지만
 memo 최신 공식 문서에서도 HoC라는 표현을 쓰고 있지 않음.
@@ -204,6 +216,9 @@ JS 코드의 연산을 기준으로 시간 복잡도가 클 것으로 예상되�
 
 ### 애초에 왜 메모를 하려고 하십니까?
 
+https://github.com/facebook/react/issues/14463
+뜨거운감자
+
 비싸 보이는 것과 실제로 비싼 것
 
 메모이제이션은 공짜가 아니다.
@@ -237,6 +252,3 @@ https://bum-developer.tistory.com/entry/React-useMemo%EB%A5%BC-%EC%82%AC%EC%9A%A
 https://react.dev/reference/react/useMemo#how-to-tell-if-a-calculation-is-expensive
 
 https://ko.react.dev/reference/react/memo
-
-https://github.com/facebook/react/issues/14463
-뜨거운감자
