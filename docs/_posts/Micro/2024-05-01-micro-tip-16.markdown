@@ -9,7 +9,7 @@ categories: [Micro]
 
 ## TL;DR
 
-- `useMemo()`는 JS 관점에서 연산 시간이 오래 걸리는 경우에 사용하자.
+- `useMemo()`는 JS 관점에서 연산 시간이 오래 걸리는 값을 메모할 때에 사용하자.
   - ex. 배열 정렬, 대량 데이터 필터링, 아주 복잡한 방정식 풀이, 암호화 및 해시 계산 등등
 
 ```javascript
@@ -43,9 +43,9 @@ const MemoedGreeting = memo(function Gretting({ name }) {
 });
 ```
 
-- `useMemo()`는 함수형 컴포넌트 안에서 그 로직 일부를 메모할 때 사용한다.
-- `React.memo()`는 함수형 컴포넌트 그 자체를 메모할 때 사용한다.
-
+- 컴포넌트의 일부 vs 컴포넌트 그 자체
+  - `useMemo()`는 함수형 컴포넌트 안에서 로직 일부의 결과를 메모할 때 사용한다.
+  - `React.memo()`는 함수형 컴포넌트 그 자체를 메모할 때 사용한다.  
 - 다만, 메모이제이션이 항상 좋은 것은 아니다.
   - 메모이제이션이 그냥 불필요한 비교 과정과 오버헤드 추가에 불과할 수도 있다.
   - 무작정 쓰지 말고 생각하고 씁시다.
@@ -65,7 +65,7 @@ const MemoedGreeting = memo(function Gretting({ name }) {
 
 **[메모이제이션(Memoization)](https://ko.wikipedia.org/wiki/%EB%A9%94%EB%AA%A8%EC%9D%B4%EC%A0%9C%EC%9D%B4%EC%85%98)**은 컴퓨터 프로그램이 동일한 계산을 반복해야 할 때, 이전에 계산한 값을 메모리에 저장함으로써 동일한 계산의 반복 수행을 제거해 프로그램 실행 속도를 빠르게 하는 기술이다. 라고 위키피디아에서 설명하고 있다. 알고리즘 분야 공부의 첫 번째 관문인 다이나믹 프로그래밍 기법에서 핵심적으로 다루는 테크닉이다. 피보나치 수열 계산 알고리즘이 대표적인 사례인데 굳이 다루진 않을 생각이니까 궁금하면 검색해보자. 한 가지 의외의 사실은 이게 원래 있던 단어를 가져온게 아니라 1960년대에 나온 조어(造語)라는 점이다.
 
-프론트엔드, 즉 GUI 어플리케이션을 만드는 기술인 리액트(React)에선 함수형 컴포넌트로 패러다임을 전환하면서 이 메모이제이션 개념을 적극적으로 도입하고 있다. 자바스크립트 함수로 컴포넌트를 정의하고 렌더링한다는 것은, 어플리케이션이 실행되는 동안 그 함수가 반복적으로 재실행된다는 것을 의미한다. **[렌더링은 화면 한 번 그리고 끝인 과정이 아니기 때문에](/hack/2024/02/02/hack-the-terms-4.html#살아있는-웹-페이지){: .center .a-not-colored}**. 그 함수 안에는 굳이 매번 다시 실행될 필요가 없는 로직들도 들어 있을 것이고, 함수가 다시 실행 될때마다 값이 초기화되어 버린다면 도저히 써먹을 수가 없는 변수들도 있을 것이다. 그런 다양한 목적의 코드 연산들을 저장하고 그것이 필요한 때에만 다시 실행되도록 만들어주는 리액트의 추상화된 API가 바로 **훅(Hook)**이다. 사실 훅은 메모이제이션이라고 설명하기보단 로직의 재사용을 가능하게 해준다고 설명하는게 더 바람직하겠지만.
+프론트엔드, 즉 GUI 어플리케이션을 만드는 기술인 리액트(React)에선 함수형 컴포넌트로 패러다임을 전환하면서 이 메모이제이션 개념을 적극적으로 도입하고 있다. 자바스크립트 함수로 컴포넌트를 정의하고 렌더링한다는 것은, 어플리케이션이 실행되는 동안 그 함수가 반복적으로 재실행된다는 것을 의미한다. **[렌더링은 화면 한 번 그리고 끝인 과정이 아니기 때문에](/hack/2024/02/02/hack-the-terms-4.html#살아있는-웹-페이지){: .center .a-not-colored}**. 그 함수 안에는 굳이 매번 다시 실행될 필요가 없는 로직들도 들어 있을 것이고, 함수가 다시 실행 될때마다 값이 초기화되어 버린다면 도저히 써먹을 수가 없는 변수들도 있을 것이다. 그런 다양한 목적의 코드 연산들을 저장하고 그것이 필요한 때에만 다시 실행되도록 만들어주는 함수형 리액트 컴포넌트의 추상화된 API가 바로 **훅(Hook)**이다. 사실 훅은 메모이제이션이라고 설명하기보단 라이프사이클 동안 로직의 재사용을 가능하게 해준다고 설명하는게 더 바람직하겠지만.
 
 ```javascript
 /** To Do 목록을 담고 있는 리스트 컴포넌트 */
@@ -87,17 +87,11 @@ function TodoList({ todos, tag }) {
 
 ### 컴포넌트는 메모 못해?
 
-![학부생을 보는 교수님](https://i.postimg.cc/wBcn27WF/image.gif)  
-(이케이케 하면 되려나...)  
-{: .center}
-
-정확히는 `const MyButton = <button>{ myValue }</button>` 같은거. 상수값, 배열, 함수, 객체 등등 여타 다른 값들 처럼 사용 가능한 JSX 문법의 엘리먼트 표기법을 `useMemo`로 메모함으로써 (혹은 `useCallback`으로 함수헝 컴포넌트 형태로 메모함으로써) 컴포넌트를 메모할 수 있지 않을까? 그게.. 컴포넌트를 만드는 연산이야말로 엄청 비싸 보이지 않아...?
-
 ```javascript
 import { memo } from "react";
 ```
 
-이래서 사람이 교재를 보면서 차근차근 배워야 하는거야. 정답부터 이야기히자면 그런 경우의 메모를 위한 방법은 이미 존재하고, 그것이 바로 `React.memo()` API이다. 사실 `"react"` 패키지에서 가져오는 `memo()` 메서드인데, 함수명 자체가 워낙 흔히 쓰이는 단어라 그런지 굳이 따로 `import` 하지 않고 `React.memo()` 형태로 쓰는 자료가 많더라.
+정답부터 이야기히자면 컴포넌트를 메모하는 방법은 이미 존재하고, 그것이 바로 [`React.memo()`](https://ko.react.dev/reference/react/memo){:target="_blank"} API이다. 정확히는 `"react"` 패키지에서 가져오는 `memo()` 메서드인데, 함수명 자체가 워낙 흔히 쓰이는 단어라 그런지 굳이 해당 메서드 하나만 따로 가져와 쓰지 않고 `React.memo()` 형태로 쓰는 자료가 많더라. 아무튼, 이렇게 쓰면 된다.
 
 ```jsx
 /**
@@ -109,19 +103,29 @@ const MemoedGreeting = memo(function Gretting({ name }) {
 });
 ```
 
-`React.memo()`는 이렇게 사용하면 된다.
+훅과 다르게 `memo()`엔 의존성 배열이 없다. 대신 `memo()`로 메모된 컴포넌트는 의존성 배열 대신 프로퍼티에 대해 의존성이 생긴다. `memo()` 메서드에 인자로 전달한 컴포넌트(`Greeting`)의 프로퍼티(`name`)가 바뀔 때 마다 컴포넌트가 다시 렌더링된다.
 
-React.memo
-HoC -> 현대 리엑트에선 잘 안쓰이지만
-memo 최신 공식 문서에서도 HoC라는 표현을 쓰고 있지 않음.
-
-propsAreEqual
-```javascript
-  (prev, next) => {
-    console.log("TEST :: (A) checked props for <MemoedCounter />");
-    return prev.count === next.count && prev.onClick === next.onClick;
-  }
+```jsx
+const MemoizedComponent = memo(SomeComponent, arePropsEqual?)
 ```
+
+`memo()`에는 `arePropsEqual`라는 두 번째 인자를 줄 수도 있다. 이름 그대로 프로퍼티들이 이전과 똑같은지 아닌지를 판단하는 함수이다. 동일값 비교가 복잡한 객체를 프로퍼티로 쓸때 로직을 직접 구현해 전달하면 된다.
+
+흔히 `React.memo()`는 **고차 컴포넌트(Higher Order Component, HOC)**라고들 설명한다. 고차 컴포넌트는 컴포넌트를 가져와 새 컴포넌트를 반환하는 함수를 의미하는데, 사실 최근 리액트에선 이 표현을 잘 사용하진 않는다. [업데이트된 `memo()`의 공식 문서](https://react.dev/reference/react/memo){:target="_blank"}에서도 고차 컴포넌트를 딱히 언급하고 있지는 않다. 대충 `React.memo()`는 컴포넌트를 메모하는 방법이라는 정도로 이해해두자. 이처럼 `memo()` 역시 크게 어렵지 않은 리액트 API이다.
+
+### `useMemo`로 컴포넌트 메모하기
+
+> **주의! 이러지 마세요.**
+
+![학부생을 보는 교수님](https://i.postimg.cc/wBcn27WF/image.gif)  
+(이케이케 하면 되려나...)  
+{: .center}
+
+지금부터는 민망한 내 과거 시도를 되살펴보자. 내 생각은 이랬다. `const MyButton = <button>{ myValue }</button>` 같은 표현식. 상수값, 배열, 함수, 객체 등등 여타 다른 값들 처럼 사용 가능한 JSX 문법의 엘리먼트 표현식을 `useMemo`로 메모함으로써 (혹은 `useCallback`으로 함수헝 컴포넌트 형태로 메모함으로써) 컴포넌트를 메모할 수 있지 않을까? 사실 역사를 따지면 `React.memo()`가 `useMemo()`보다 먼저 나온 기술이지만, 애석하게도 나는 훅 밖에 몰랐다. 나의 리액트에 대한 학습은 On-demand 방식으로 이루어지고 있었는데 (고상하게 말하면 이렇고, 그냥 필요한게 있다 싶을 때마다 구글과 SO와 GPT의 도움을 받는 식) 마침 메모이제이션에 대한 수요가 생겼고, 내 머릿 속 캐시 서버 안에는 메모이제이션이라는 키워드는 `useMemo()`와 매핑되어 있었고... 이래서 사람이 교재를 보면서 차근차근 배워야 하는거야.
+
+가장 큰 문제는, 그걸 구현해본 코드가 겉으로 보기에는 마치 의도대로 동작하는 것 처럼 보인다는 점이다.
+
+
 
 React 소스 코드를 훑어보면서 한 가지 유추할 수 있는 사실은, React 프레임워크 내부에서도 memo로 만든 컴포넌트는 꽤나 특별한 위치에 있는 것 같다.
 18버전 기준 단 13개만이 존재하는 Symbol 중 하나. 단순 훅 몇개로 어쩌구 할 일이 아니란 말일지도 몰라. 훅의 응용같은게 아니라, 아에 둘이 위치하는 영역이 다른 수준.
@@ -216,12 +220,21 @@ JS 코드의 연산을 기준으로 시간 복잡도가 클 것으로 예상되�
 
 ### 애초에 왜 메모를 하려고 하십니까?
 
+https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/#memoize-everything
+
 https://github.com/facebook/react/issues/14463
 뜨거운감자
 
 비싸 보이는 것과 실제로 비싼 것
 
 메모이제이션은 공짜가 아니다.
+
+그런데 싹다 메모하는게 "정말로" 해로운가?
+-> 그래서 코드 컨벤션으로 그냥 모두 메모하는걸로 정해둔 팀도 있다고 카더라
+-> 코드 가독성은 어떻게 할건데?
+
+내노라하는 개발자들도 한바탕 싸운 마당에 내가 정답을 내기는 어렵겠지만,
+최소한 판단의 근거는 마련한 메모이제이션이 되어야 한다.
 
 사람이 들여야 하는 비용
 컴퓨터가 들여야 하는 비용
@@ -252,3 +265,5 @@ https://bum-developer.tistory.com/entry/React-useMemo%EB%A5%BC-%EC%82%AC%EC%9A%A
 https://react.dev/reference/react/useMemo#how-to-tell-if-a-calculation-is-expensive
 
 https://ko.react.dev/reference/react/memo
+
+https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/#memoize-everything
