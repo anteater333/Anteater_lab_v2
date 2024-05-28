@@ -6,7 +6,7 @@ import "./App.css";
   React 코어에 의해 다른 로직으로 관리되는 컴포넌트 (REACT_MEMO_TYPE)
   App이 재렌더링 되어도 count, onClick이 변경되지 않으면 이 컴포넌트는 재렌더링되지 않음.
 */
-const MemoedCounter = memo(function MemoedComponent({ count, onClick }) {
+const MemoedCounter = memo(function Counter({ count, onClick }) {
   console.log("TEST :: (A) rendered <MemoedCounter />");
   return (
     <button onClick={onClick}>
@@ -33,11 +33,22 @@ const usePreRenderedCustomHookCounter = (onClick, count) => {
   }, [onClick, count]);
 };
 
+/** 메모되지 않는 컴포넌트 */
+const PlainCounter = ({ count, onClick }) => {
+  console.log("TEST :: (F) rendered <PlainCounter />");
+  return (
+    <button onClick={onClick}>
+      (F) {`<PlainCounter />`} {count}
+    </button>
+  );
+};
+
 function App() {
   console.log("TEST :: (0) rendered <App />");
 
   const [count, setCount] = useState(0);
   const [isGood, setIsGood] = useState(false);
+  const [isOK, setIsOK] = useState(false);
 
   const onCountHandler = useCallback(() => setCount((count) => count + 1), []);
 
@@ -84,6 +95,7 @@ function App() {
     App이 재렌더링 되어도 재렌더링 되지 않음
     아래에 전달된 것이 렌더링 함수가 아니라 JSX Element 그 자체이기 때문에
     하지만 이렇게는 props 전달이 불가능
+    React Dev Tools에 파악되지도 않음
   */
   const PreRenderedMemoedCounter = useMemo(() => {
     console.log("TEST :: (D) rendered and memoed <PreRenderedMemoedCounter />");
@@ -113,16 +125,6 @@ function App() {
           {isGood ? "Good" : "Bad"}
         </button>
         <p />
-        {/* 재렌더링 관련 테스트를 원한다면 */}
-        {/* <>
-          <MemoedCounter onClick={onCountHandler} count={count} />
-          <UseMemoedCounter onClick={onCountHandler} count={count} />
-          <UseMemoedCounterByDeps />
-          {PreRenderedMemoedCounter}
-          {PreRenderedCustomHookCounter}
-        </> */}
-
-        {/* 조건부 렌더링 관련 테스트를 원한다면 */}
         {isGood ? (
           <>
             <MemoedCounter onClick={onCountHandler} count={count} />
@@ -130,8 +132,13 @@ function App() {
             <UseMemoedCounterByDeps />
             {PreRenderedMemoedCounter}
             {PreRenderedCustomHookCounter}
+            <PlainCounter onClick={onCountHandler} count={count} />
           </>
         ) : undefined}
+        <p />
+        <button onClick={() => setIsOK((isOK) => !isOK)}>
+          {isOK ? "OK" : "NOT OK"}
+        </button>
       </div>
     </>
   );
