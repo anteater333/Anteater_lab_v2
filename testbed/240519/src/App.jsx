@@ -50,7 +50,20 @@ function App() {
   const [isGood, setIsGood] = useState(false);
   const [isOK, setIsOK] = useState(false);
 
-  const onCountHandler = useCallback(() => setCount((count) => count + 1), []);
+  const onCountHandler = useCallback(() => {
+    console.log("TEST :: counter triggered !!");
+    setCount((count) => count + 1), [];
+  }, []);
+
+  const onGoodToggleHandler = useCallback(() => {
+    console.log("TEST :: isGood toggled !!");
+    setIsGood((isGood) => !isGood);
+  }, []);
+
+  const onOKToggleHandler = useCallback(() => {
+    console.log("TEST :: isOK toggled !!");
+    setIsOK((isOK) => !isOK);
+  }, []);
 
   /**
     useMemo로 컴포넌트 메모를 시도
@@ -114,16 +127,14 @@ function App() {
 
   // 로그 구분용
   useEffect(() => {
-    console.log("=============================");
-  }, [count, isGood]);
+    console.log("TEST :: =============================");
+  }, [count, isGood, isOK]);
 
   return (
     <>
       <h1>About Memo</h1>
       <div className="card">
-        <button onClick={() => setIsGood((isGood) => !isGood)}>
-          {isGood ? "Good" : "Bad"}
-        </button>
+        <button onClick={onGoodToggleHandler}>{isGood ? "Good" : "Bad"}</button>
         <p />
         {isGood ? (
           <>
@@ -136,9 +147,7 @@ function App() {
           </>
         ) : undefined}
         <p />
-        <button onClick={() => setIsOK((isOK) => !isOK)}>
-          {isOK ? "OK" : "NOT OK"}
-        </button>
+        <button onClick={onOKToggleHandler}>{isOK ? "OK" : "NOT OK"}</button>
       </div>
     </>
   );
