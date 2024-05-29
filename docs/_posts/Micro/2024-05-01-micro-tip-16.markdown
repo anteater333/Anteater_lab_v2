@@ -121,11 +121,87 @@ const MemoizedComponent = memo(SomeComponent, arePropsEqual?)
 (이케이케 하면 되려나...)  
 {: .center}
 
-지금부터는 민망한 내 과거 시도를 되살펴보자. 내 생각은 이랬다. `const MyButton = <button>{ myValue }</button>` 같은 표현식. 상수값, 배열, 함수, 객체 등등 여타 다른 값들 처럼 사용 가능한 JSX 문법의 엘리먼트 표현식을 `useMemo`로 메모함으로써 (혹은 `useCallback`으로 함수헝 컴포넌트 형태로 메모함으로써) 컴포넌트를 메모할 수 있지 않을까? 사실 역사를 따지면 `React.memo()`가 `useMemo()`보다 먼저 나온 기술이지만, 애석하게도 나는 훅 밖에 몰랐다. 나의 리액트에 대한 학습은 On-demand 방식으로 이루어지고 있었는데 (고상하게 말하면 이렇고, 그냥 필요한게 있다 싶을 때마다 구글과 SO와 GPT의 도움을 받는 식) 마침 메모이제이션에 대한 수요가 생겼고, 내 머릿 속 캐시 서버 안에는 메모이제이션이라는 키워드는 `useMemo()`와 매핑되어 있었고... 이래서 사람이 교재를 보면서 차근차근 배워야 하는거야.
+지금부터는 `React.memo()`를 몰랐던 나의 민망한 과거를 되살펴보자. 내 생각은 이랬다.
 
-가장 큰 문제는, 그걸 구현해본 코드가 겉으로 보기에는 마치 의도대로 동작하는 것 처럼 보인다는 점이다.
+> `const MyButton = <button>{ myValue }</button>` 같은 표현식. 그러니까 상수값, 배열, 함수, 객체 등등 여타 다른 값들 처럼 사용 가능한 JSX 문법의 엘리먼트 표현식을 `useMemo`로(혹은 `useCallback`으로) 메모해서 컴포넌트를 메모할 수 있지 않을까?
+
+사실 역사를 따지면 `React.memo()`가 `useMemo()`보다 먼저 나온 기술이지만, 애석하게도 나는 훅 밖에 알지 못했다. 나의 리액트에 대한 학습은 On-demand 방식으로 이루어지고 있었는데*(고상하게 말하면 이렇고, 그냥 모르는게 있을 때마다 구글과 SO와 GPT의 도움을 받고 있다는 뜻)*{: .small} 마침 메모이제이션에 대한 수요가 생겼고, 내 머릿 속 캐시 서버 안에는 메모이제이션이라는 키워드는 `useMemo()`와 매핑되어 있었고... 나는 기어코 `useMemo()`로 컴포넌트를 메모하는 코드를 작성해버리는데...
+
+```jsx
+function App() {
+  const [isOK, setIsOK] = useState(false);
+  const [count, setCount] = useState(0);
+
+  // ...
+
+  const MemoedCounter = useMemo(() => {
+    return () => (
+      <button onClick={() => setCount(cnt => cnt + 1)}>
+        {count}
+      </button>
+    );
+  }, [count]);
+
+  // ...
+
+  return (
+    <div>
+      {/* ... */}
+      <MemoedCounter />
+      {/* ... */}
+    </div>
+  );
+}
+```
+*(걱정마세요, 안전하게 연출된 코드입니다.)*{: .middle-small}
+
+함수를 내보내고 있으니 `useCallback()`으로 구현해도 동일하게 동작할 것이다. 중요한건 그게 아니지만. 아무튼 무엇이 문제일까. `isOK` 상태가 변경되어 `<App />`이 다시 렌더링 되어도 `count` 상태에 대해서만 의존성을 가지는 `<MemoedCounter />`는 다시 렌더링 되지 않기를 원하는 코드다. 하지만 여기서 메모된 것은 `<MemoedCounter />` 컴포넌트 그 자체가 아니라 컴포넌트를 생성하는 함수이다. `<App />`이 다시 렌더링되면 그 함수는 다시 실행된다. 다시 말해, 이렇게 해도 `isOK`가 변할 때 마다 `<MemoedCounter />`는 다시 렌더링 될 뿐이다.
+
+```jsx
+  const MemoedCounter = useMemo(() => {
+    return (
+      <button onClick={() => setCount(cnt => cnt + 1)}>
+        {count}
+      </button>
+    );
+  }, [count]);
+
+  // ...
+
+  return (
+    <div>
+      {/* ... */}
+      {MemoedCounter}
+      {/* ... */}
+    </div>
+  )
+```
+*(집에선 따라하지 마세요.)*{: .middle-small}
+
+그럼 이렇게 하면 어떨까? 컴포넌트를 생성하는 함수를 메모하는게 아니라 컴포넌트 그 자체를 메모한다. 그리고 `<App />` 컴포넌트가 반환하는 HTML 부분에 일반 변수를 쓰듯이 메모한 컴포넌트를 사용한다. 적어도 이 방법은 예상한 대로 동작하는 것 처럼 보인다. `isOK`가 변경되어 `<App />`이 다시 렌더링되어도 `<MemoedCounter />`는 다시 렌더링 되지 않는다. `useMemo()` 안에서 렌더링 작업이 미리 이뤄진 것과 비슷하다고 볼 수 있을 것 같다. 하지만 이 방법도 완벽하지는 않다. 이래선 프로퍼티 전달은 어떻게 하지? 애초에 저 이상한 컴포넌트 사용법도 불편하기만 하다.
+
+<div class="sandbox-container">
+  <iframe src="https://codesandbox.io/embed/29nyc9?view=preview&module=%2Fsrc%2FApp.js&hidenavigation=1&expanddevtools=1"
+      style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+      title="don&#039;t useMemo for component"
+      allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+      sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+    ></iframe>
+</div>
+
+<div class="sandbox-container">
+  <iframe src="https://codesandbox.io/embed/29nyc9?view=editor&module=%2Fsrc%2FApp.js&hidenavigation=1"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="don&#039;t useMemo for component"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+</div>
+
+`React.memo()`를 써야 하는 이유를 실제 예제 코드를 보면서 더 자세히 알아보자.
 
 
+--
 
 React 소스 코드를 훑어보면서 한 가지 유추할 수 있는 사실은, React 프레임워크 내부에서도 memo로 만든 컴포넌트는 꽤나 특별한 위치에 있는 것 같다.
 18버전 기준 단 13개만이 존재하는 Symbol 중 하나. 단순 훅 몇개로 어쩌구 할 일이 아니란 말일지도 몰라. 훅의 응용같은게 아니라, 아에 둘이 위치하는 영역이 다른 수준.
