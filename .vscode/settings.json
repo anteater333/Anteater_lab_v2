@@ -3,5 +3,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.enable": true,
   "reactSnippets.settings.prettierEnabled": true,
-  "liquid.format.enable": false
+  "liquid.format.enable": false,
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": false
 }
