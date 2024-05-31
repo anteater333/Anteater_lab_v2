@@ -42,6 +42,10 @@ body > .page-content {
   scrollbar-width: auto;
 }
 
+.highlight ::-webkit-scrollbar {
+  display: unset;
+}
+
 /**
  * Bottom link color
  */
