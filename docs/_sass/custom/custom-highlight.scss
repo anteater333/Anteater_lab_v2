@@ -10,17 +10,8 @@
 
 .highlight {
   border-radius: 1rem;
-}
-
-div.highlight {
-  box-shadow: 0px 8px 6px -6px #1b1b1b;
-}
-
-.highlight {
   scrollbar-width: auto;
-}
 
-.highlight {
   ::-webkit-scrollbar {
     display: unset;
     height: 0.5rem;
@@ -35,4 +26,9 @@ div.highlight {
     background-color: $code-background-color;
     border-radius: 0 0 1rem 1rem;
   }
+}
+
+div.highlight {
+  box-shadow: 0px 8px 6px -6px #1b1b1b;
+  position: relative;
 }
