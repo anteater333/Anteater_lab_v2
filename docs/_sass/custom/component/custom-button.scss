@@ -70,3 +70,33 @@ $local-time: 0.5s;
 .share-btn.share-btn-vanilla > svg > path {
   fill: $brand-color-dark;
 }
+
+.code-copy-btn {
+  opacity: 0;
+  position: absolute;
+  top: 0.4rem;
+  right: 1rem;
+  font-size: 1.2rem;
+  width: 2.5rem;
+
+  background-color: $grey-color-dark;
+  border-radius: 0.5rem;
+  border: none;
+
+  transition: opacity $local-time / 2, background-color $local-time / 4;
+}
+
+.code-copy-btn.show {
+  opacity: 1;
+}
+
+.code-copy-btn:hover {
+  cursor: pointer;
+}
+
+.code-copy-btn:active {
+  background-color: darken($grey-color-dark, 10%);
+}
+
+.code-copy-btn:after {
+}
