@@ -84,6 +84,12 @@ $local-time: 0.5s;
   border: none;
 
   transition: opacity $local-time / 2, background-color $local-time / 4;
+
+  @include media-query($on-palm) {
+    opacity: 1;
+    width: 1.75rem;
+    font-size: 1rem;
+  }
 }
 
 .code-copy-btn.show {
