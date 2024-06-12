@@ -8,3 +8,5 @@ vendor
 
 output/
 input/
+
+.DS_Store
