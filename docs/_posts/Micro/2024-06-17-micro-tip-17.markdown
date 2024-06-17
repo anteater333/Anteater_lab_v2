@@ -1,0 +1,26 @@
+---
+layout: post
+title: "자잘한 도움말 #17 usePreventLeave 구현하기"
+subtitle: "React 메모이제이션 연작 2편 - useCallback을 씁시다."
+description: "참조동일성, 참조 동일성"
+date: 2024-06-17 18:30:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+
+
+## 이하 그리 중요하진 않은 내용들
+
+
+## 내가 배운 것
+
+----
+- React에서 usePreventLeave 구현하기
+    - Well-Known 문제지만
+        - useCallback을 쓰지 않는 예제가 넷상에 많다.
+    - 문제 상황 재현하기
+    - useCallback을 어떻게 써야 하는가?
+    - **참조동일성**이란 키워드에 대해
+    - 직전 글과 직접 비교를 하면서 두 상황에 대한 이야기를 나눠보는것도 좋을듯.
+    - React 메모이제이션 2부작
