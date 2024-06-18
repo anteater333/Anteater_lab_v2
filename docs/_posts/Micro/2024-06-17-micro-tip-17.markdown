@@ -1,13 +1,48 @@
 ---
 layout: post
-title: "자잘한 도움말 #17 usePreventLeave 구현하기"
-subtitle: "React 메모이제이션 연작 2편 - useCallback을 씁시다."
+title: "자잘한 도움말 #17 페이지 이탈 방지 React 커스텀 훅 구현하기"
+subtitle: "React 메모이제이션 연작 2편 - 참조 동일성"
 description: "참조동일성, 참조 동일성"
 date: 2024-06-17 18:30:00 +0900
 categories: [Micro]
 ---
 
 ## TL;DR
+![leave site?](https://i.postimg.cc/W1G0zZv2/image.png)  
+{: .center .w-half .rounded-edge-16}
+
+- 사용자가 페이지 이탈을 시도할 때 확인 메시지를 표출하고 싶을 경우(**Prevent Leave**)  
+  `beforeunload` 이벤트를 사용한다.  
+
+```javascript
+addEventListener("beforeunload", (event) => {});
+onbeforeunload = (event) => {};
+```
+- React 커스텀 훅 형태로는 다음과 같이 만들 수 있다. (TypeScript)
+  
+```typescript
+import { useCallback } from 'react';
+
+export function usePreventLeave() {
+  const handler = useCallback((e) => {
+    e.preventDefault();
+    e.returnValue = true;
+  }, []);
+
+  /** 페이지 이탈 방지 활성화 */
+  const enablePrevent = () =>
+    window.addEventListener("beforeunload", handler);
+
+  /** 페이지 이탈 방지 해제 */
+  const disablePrevent = () =>
+    window.removeEventListener("beforeunload", handler);
+
+  return { enablePrevent, disablePrevent };
+}
+```
+
+- 이 때 `useCallback`이 없으면 의도하지 않은 동작이 발생할 수도 있다.
+- 메모이제이션은 성능적 측면 이외에도 **참조 동일성**을 지키기 위해 사용하기도 한다.
 
 
 ## 이하 그리 중요하진 않은 내용들
