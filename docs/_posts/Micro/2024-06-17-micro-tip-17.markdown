@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "자잘한 도움말 #17 페이지 이탈 방지 React 커스텀 훅 구현하기"
-subtitle: "React 메모이제이션 연작 2편 - 참조 동일성"
-description: "참조동일성, 참조 동일성"
+subtitle: "React 메모이제이션 연작 제 2편 - 참조 동일성"
+description: "참조동일성, 참조 동일성, beforeunload, 새로고침 방지, 페이지 이탈 방지, React, 리액트, usePreventLeave, 메모이제이션, useCallback"
 date: 2024-06-17 18:30:00 +0900
 categories: [Micro]
 ---
@@ -11,16 +11,18 @@ categories: [Micro]
 ![leave site?](https://i.postimg.cc/W1G0zZv2/image.png)  
 {: .center .w-half .rounded-edge-16}
 
-- 사용자가 페이지 이탈을 시도할 때 확인 메시지를 표출하고 싶을 경우(**Prevent Leave**)  
-  `beforeunload` 이벤트를 사용한다.  
+- 현재 페이지에서 다른 페이지로 이동하거나 웹 페이지를 새로고침 할 때 사용자에게 확인 메시지를 표시하고 싶을 경우 `beforeunload` 이벤트를 사용한다.
 
 ```javascript
-addEventListener("beforeunload", (event) => {});
-onbeforeunload = (event) => {};
+window.addEventListener("beforeunload", function (event) {
+  event.preventDefault();
+  event.returnValue = true;
+});
 ```
-- React 커스텀 훅 형태로는 다음과 같이 만들 수 있다. (TypeScript)
-  
-```typescript
+
+- React 커스텀 훅 형태로는 다음과 같이 만들 수 있다.
+
+```javascript
 import { useCallback } from 'react';
 
 export function usePreventLeave() {
@@ -41,12 +43,42 @@ export function usePreventLeave() {
 }
 ```
 
-- 이 때 `useCallback`이 없으면 의도하지 않은 동작이 발생할 수도 있다.
+- 이 때 `handler`에 `useCallback`을 사용하지 않으면 의도하지 않은 동작이 발생할 수도 있다.
 - 메모이제이션은 성능적 측면 이외에도 **참조 동일성**을 지키기 위해 사용하기도 한다.
-
 
 ## 이하 그리 중요하진 않은 내용들
 
+내가 웹 프론트 개발자의 길을 가고 있는 이유에는 사실 "웹 서핑"을 당당히 취미 중 하나로 꼽을 수 있을 정도로 방대한 인터넷 사용량도 포함된다고 볼 수 있다. 나는 현직**그리고 무직**{: .small .text-deco-line-through .text-deco-weight-normal} 사이버 먕령으로서, 사소하면서도 크리티컬한 사용자 경험 몇 가지에 눈살을 찌푸린 적이 많다고 자부한다. 그리고 아마 그 중 가장 최악이 1시간 동안 쓴 글이 새로고침 한 번에 사라지는 일일 것이다.
+
+### 사이트에서 나가시겠습니까?
+
+![사이트에서 나가시겠습니까?](https://i.postimg.cc/C5r1Q3r5/image.png)  
+**바보같이 이걸 봐놓고도 무심코 "나가기"를 눌러서 쓰던 글을 날린 경험도 많다.**{: .text-deco-weight-normal .text-deco-line-through .middle-small}
+{: .center .w-half .rounded-edge-16}
+
+그래서 필요한 것이 이 기능이다. 사용자가 기꺼이 다시 쓰기엔 너무 귀찮을 내용을 웹 페이지에서 작업하고 있을 땐, 그것이 실수 한 번에 사라지지 않도록 만들어줘야 한다. 다음과 같은 자바스크립트를 작성해 웹 페이지에 부착해주자.
+
+```javascript
+window.addEventListener("beforeunload", function (event) {
+  event.preventDefault();
+  event.returnValue = true;
+});
+```
+
+[`beforeunload` 이벤트](https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event){:target="_blank"}는 이름 그대로 불러왔던 리소스를 해제(unload)하기 직전 발생하는 이벤트다. 일반적으로 그 리소스는 접속한 페이지가 담겨있는 창(`window` 객체)을 뜻한다. 그래서 사용자가 현재 페이지에서 실수로 벗어나는 것을 막고자 할 때 이 이벤트를 사용하는 것이다.
+
+페이지 이탈 확인 창은 `beforeunload` 이벤트에 전달된 핸들러가 다음과 같은 행동을 할 때 장전된다.
+
+- `event` 객체의 `preventDefault()` 메소드를 호출할 때  
+  기본적으로 권장하는 방식이다.
+- `event` 객체의 `returnValue` 프로퍼티에 truthy 값을 할당할 때  
+  일부 브라우저 호환성을 위해 위 방식과 병행하는 것이 좋다.
+- 이벤트 핸들러 함수가 truthy 값을 반환할 때  
+  이 방식은 `addEventListener`가 아닌 `onbeforeunload`를 사용했을 때에만 유효하다.
+
+확인 창은 `alert()` 메소드를 호출했을 때 나타나는 그것과 같이 브라우저에서 구현해준다. 여기서 각 브라우저의 똑똑한 정도를 알 수도 있는데, 위에 예제 화면으로 올린 크롬의 경우 사용자의 이탈 시도가 "페이지 새로고침"인지 혹은 "페이지 종료"인지를 인식해 메시지 내용을 다르게 표시한다. 파이어폭스는 그런거 없더라고.
+
+아무튼 참 쉽죠? 농담이 아니라 너무 쉬워서 이걸로 글을 마무리하긴 좀 아쉽다. "자잘한" 도움말에조차 못 넣겠다 싶을 수준.
 
 ## 내가 배운 것
 
