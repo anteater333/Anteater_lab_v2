@@ -28,6 +28,14 @@
   font-size: $base-font-size * 0.9;
 }
 
+.text-deco-line-through {
+  text-decoration: line-through;
+}
+
+.text-deco-weight-normal {
+  font-weight: 300 !important;
+}
+
 .rounded-edge img {
   border-radius: 5%;
 }
