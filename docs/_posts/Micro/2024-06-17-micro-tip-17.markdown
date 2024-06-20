@@ -32,12 +32,14 @@ export function usePreventLeave() {
   }, []);
 
   /** 페이지 이탈 방지 활성화 */
-  const enablePrevent = () =>
-    window.addEventListener("beforeunload", handler);
+  const enablePrevent = useCallback(
+    () => window.addEventListener("beforeunload", handler),
+    []);
 
   /** 페이지 이탈 방지 해제 */
-  const disablePrevent = () =>
-    window.removeEventListener("beforeunload", handler);
+  const disablePrevent = useCallback(
+    () => window.removeEventListener("beforeunload", handler),
+    []);
 
   return { enablePrevent, disablePrevent };
 }
@@ -80,6 +82,90 @@ window.addEventListener("beforeunload", function (event) {
 
 아무튼 참 쉽죠? 농담이 아니라 너무 쉬워서 이걸로 글을 마무리하긴 좀 아쉽다. "자잘한" 도움말에조차 못 넣겠다 싶을 수준.
 
+### React에서 해보자
+
+그렇다면 이걸 React에서 한 번 구현해보자. 커스텀 훅 형태로 만들어 언제 어디서든, 어떤 프로젝트에서든 그 코드를 가져와 재사용할 수 있도록 만들어두자.
+
+```javascript
+export function usePreventLeave() {
+  const handler = (e) => {
+    e.preventDefault();
+    e.returnValue = true;
+  };
+
+  /** 페이지 이탈 방지 활성화 */
+  const enablePrevent = () =>
+    window.addEventListener("beforeunload", handler);
+
+  /** 페이지 이탈 방지 해제 */
+  const disablePrevent = () =>
+    window.removeEventListener("beforeunload", handler);
+
+  return { enablePrevent, disablePrevent };
+}
+```
+
+이렇게 구현해 다음과 같이 사용해봤다.
+
+```javascript
+export default function App() {
+  // ...
+
+  // 앞서 구현해둔 Prevent Leave 커스텀 훅 사용
+  const { enablePrevent, disablePrevent } = usePreventLeave();
+
+  /** 어떤 기능이 동작하는 중에만 Prevent Leave 활성화 */
+  useEffect(() => {
+    if (isRunning) enablePrevent();
+    else disablePrevent();
+  }, [isRunning]);
+
+  // ...
+}
+```
+
+<p class="small text-deco-line-through">신경 쓰이는 부분이 있겠지만 뒷부분 전개를 위해 연출 좀 했습니다. 참아주십쇼.</p>
+
+그리고 이 코드로 구현한 아래 데모 페이지를 한 번 조작해보자.
+
+<div class="sandbox-container">
+<iframe src="https://codesandbox.io/embed/l36dtq?view=preview&module=%2Fsrc%2FApp.js"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="usePreventLeave"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+</div>
+
+설명대로 버튼을 누르고 페이지 새로고침을 해보자. 샌드박스 안에서만 새로고침을 해도 좋고 지금 이 블로그 페이지를 새로고침해도 좋다. 앞서 설명했던 확인 창이 표시될 것이다.
+
+### 참조 동일성
+
+그럼 이렇게도 해볼까. 타이머를 실행 하고 -> 다시 버튼을 한 번 더 눌러 정지한 다음 -> 새로고침 해보자. 이번에도 확인 창이 표시될 것이다. 아니 타이머가 동작 중일 때만 확인 창이 나왔으면 했는데?!
+
+꽤 큰 문제라고 볼 수 있다. 불쾌한 사용자 경험엔 "쓸데없는 확인 창 출력"도 들어 있을거라고 믿는다. 우리의 의도를 벗어난 이 현상을 해결하려면 어떻게 해야할까? 위 커스텀 훅 코드를 분석해보자.
+
+![이미지](https://i.postimg.cc/JhHQYn8d/image.png)  
+{: .center .rounded-edge-16}
+
+<div class="sandbox-container">
+<iframe src="https://codesandbox.io/embed/d9t2yq?view=editor&module=%2Fsrc%2Fhooks%2FusePreventLeave.js"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="usePreventLeave and useCallback"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+</div>
+
+<div class="sandbox-container">
+<iframe src="https://codesandbox.io/embed/d9t2yq?view=preview&expanddevtools=1"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="usePreventLeave and useCallback"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+</div>
+
 ## 내가 배운 것
 
 ----
@@ -91,3 +177,15 @@ window.addEventListener("beforeunload", function (event) {
     - **참조동일성**이란 키워드에 대해
     - 직전 글과 직접 비교를 하면서 두 상황에 대한 이야기를 나눠보는것도 좋을듯.
     - React 메모이제이션 2부작
+
+prevent leave 자체는 아주 사소한 주제. 이렇게 글로 쓸 필요도 없음.
+
+Custom Hook으로 만들어보자 (여기선 의도적으로 useCallback을 제외)
+
+문제 상황 발생
+사실 그 불쾌한 사용자 경험중 하나에 쓸데없는 확인 메시지 출력도 있거든.
+
+useCallback을 쓰는 이유
+참조 동일성에 대해
+
+그리고 마지막으로 사실 useEffect를 좀 더 제대로 썼으면 굳이...
