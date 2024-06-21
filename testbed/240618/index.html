@@ -3,10 +3,12 @@
   <head>
     <title>DO NOT LEAVE</title>
     <script type="text/javascript">
-      window.addEventListener("beforeunload", function (event) {
-        event.preventDefault();
-        event.returnValue = "";
-      });
+      // window.addEventListener("beforeunload", function (event) {
+      //   event.preventDefault();
+      //   event.returnValue = "";
+      // });
+
+      window.onbeforeunload = () => true;
     </script>
   </head>
   <body></body>
