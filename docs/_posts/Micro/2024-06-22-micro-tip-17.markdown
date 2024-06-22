@@ -1,0 +1,237 @@
+---
+layout: post
+title: "자잘한 도움말 #17 페이지 이탈 방지 React 커스텀 훅 구현하기"
+subtitle: "React 메모이제이션 연작 제2편 - 참조 동일성"
+description: "참조동일성, 참조 동일성, beforeunload, 새로고침 방지, 페이지 이탈 방지, React, 리액트, usePreventLeave, 메모이제이션, useCallback"
+date: 2024-06-22 11:30:00 +0900
+categories: [Micro]
+---
+
+## TL;DR
+![leave site?](https://i.postimg.cc/W1G0zZv2/image.png)  
+{: .center .w-half .rounded-edge-16}
+
+- 현재 페이지에서 다른 페이지로 이동하거나 웹 페이지를 새로고침 할 때 사용자에게 확인 메시지를 표시하고 싶을 경우 `beforeunload` 이벤트를 사용한다.
+
+```javascript
+window.addEventListener("beforeunload", function (event) {
+  event.preventDefault();
+  event.returnValue = true;
+});
+```
+
+- React 커스텀 훅 형태로는 다음과 같이 만들 수 있다.
+
+```javascript
+import { useCallback } from 'react';
+
+export function usePreventLeave() {
+  const handler = useCallback((e) => {
+    e.preventDefault();
+    e.returnValue = true;
+  }, []);
+
+  /** 페이지 이탈 방지 활성화 */
+  const enablePrevent = useCallback(
+    () => window.addEventListener("beforeunload", handler),
+    []);
+
+  /** 페이지 이탈 방지 해제 */
+  const disablePrevent = useCallback(
+    () => window.removeEventListener("beforeunload", handler),
+    []);
+
+  return { enablePrevent, disablePrevent };
+}
+```
+
+- 이때 `handler`에 `useCallback`을 사용하지 않으면 의도하지 않은 동작이 발생할 수도 있다.
+- 메모이제이션은 성능적 측면 이외에도 **참조 동일성**을 지키기 위해 사용하기도 한다.
+
+## 이하 그리 중요하진 않은 내용들
+
+내가 웹 프론트 개발자의 길을 가고 있는 이유에는 사실 "웹 서핑"을 당당히 취미 중 하나로 꼽을 수 있을 정도로 방대한 인터넷 사용량도 포함된다고 볼 수 있다. 나는 현직**그리고 무직**{: .small .text-deco-line-through .text-deco-weight-normal} 사이버 먕령으로서, 사소하면서도 크리티컬한 사용자 경험 몇 가지에 눈살을 찌푸린 적이 많다고 자부한다. 그리고 아마 그중 가장 최악이 1시간 동안 쓴 글이 새로고침 한 번에 사라지는 일일 것이다.
+
+### 사이트에서 나가시겠습니까?
+
+![사이트에서 나가시겠습니까?](https://i.postimg.cc/C5r1Q3r5/image.png)  
+**바보같이 이걸 봐놓고도 무심코 "나가기"를 눌러서 쓰던 글을 날린 경험도 많다.**{: .text-deco-weight-normal .text-deco-line-through .middle-small}
+{: .center .w-half .rounded-edge-16}
+
+그래서 필요한 것이 이 기능이다. 사용자가 기꺼이 다시 쓰기엔 너무 귀찮을 내용을 웹 페이지에서 작업하고 있을 땐, 그것이 실수 한 번에 사라지지 않도록 만들어줘야 한다. 거두절미하고 바로 구현 시작. 다음 자바스크립트 코드를 작성해 웹 페이지에 부착해 주자.
+
+```javascript
+window.addEventListener("beforeunload", function (event) {
+  event.preventDefault();
+  event.returnValue = true;
+});
+
+// 혹은 이렇게
+window.onbeforeunload = () => true;
+```
+
+[`beforeunload` 이벤트](https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event){:target="_blank"}는 이름 그대로 불러왔던 리소스를 해제(unload)하기 직전 발생하는 이벤트다. 일반적으로 그 리소스는 접속한 페이지가 담겨있는 창(`window` 객체)을 뜻한다. 그래서 사용자가 현재 페이지에서 실수로 벗어나는 것을 막고자 할 때 이 이벤트를 사용하는 것이다.
+
+페이지 이탈 확인 창은 `beforeunload` 이벤트에 전달된 핸들러가 다음과 같은 행동을 할 때 장전된다.
+
+- `event` 객체의 `preventDefault()` 메소드를 호출할 때  
+  기본적으로 권장하는 방식이다.
+- `event` 객체의 `returnValue` 프로퍼티에 truthy 값을 할당할 때  
+  일부 브라우저 호환성을 위해 위 방식과 병행하는 것이 좋다.
+- 이벤트 핸들러 함수가 truthy 값을 반환할 때  
+  이 방식은 `addEventListener`가 아닌 `onbeforeunload`를 사용했을 때만 유효하다.
+
+확인 창은 `alert()` 메소드를 호출했을 때 나타나는 그것처럼 브라우저에서 구현해 준다. 여기서 각 브라우저의 똑똑한 정도를 알 수도 있는데, 위에 예제 화면으로 올린 크롬의 경우 사용자의 이탈 시도가 "페이지 새로고침"인지 혹은 "페이지 종료"인지를 인식해 메시지 내용을 다르게 표시한다. 파이어폭스는 그런 거 없더라고.
+
+아무튼 참 쉽죠? 농담이 아니라 너무 쉬워서 이걸로 글을 마무리하긴 좀 아쉽다. "자잘한" 도움말에조차 못 넣겠다 싶을 수준.
+
+### React에서 해보자
+
+그런 의미에서 이걸 React에서 한번 구현해 보자. 커스텀 훅 형태로 만들어 언제 어디서든, 어떤 프로젝트에서든 그 코드를 가져와 재사용할 수 있도록 만들어두자.
+
+```javascript
+export function usePreventLeave() {
+  const handler = (e) => {
+    e.preventDefault();
+    e.returnValue = true;
+  };
+
+  /** 페이지 이탈 방지 활성화 */
+  const enablePrevent = () =>
+    window.addEventListener("beforeunload", handler);
+
+  /** 페이지 이탈 방지 해제 */
+  const disablePrevent = () =>
+    window.removeEventListener("beforeunload", handler);
+
+  return { enablePrevent, disablePrevent };
+}
+```
+
+이렇게 구현해 다음과 같이 사용해 봤다.
+
+```javascript
+export default function App() {
+  // ...
+
+  // 앞서 구현해 둔 Prevent Leave 커스텀 훅 사용
+  const { enablePrevent, disablePrevent } = usePreventLeave();
+
+  /** 어떤 기능이 동작하는 중에만 Prevent Leave 활성화 */
+  useEffect(() => {
+    if (isRunning) enablePrevent();
+    else disablePrevent();
+  }, [isRunning]);
+
+  // ...
+}
+```
+
+<p class="small text-deco-line-through">신경 쓰이는 부분이 있겠지만 뒷부분 전개를 위해 연출 좀 했습니다. 참아주십쇼.</p>
+
+그리고 이 코드로 구현한 아래 데모 페이지를 한번 조작해 보자.
+
+<div class="sandbox-container">
+<iframe src="https://codesandbox.io/embed/l36dtq?view=preview&module=%2Fsrc%2FApp.js"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="usePreventLeave"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+</div>
+
+설명대로 버튼을 누르고 페이지 새로고침을 해보자. 샌드박스 안에서만 새로고침을 해도 좋고 지금 이 블로그 페이지를 새로고침 해도 좋다. 앞서 설명했던 확인 창이 표시될 것이다.
+
+### 참조 동일성
+
+그럼 이렇게도 해볼까. 버튼을 눌러 타이머를 실행하고 -> 타이머 버튼을 다시 한번 더 눌러 정지한 다음 -> 새로고침을 해보자. 페이지의 버튼은 `isRunning` 상태를 토글 하는 역할을 수행한다. 위에서 사용한 `useEffect()` 훅에 따르면 `isRunning`이 `false`가 되었을 때 `disablePrevent()`가 실행돼 페이지 이탈 방지 기능은 해제되어야 한다. 하지만 이번에도 여전히 확인 창이 표시될 것이다. 아니 타이머가 동작 중일 때만 확인 창이 나왔으면 했는데?!
+
+꽤 큰 문제라고 볼 수 있다. 불쾌한 사용자 경험엔 "쓸데없는 확인 창 출력"도 들어 있을 거라고 믿는다. 우리의 의도를 벗어난 이 현상을 해결하려면 어떻게 해야 할까? 예제 코드를 분석해 보자. 줄글로 풀어 설명할 자신이 없어서 Figma의 힘을 좀 빌려봤다.
+
+![이미지](https://i.postimg.cc/Pr457v54/image.png)  
+{: .center .rounded-edge-16}
+
+이해가 되십니까? 커스텀 훅이란 이름이 붙어진 패턴도 코드 레벨에서 봤을 땐 일반적인 함수와 다를 바 없다. `App()`이 재렌더링 될 때마다, 다시 말해 타이머를 위한 숫자 값 상태, 버튼 입력에 따른 `isRunning` 상태가 바뀌어 `App()` 함수가 다시 실행될 때마다 `usePreventLeave()`도 다시 실행된다.  
+
+`usePreventLeave()`가 다시 실행될 때마다 그 내부에 들어 있던 세 가지의 함수들은 다시 정의된다. 즉 컴포넌트가 재렌더링 될 때 마다 `handler`는 매번 변경된다. 그 결과 처음 `isRunning`이 `true`가 되어 `before unload` 이벤트에 핸들러로서 전달된 함수의 주소 (A)`handler`와, 다시 `isRunning`이 `false`로 바뀌어 제거 해야 할 핸들러 함수의 주소로 전달된 (B)`handler`는 서로 다른 값을 가리키게 된다.  
+
+**(A)`handler` !== (B)`handler`**  
+{: .center}
+
+이렇듯 GUI의 무한 루프 속에서 **참조 동일성(Referential Equality, `===`)**은 유리잔처럼 손쉽게 깨져버리곤 한다. 끊임없이 다시 실행되고 다시 정의되는 로직들 사이 이 객체가 항상 동일한 것임을 보장하려면 어떻게 해야 할까? React에서 이를 해결하기 위해 사용하는 것이 바로 **[메모이제이션(Memoization)](/micro/2024/05/30/micro-tip-16.html#메모이제이션memoization){:target="_blank"}**이다.
+
+### 메모이제이션(Memoization)
+
+지난 글에서 성능적 이점을 위한 메모이제이션에 대해 집중해 봤었는데, 그에 못지않게 중요한 능력이 이 참조 동일성 보존이다. 아마 React에서 가장 많이들 사용할 훅, `useState()`를 그 대표적인 사례라고 볼 수 있겠다. `useState()`는 선언한 변수가 해당 컴포넌트 안에서 참조 동일성을 유지할 수 있게 하여 그것을 컴포넌트의 지역 상태로 사용할 수 있도록 해주는 훅이다.
+
+그러므로 `usePreventLeave()` 내부의 함수들을 모두 메모해 참조 동일성을 확보해 보자. React에서 함수를 메모할 땐 `useCallback()`을 사용한다.
+
+```javascript
+import { useCallback } from 'react';
+
+export function usePreventLeave() {
+  const handler = useCallback((e) => {
+    e.preventDefault();
+    e.returnValue = true;
+  }, []);
+
+  /** 페이지 이탈 방지 활성화 */
+  const enablePrevent = useCallback(
+    () => window.addEventListener("beforeunload", handler),
+    []);
+
+  /** 페이지 이탈 방지 해제 */
+  const disablePrevent = useCallback(
+    () => window.removeEventListener("beforeunload", handler),
+    []);
+
+  return { enablePrevent, disablePrevent };
+}
+```
+
+`useCallback`을 사용한 방식과 사용하지 않은 방식, 둘의 동작을 비교해 볼 수 있는 샌드박스를 준비했다. 한번 확인해 보자.
+
+<div class="sandbox-container">
+<iframe src="https://codesandbox.io/embed/d9t2yq?view=preview&expanddevtools=1"
+     style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+     title="usePreventLeave and useCallback"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+</div>
+
+처음 표시되는 `/withoutUseCallback` 페이지에선 `useCallback()`을 사용하지 않았다. 타이머를 실행하면 숫자가 증가할 때마다 콘솔창에 각 함수가 재정의 됐다는 메시지가 표시될 것이다.
+
+상단 "to with" 버튼을 누르면 `/withUseCallback` 페이지로 이동한다. 여기선 타이머가 실행돼도 콘솔 메시지가 다시 출력되지 않는다. 타이머를 실행했다가 정지했을 때 새로고침 시 확인 메시지가 표시되지 않는 것을 확인할 수 있다.
+
+[직전 글](/micro/2024/05/30/micro-tip-16.html){:target="_blank"} 마지막에 "복잡하게 생각하지 말고 그냥 `React.memo()`"를 쓰라는 주장을 소개한 바 있다. 그 방법을 "`useMemo()`와 `useCallback()`을 대표로 하는 컴포넌트 내부 메모이제이션에도 똑같이 적용할 수 있다. 특히 이 경우엔 참조적 동일성에 대한 고려를 줄일 수 있다는 점에서 더 장점이 있다고 볼 수도 있다. 물론, 이것 또한 정답이 아니고 어디까지나 "그럴 수도 있다"는 주장이기 때문에, 언제나 충분한 고려를 마친 다음 코드 작성의 방향을 정하도록 하자.
+
+## 내가 배운 것
+
+어쩌다 보니 비슷한 주제로 글을 연달아 쓰게 됐다. 했던 이야기 또 하는 것 같기도 하고... 그리고 사실 최근 블로그에 대한 어떤 새로운 시도를 하고 있는 탓에 최대한 쓰는데 부담이 덜할 만한 주제를 찾은 것도 있다. 아무튼 React 메모이제이션 연작 제2편 - 참조 동일성 끝.
+
+- 웹 페이지 화면 이탈 방지 기능을 구현하는 방법
+- `useCallback()`과 참조 동일성
+- 메소드 명을 `enablePreventLeave`, `disablePreventLeave`라고 지을걸.
+
+그리고 앞서 예제로 만들었던 코드, 
+
+```javascript
+/** 타이머가 동작하는 중에만 Prevent Leave 활성화 */
+useEffect(() => {
+  if (isRunning) enablePrevent();
+  else disablePrevent();
+}, [isRunning]);
+```
+
+이거 사실 이렇게 하지 말고 아래처럼 하는 게 좋다.
+
+```javascript
+/** 타이머가 동작하는 중에만 Prevent Leave 활성화 */
+useEffect(() => {
+  if (isRunning) enablePrevent();
+  return () => disablePrevent();
+}, [isRunning]);
+```
+
+이렇게 하면 굳이 `usePreventLeave()`의 내부 함수들을 메모이제이션 하지 않아도 의도대로 동작한다. 연출 좀 했지.

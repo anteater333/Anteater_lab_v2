@@ -1,5 +1,6 @@
 import { useState, memo, useMemo, useCallback, useEffect } from "react";
 import "./App.css";
+import { Link } from "react-router-dom";
 
 /*
   권장. React.memo 사용.
@@ -148,6 +149,15 @@ function App() {
         ) : undefined}
         <p />
         <button onClick={onOKToggleHandler}>{isOK ? "OK" : "NOT OK"}</button>
+        <p />
+        <div>
+          <Link to={"/withUseCallback"}>
+            <button>with</button>
+          </Link>
+          <Link to={"/withoutUseCallBack"}>
+            <button>without</button>
+          </Link>
+        </div>
       </div>
     </>
   );
