@@ -94,7 +94,7 @@ categories: [NDev]
 <p class="middle-big center" style="display:flex;align-items:center;justify-content:space-evenly;">
 <a href="https://inpa.tistory.com/"><img src="https://i.postimg.cc/3xwJmSrY/image.png" alt="inpa dev scroll"><br>
 Inpa Dev</a>
-<a href="https://pronist.dev/"><img src="https://i.postimg.cc/tJ3c9SkL/image.png" alt="hELLO."><br>
+<a href="https://pronist.tistory.com/"><img src="https://i.postimg.cc/tJ3c9SkL/image.png" alt="hELLO."><br>
 hELLO.
 </a>
 </p>
