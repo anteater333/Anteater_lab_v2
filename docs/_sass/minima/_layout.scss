@@ -364,8 +364,8 @@
             height: 1.5rem;
           }
         }
-        > .profile-link a:first-child {
-          margin-right: $spacing-unit / 2;
+        > .profile-link a {
+          margin-left: $spacing-unit / 4;
         }
       }
     }
