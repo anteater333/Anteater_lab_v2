@@ -101,6 +101,7 @@
 
 .bmc-btn-text {
   font-size: 18px;
+  font-weight: 100 !important;
 
   @include media-query($on-palm) {
     display: none !important;
