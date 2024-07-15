@@ -1,0 +1,29 @@
+---
+layout: post
+title: "자잘한 도움말 #18 강제의 필요성"
+subtitle: "형상 관리 도구에 강제 푸시 기능이 존재하는 이유"
+description: ""
+date: 2024-07-15 15:30:00 +0900
+categories: [Micro]
+
+id: 18
+slug: 
+tags: []
+---
+
+## TL;DR
+
+## 이하 그리 중요하진 않은 내용들
+
+## 내가 배운 것
+
+
+---
+
+- git force push는 언제 쓰나?
+    - 강제 푸쉬가 위험한 기능이라면 애초에 왜 존재하는가?
+    - Whenever you are the only one working on a branch (or on a repo, in
+    the case of a fork), you can force push.
+    - https://stackoverflow.com/questions/34995726/why-when-should-one-ever-force-push
+    - 관련 질문과 답변은 많은 편
+    - 공학적인 글이라기보단, 에세이에 가까운 주제
