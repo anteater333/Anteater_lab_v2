@@ -13,7 +13,39 @@ tags: []
 
 ## TL;DR
 
+- `git push --force`에 대해
+  - 강제 푸시 옵션은 위험하다고들 하는데 그럼 왜 존재하는가?
+- 강제 푸시는 다음과 같은 상황에 유용하다.
+  - 이미 푸시된 커밋을 수정할 때
+  - 로컬에서 진행한 리베이스를 원격에도 반영할 때
+- 대신 위험한건 여전하니까 더 안전하게 사용하자.
+  - 기본적으로 혼자 사용하는 브랜치에서만 사용하자.
+  - `--force` 대신 `--force-with-lease` 옵션을 사용하자.
+    - 이 옵션은 강제 푸시를 적용하되 다른 사용자의 커밋 내역이 발견되는 경우 푸시를 하지 않는다.
+- GUI 클라이언트를 사용한다면 내부적으로 무슨 옵션을 사용 중인지 한 번 확인해보자
+  - [Fork 클라이언트](https://git-fork.com/)는 내부적으로 `--force-with-lease` 옵션을 쓰고 있다
+
 ## 이하 그리 중요하진 않은 내용들
+
+개발자의 친구 Git
+블로그에 Git 주제는 처음인듯
+
+자주 쓰는 도구긴 한데 워낙 관성적으로, 적은 기능만 써서 자신은 없다. 심지어 CLI도 아니고 GUI로 쓴다구
+
+그래도 "형상 관리" 자체가 만만히 볼 분야는 아님
+소프트웨어 공학의 한 부분을 차지하는 분야라고
+
+개인적으로 GUI가 제공해주는 amend 기능을 자주 쓴다.
+커밋 해놓고 보니 아 이거 깜빡했네 하는 일이 많아서
+그 때 만약 그 커밋이 원격에까지 푸시가 된 상태였다면 force 옵션을 주로 사용
+
+
+![rebase-push](https://i.postimg.cc/RZWJkZmz/image.png)
+
+![git fork는 합니다](https://i.postimg.cc/XvmcJNdw/image.png)
+
+Git Push Force-With-Lease
+git push --force-with-lease is a safer alternative to git push --force. It allows you to push changes to the remote branch only if the remote branch is at the same commit as the one you have locally. If the remote branch has been updated by someone else, the push will be rejected, preventing accidental overwrites.
 
 ## 내가 배운 것
 
@@ -27,3 +59,11 @@ tags: []
     - https://stackoverflow.com/questions/34995726/why-when-should-one-ever-force-push
     - 관련 질문과 답변은 많은 편
     - 공학적인 글이라기보단, 에세이에 가까운 주제
+
+
+---
+
+refs.
+https://www.freecodecamp.org/korean/news/git-push-to-remote-branch/
+https://velog.io/@rawoon/-force-%EB%8A%94-%EC%9C%84%ED%97%98%ED%95%98%EB%8B%88-git%EC%9D%98-force-with-lease-%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EC%9E%90
+https://safjan.com/understanding-the-differences-between-git-push-force-and-git-push-force-with-lease/#git-push-force-with-lease
